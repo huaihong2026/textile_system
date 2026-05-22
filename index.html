@@ -84,7 +84,6 @@
     <div class="main-content">
         <div id="loadingMsg" class="loading">⏳ 正在加载...</div>
         
-        <!-- 工艺参数 -->
         <div id="craftPanel" style="display:none;">
             <div class="craft-layout">
                 <div class="craft-list">
@@ -98,7 +97,6 @@
             </div>
         </div>
 
-        <!-- 入仓记录 -->
         <div id="inPanel" style="display:none;">
             <div class="add-form">
                 <h4>➕ 添加入仓</h4>
@@ -117,7 +115,6 @@
             <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div>
         </div>
 
-        <!-- 出仓记录（含价格） -->
         <div id="outPanel" style="display:none;">
             <div class="add-form">
                 <h4>📤 添加出仓</h4>
@@ -125,8 +122,8 @@
                     <div class="form-field"><label>客户</label><input type="text" id="outCustomer"></div>
                     <div class="form-field"><label>型号</label><input type="text" id="outModel"></div>
                     <div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight" step="0.01"></div>
-                    <div class="form-field"><label>单价(元/kg)</label><input type="number" id="outPrice" step="0.01" placeholder="单价"></div>
-                    <div class="form-field"><label>总价(元)</label><input type="text" id="outTotal" readonly style="background:#e8f5e9; font-weight:bold;"></div>
+                    <div class="form-field"><label>单价(元/kg)</label><input type="number" id="outPrice" step="0.01"></div>
+                    <div class="form-field"><label>总价(元)</label><input type="text" id="outTotal" readonly style="background:#e8f5e9;"></div>
                     <div class="form-field"><label>日期</label><input type="date" id="outDate"></div>
                     <div class="form-field"><button id="addOutBtn" class="btn-out">✅ 添加出仓</button></div>
                 </div>
@@ -136,10 +133,9 @@
                 <div class="stat-card"><h3>💰 出仓总金额</h3><div class="number" id="outTotalAmount">0</div></div>
                 <div class="stat-card"><h3>📋 出仓记录数</h3><div class="number" id="outTotalCount">0</div></div>
             </div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></tr></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
         </div>
 
-        <!-- 年度报表 -->
         <div id="statsPanel" style="display:none;">
             <div class="filter-bar">
                 <div class="form-field"><label>📅 年份</label><input type="number" id="statsYear" value="2024"></div>
@@ -149,7 +145,6 @@
             <div id="reportContainer"><div class="empty-state">请选择年份并点击统计</div></div>
         </div>
 
-        <!-- 打印标签 -->
         <div id="printPanel" style="display:none;">
             <div class="add-form">
                 <h4>🖨️ 成品标签打印（净重自动计算）</h4>
@@ -175,175 +170,164 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // Supabase配置
-    const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
-    let supabase;
-    let currentTab = 'craft';
-    let currentCraftId = null;
-    let craftRecords = [];
-    let warehouseIn = [];
-    let warehouseOut = [];
+    (async function() {
+        const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
+        let supabase;
+        let currentTab = 'craft';
+        let currentCraftId = null;
+        let craftRecords = [];
+        let warehouseIn = [];
+        let warehouseOut = [];
 
-    // 自动计算总价
-    function calculateTotal() {
-        let weight = parseFloat(document.getElementById('outWeight').value) || 0;
-        let price = parseFloat(document.getElementById('outPrice').value) || 0;
-        let total = weight * price;
-        document.getElementById('outTotal').value = total.toFixed(2);
-    }
-    document.getElementById('outWeight').addEventListener('input', calculateTotal);
-    document.getElementById('outPrice').addEventListener('input', calculateTotal);
+        function calculateTotal() {
+            let w = parseFloat(document.getElementById('outWeight').value) || 0;
+            let p = parseFloat(document.getElementById('outPrice').value) || 0;
+            document.getElementById('outTotal').value = (w * p).toFixed(2);
+        }
 
-    async function init() {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await loadData();
-        document.getElementById('loadingMsg').style.display = 'none';
-        document.getElementById('craftPanel').style.display = 'block';
-        renderCraftList();
-        if(craftRecords.length) { currentCraftId = craftRecords[0].id; renderCraftDetail(craftRecords[0]); }
-        renderInOut();
-        updateTodayCount();
-        document.getElementById('inDate').valueAsDate = new Date();
-        document.getElementById('outDate').valueAsDate = new Date();
-    }
+        async function init() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                await loadData();
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('craftPanel').style.display = 'block';
+                renderCraftList();
+                if(craftRecords.length) { currentCraftId = craftRecords[0].id; renderCraftDetail(craftRecords[0]); }
+                renderInOut();
+                updateTodayCount();
+                document.getElementById('inDate').valueAsDate = new Date();
+                document.getElementById('outDate').valueAsDate = new Date();
+                document.getElementById('outWeight').addEventListener('input', calculateTotal);
+                document.getElementById('outPrice').addEventListener('input', calculateTotal);
+            } catch(e) {
+                console.error('初始化失败:', e);
+                document.getElementById('loadingMsg').innerHTML = '加载失败，请刷新页面重试';
+            }
+        }
 
-    async function loadData() {
-        let { data: c } = await supabase.from('craft_records').select('*');
-        if(c && c.length) craftRecords = c;
-        else craftRecords = [{ id:"1", title:"10570/38", customer:"黄芳", date:"2024-10-14", materials:["105氨纶","78/24F尼龙"], curlSingle:{values:[46,70,68,80],extra:"0.797"}, curlDouble:{values:[38,78,76,80],extra:"0.826"}, draft:{values:[72,58,70,36],extra:"556捻"}, feed:{values:[76,40,56,64],extra:"4.03拉力"} }];
-        let { data: i } = await supabase.from('in_records').select('*');
-        if(i) warehouseIn = i;
-        let { data: o } = await supabase.from('out_records').select('*');
-        if(o) warehouseOut = o;
-    }
+        async function loadData() {
+            let { data: c } = await supabase.from('craft_records').select('*');
+            craftRecords = (c && c.length) ? c : [{ id:"1", title:"10570/38", customer:"黄芳", date:"2024-10-14", materials:["105氨纶","78/24F尼龙"], curlSingle:{values:[46,70,68,80],extra:"0.797"}, curlDouble:{values:[38,78,76,80],extra:"0.826"}, draft:{values:[72,58,70,36],extra:"556捻"}, feed:{values:[76,40,56,64],extra:"4.03拉力"} }];
+            let { data: i } = await supabase.from('in_records').select('*');
+            warehouseIn = i || [];
+            let { data: o } = await supabase.from('out_records').select('*');
+            warehouseOut = o || [];
+        }
 
-    async function saveCraft(r) { await supabase.from('craft_records').upsert(r); }
-    async function deleteCraft(id) { await supabase.from('craft_records').delete().eq('id', id); }
-    async function saveIn(r) { await supabase.from('in_records').upsert(r); }
-    async function deleteIn(id) { await supabase.from('in_records').delete().eq('id', id); }
-    async function saveOut(r) { await supabase.from('out_records').upsert(r); }
-    async function deleteOut(id) { await supabase.from('out_records').delete().eq('id', id); }
+        async function saveCraft(r) { await supabase.from('craft_records').upsert(r); }
+        async function deleteCraft(id) { await supabase.from('craft_records').delete().eq('id', id); }
+        async function saveIn(r) { await supabase.from('in_records').upsert(r); }
+        async function deleteIn(id) { await supabase.from('in_records').delete().eq('id', id); }
+        async function saveOut(r) { await supabase.from('out_records').upsert(r); }
+        async function deleteOut(id) { await supabase.from('out_records').delete().eq('id', id); }
 
-    // 工艺模块
-    function renderCraftList() {
-        let html = craftRecords.map(c => `<div class="craft-item ${currentCraftId===c.id?'active':''}" data-id="${c.id}"><div><span>📄 ${c.title}</span><span style="float:right"><button class="edit-craft" data-id="${c.id}">✏️</button><button class="del-craft" data-id="${c.id}">🗑️</button></span></div><div style="font-size:0.7rem">${c.customer}</div></div>`).join('');
-        document.getElementById('craftList').innerHTML = html || '<div class="empty-state">暂无</div>';
-        document.querySelectorAll('.craft-item').forEach(el => el.addEventListener('click', (e) => { if(!e.target.classList.contains('edit-craft') && !e.target.classList.contains('del-craft')) selectCraft(el.dataset.id); }));
-        document.querySelectorAll('.edit-craft').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); editCraft(btn.dataset.id); }));
-        document.querySelectorAll('.del-craft').forEach(btn => btn.addEventListener('click', async (e) => { e.stopPropagation(); if(confirm('删除工艺？')) { await deleteCraft(btn.dataset.id); craftRecords = craftRecords.filter(c=>c.id!==btn.dataset.id); if(currentCraftId===btn.dataset.id) currentCraftId=craftRecords[0]?.id||null; renderCraftList(); if(currentCraftId) renderCraftDetail(craftRecords.find(c=>c.id===currentCraftId)); else document.getElementById('craftDetail').innerHTML='<div class="empty-state">请选择工艺</div>'; } }));
-    }
-    function selectCraft(id) { currentCraftId=id; renderCraftDetail(craftRecords.find(c=>c.id===id)); renderCraftList(); }
-    function renderCraftDetail(c) { if(!c) return; document.getElementById('craftDetail').innerHTML = `<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${c.title}</div><div>👤 ${c.customer} 📅 ${c.date}</div></div><table class="excel-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead><tbody><tr><td class="row-label">🌀卷曲单</td><td>${c.curlSingle.values[0]}</td><td>${c.curlSingle.values[1]}</td><td>${c.curlSingle.values[2]}</td><td>${c.curlSingle.values[3]}</td><td>${c.curlSingle.extra}</td></tr>
+        function renderCraftList() {
+            let html = craftRecords.map(c => `<div class="craft-item ${currentCraftId===c.id?'active':''}" data-id="${c.id}"><div><span>📄 ${c.title}</span><span style="float:right"><button class="edit-craft" data-id="${c.id}">✏️</button><button class="del-craft" data-id="${c.id}">🗑️</button></span></div><div style="font-size:0.7rem">${c.customer}</div></div>`).join('');
+            document.getElementById('craftList').innerHTML = html || '<div class="empty-state">暂无</div>';
+            document.querySelectorAll('.craft-item').forEach(el => el.addEventListener('click', (e) => { if(!e.target.classList.contains('edit-craft') && !e.target.classList.contains('del-craft')) selectCraft(el.dataset.id); }));
+            document.querySelectorAll('.edit-craft').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); editCraft(btn.dataset.id); }));
+            document.querySelectorAll('.del-craft').forEach(btn => btn.addEventListener('click', async (e) => { e.stopPropagation(); if(confirm('删除工艺？')) { await deleteCraft(btn.dataset.id); craftRecords = craftRecords.filter(c=>c.id!==btn.dataset.id); if(currentCraftId===btn.dataset.id) currentCraftId=craftRecords[0]?.id||null; renderCraftList(); if(currentCraftId) renderCraftDetail(craftRecords.find(c=>c.id===currentCraftId)); else document.getElementById('craftDetail').innerHTML='<div class="empty-state">请选择工艺</div>'; } }));
+        }
+        function selectCraft(id) { currentCraftId=id; renderCraftDetail(craftRecords.find(c=>c.id===id)); renderCraftList(); }
+        function renderCraftDetail(c) { if(!c) return; document.getElementById('craftDetail').innerHTML = `<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${c.title}</div><div>👤 ${c.customer} 📅 ${c.date}</div></div><table class="excel-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead><tbody><tr><td class="row-label">🌀卷曲单</td><td>${c.curlSingle.values[0]}</td><td>${c.curlSingle.values[1]}</td><td>${c.curlSingle.values[2]}</td><td>${c.curlSingle.values[3]}</td><td>${c.curlSingle.extra}</td></tr>
                 <tr><td class="row-label">🌀卷曲双</td><td>${c.curlDouble.values[0]}</td><td>${c.curlDouble.values[1]}</td><td>${c.curlDouble.values[2]}</td><td>${c.curlDouble.values[3]}</td><td>${c.curlDouble.extra}</td></tr>
                 <tr><td class="row-label">⚙️牵伸</td><td>${c.draft.values[0]}</td><td>${c.draft.values[1]}</td><td>${c.draft.values[2]}</td><td>${c.draft.values[3]}</td><td>${c.draft.extra}</td></tr>
                 <tr><td class="row-label">📥喂入</td><td>${c.feed.values[0]}</td><td>${c.feed.values[1]}</td><td>${c.feed.values[2]}</td><td>${c.feed.values[3]}</td><td>${c.feed.extra}</td></tr>
             </tbody></table><div><strong>原料：</strong> ${c.materials.map(m=>`<span style="background:#f0f0f0;padding:2px 8px;margin:2px;border-radius:20px">${m}</span>`).join('')}</div>`; }
-    async function editCraft(id) { let c = craftRecords.find(c=>c.id===id); if(c){ let t=prompt("标题",c.title); if(t) c.title=t; let cu=prompt("客户",c.customer); if(cu!==null) c.customer=cu; await saveCraft(c); renderCraftList(); if(currentCraftId===id) renderCraftDetail(c); } }
-    document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("新工艺标题"); if(title) { let newCraft = { id: Date.now().toString(), title, customer: "", date: new Date().toISOString().slice(0,10), materials: [], curlSingle: {values:["","","",""],extra:""}, curlDouble: {values:["","","",""],extra:""}, draft: {values:["","","",""],extra:""}, feed: {values:["","","",""],extra:""} }; craftRecords.unshift(newCraft); await saveCraft(newCraft); renderCraftList(); selectCraft(newCraft.id); } };
+        async function editCraft(id) { let c = craftRecords.find(c=>c.id===id); if(c){ let t=prompt("标题",c.title); if(t) c.title=t; let cu=prompt("客户",c.customer); if(cu!==null) c.customer=cu; await saveCraft(c); renderCraftList(); if(currentCraftId===id) renderCraftDetail(c); } }
+        document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("新工艺标题"); if(title) { let newCraft = { id: Date.now().toString(), title, customer: "", date: new Date().toISOString().slice(0,10), materials: [], curlSingle: {values:["","","",""],extra:""}, curlDouble: {values:["","","",""],extra:""}, draft: {values:["","","",""],extra:""}, feed: {values:["","","",""],extra:""} }; craftRecords.unshift(newCraft); await saveCraft(newCraft); renderCraftList(); selectCraft(newCraft.id); } };
 
-    // 出入仓渲染
-    function renderInOut() {
-        let kw = document.getElementById('globalSearch').value.toLowerCase();
-        let inData = kw ? warehouseIn.filter(i=>i.customer.toLowerCase().includes(kw)||i.model.toLowerCase().includes(kw)) : warehouseIn;
-        let outData = kw ? warehouseOut.filter(i=>i.customer.toLowerCase().includes(kw)||i.model.toLowerCase().includes(kw)) : warehouseOut;
-        document.getElementById('inTableBody').innerHTML = inData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.date}</td><td><button class="action-btn" onclick="editIn('${i.id}')">✏️</button><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="5">暂无</td></tr>';
-        document.getElementById('outTableBody').innerHTML = outData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.price || 0}</td><td class="price-total">${((i.weight||0) * (i.price||0)).toFixed(2)}</td><td>${i.date}</td><td><button class="action-btn" onclick="editOut('${i.id}')">✏️</button><button class="action-btn" onclick="delOut('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="7">暂无</td></tr>';
+        function renderInOut() {
+            let kw = document.getElementById('globalSearch').value.toLowerCase();
+            let inData = kw ? warehouseIn.filter(i=>i.customer?.toLowerCase().includes(kw)||i.model?.toLowerCase().includes(kw)) : warehouseIn;
+            let outData = kw ? warehouseOut.filter(i=>i.customer?.toLowerCase().includes(kw)||i.model?.toLowerCase().includes(kw)) : warehouseOut;
+            document.getElementById('inTableBody').innerHTML = inData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="5">暂无</td></tr>';
+            document.getElementById('outTableBody').innerHTML = outData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.price || 0}</td><td class="price-total">${((i.weight||0)*(i.price||0)).toFixed(2)}</td><td>${i.date}</td><td><button class="action-btn" onclick="delOut('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="7">暂无</td></tr>';
+            let inW = warehouseIn.reduce((s,i)=>s+(+i.weight||0),0);
+            let outW = warehouseOut.reduce((s,i)=>s+(+i.weight||0),0);
+            let outA = warehouseOut.reduce((s,i)=>s+((+i.weight||0)*(+i.price||0)),0);
+            document.getElementById('inTotalWeight').innerText = inW.toFixed(2);
+            document.getElementById('inTotalCount').innerText = warehouseIn.length;
+            document.getElementById('outTotalWeight').innerText = outW.toFixed(2);
+            document.getElementById('outTotalAmount').innerText = outA.toFixed(2);
+            document.getElementById('outTotalCount').innerText = warehouseOut.length;
+        }
+        window.delIn = async (id) => { if(confirm('删除？')) { await deleteIn(id); warehouseIn = warehouseIn.filter(i=>i.id!==id); renderInOut(); } };
+        window.delOut = async (id) => { if(confirm('删除？')) { await deleteOut(id); warehouseOut = warehouseOut.filter(i=>i.id!==id); renderInOut(); } };
         
-        let inTotal = warehouseIn.reduce((s,i)=>s+(+i.weight||0),0);
-        let outTotal = warehouseOut.reduce((s,i)=>s+(+i.weight||0),0);
-        let outAmount = warehouseOut.reduce((s,i)=>s+((+i.weight||0)*(+i.price||0)),0);
-        document.getElementById('inTotalWeight').innerText = inTotal.toFixed(2);
-        document.getElementById('inTotalCount').innerText = warehouseIn.length;
-        document.getElementById('outTotalWeight').innerText = outTotal.toFixed(2);
-        document.getElementById('outTotalAmount').innerText = outAmount.toFixed(2);
-        document.getElementById('outTotalCount').innerText = warehouseOut.length;
-    }
-    window.editIn = async (id) => { let w = prompt("修改重量(kg)"); if(w) { let idx = warehouseIn.findIndex(i=>i.id===id); if(idx!==-1) { warehouseIn[idx].weight = parseFloat(w); await saveIn(warehouseIn[idx]); renderInOut(); } } };
-    window.delIn = async (id) => { if(confirm("删除？")) { await deleteIn(id); warehouseIn = warehouseIn.filter(i=>i.id!==id); renderInOut(); } };
-    window.editOut = async (id) => { let w = prompt("修改重量(kg)"); if(w) { let idx = warehouseOut.findIndex(i=>i.id===id); if(idx!==-1) { warehouseOut[idx].weight = parseFloat(w); await saveOut(warehouseOut[idx]); renderInOut(); } } };
-    window.delOut = async (id) => { if(confirm("删除？")) { await deleteOut(id); warehouseOut = warehouseOut.filter(i=>i.id!==id); renderInOut(); } };
-    
-    document.getElementById('addInBtn').onclick = async () => { let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, w=parseFloat(document.getElementById('inWeight').value), d=document.getElementById('inDate').value; if(!c||!m||isNaN(w)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, date:d}; warehouseIn.unshift(rec); await saveIn(rec); renderInOut(); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inWeight').value=''; };
-    
-    document.getElementById('addOutBtn').onclick = async () => { 
-        let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), d=document.getElementById('outDate').value; 
-        if(!c||!m||isNaN(w)||isNaN(p)) {alert("完整填写客户、型号、重量、单价");return;} 
-        let rec={id:Date.now().toString(), customer:c, model:m, weight:w, price:p, date:d}; 
-        warehouseOut.unshift(rec); await saveOut(rec); renderInOut(); 
-        document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value='';
-    };
+        document.getElementById('addInBtn').onclick = async () => { let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, w=parseFloat(document.getElementById('inWeight').value), d=document.getElementById('inDate').value; if(!c||!m||isNaN(w)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, date:d}; warehouseIn.unshift(rec); await saveIn(rec); renderInOut(); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inWeight').value=''; };
+        document.getElementById('addOutBtn').onclick = async () => { let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), d=document.getElementById('outDate').value; if(!c||!m||isNaN(w)||isNaN(p)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, price:p, date:d}; warehouseOut.unshift(rec); await saveOut(rec); renderInOut(); document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value=''; };
 
-    // 年报
-    document.getElementById('refreshStatsBtn').onclick = () => {
-        let year = parseInt(document.getElementById('statsYear').value);
-        let month = parseInt(document.getElementById('statsMonth').value);
-        let inF = warehouseIn.filter(r => { let d=new Date(r.date); return d.getFullYear()===year && (month===0||d.getMonth()+1===month); });
-        let outF = warehouseOut.filter(r => { let d=new Date(r.date); return d.getFullYear()===year && (month===0||d.getMonth()+1===month); });
-        let inTotal = inF.reduce((s,i)=>s+(+i.weight||0),0);
-        let outTotal = outF.reduce((s,i)=>s+(+i.weight||0),0);
-        let outAmount = outF.reduce((s,i)=>s+((+i.weight||0)*(+i.price||0)),0);
-        document.getElementById('reportContainer').innerHTML = `<div class="report-box"><div class="report-title">${year}年${month===0?"全年":month+"月"}报表</div><div class="report-item">入仓总量: <span class="report-number">${inTotal.toFixed(2)} kg</span></div><div class="report-item">出仓总量: <span class="report-number">${outTotal.toFixed(2)} kg</span></div><div class="report-item">出仓总金额: <span class="report-number">${outAmount.toFixed(2)} 元</span></div><div class="total-row">净余: ${(inTotal-outTotal).toFixed(2)} kg</div></div>`;
-    };
+        document.getElementById('refreshStatsBtn').onclick = () => {
+            let year = parseInt(document.getElementById('statsYear').value);
+            let month = parseInt(document.getElementById('statsMonth').value);
+            let inF = warehouseIn.filter(r => { let d=new Date(r.date); return d.getFullYear()===year && (month===0||d.getMonth()+1===month); });
+            let outF = warehouseOut.filter(r => { let d=new Date(r.date); return d.getFullYear()===year && (month===0||d.getMonth()+1===month); });
+            let inTotal = inF.reduce((s,i)=>s+(+i.weight||0),0);
+            let outTotal = outF.reduce((s,i)=>s+(+i.weight||0),0);
+            let outAmount = outF.reduce((s,i)=>s+((+i.weight||0)*(+i.price||0)),0);
+            document.getElementById('reportContainer').innerHTML = `<div class="report-box"><div class="report-title">${year}年${month===0?"全年":month+"月"}报表</div><div class="report-item">入仓总量: <span class="report-number">${inTotal.toFixed(2)} kg</span></div><div class="report-item">出仓总量: <span class="report-number">${outTotal.toFixed(2)} kg</span></div><div class="report-item">出仓总金额: <span class="report-number">${outAmount.toFixed(2)} 元</span></div><div class="total-row">净余: ${(inTotal-outTotal).toFixed(2)} kg</div></div>`;
+        };
 
-    // 打印标签
-    function updateTodayCount() {
-        let today = new Date().toISOString().slice(0,10);
-        let count = warehouseIn.filter(i => i.date === today).length;
-        document.getElementById('todayPrintCount').innerText = count;
-    }
-    document.getElementById('printLabelBtn').onclick = async () => {
-        let spec = document.getElementById('printSpec').value;
-        let color = document.getElementById('printColor').value;
-        let machine = document.getElementById('printMachine').value;
-        let qty = document.getElementById('printQty').value;
-        let gross = parseFloat(document.getElementById('printGross').value);
-        let tong = parseFloat(document.getElementById('printTong').value);
-        let box = parseFloat(document.getElementById('printBox').value);
-        let handler = document.getElementById('printHandler').value;
-        let batch = document.getElementById('printBatch').value;
-        let date = new Date().toISOString().slice(0,10);
-        if(isNaN(gross) || isNaN(tong) || isNaN(box)) { alert("请填写完整的毛重、筒重、箱重"); return; }
-        let net = gross - tong - box;
-        let inRecord = { id: Date.now().toString(), customer: `成品-${batch}`, model: spec, weight: net, date: date };
-        warehouseIn.unshift(inRecord);
-        await saveIn(inRecord);
-        let printContent = `<div style="width:100mm; height:100mm; padding:8px; font-family:'SimHei','Microsoft YaHei'; border:1px solid #ccc;"><div style="text-align:center; font-size:22px; font-weight:800;">中山市淮鸿橡筋织带有限公司</div><div style="font-size:10px; text-align:center;">地址：中山市三角镇接民村金达路三号B栋5楼</div><div style="font-size:10px; text-align:center;">电话：13535238522</div><hr style="margin:6px 0"/><div style="border:2px solid #000; padding:6px;"><div style="display:flex; justify-content:space-between; font-size:11px;"><span>规格：${spec}</span><span>包根色：${color}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>机号：${machine}</span><span>毛重：${gross} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>数量：${qty} 个</span><span>筒重：${tong} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>箱重：${box} kg</span><span>净重：${net.toFixed(2)} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>经手人：${handler}</span><span>日期：${date}</span></div><div style="font-size:11px;">批号：${batch}</div></div><div style="font-size:12px; font-weight:800; color:red; text-align:center; margin-top:6px;">⚠️ 不同机号，批号分开使用</div></div>`;
-        let printWindow = window.open('', '_blank');
-        printWindow.document.write(printContent);
-        printWindow.document.close();
-        printWindow.print();
-        document.getElementById('printSpec').value = '';
-        document.getElementById('printColor').value = '';
-        document.getElementById('printMachine').value = '';
-        document.getElementById('printQty').value = '';
-        document.getElementById('printGross').value = '';
-        document.getElementById('printTong').value = '';
-        document.getElementById('printBox').value = '';
-        document.getElementById('printHandler').value = '';
-        document.getElementById('printBatch').value = '';
-        renderInOut();
-        updateTodayCount();
-        alert(`打印成功！已自动入仓，净重：${net.toFixed(2)} kg`);
-    };
+        function updateTodayCount() {
+            let today = new Date().toISOString().slice(0,10);
+            let count = warehouseIn.filter(i => i.date === today).length;
+            document.getElementById('todayPrintCount').innerText = count;
+        }
+        document.getElementById('printLabelBtn').onclick = async () => {
+            let spec = document.getElementById('printSpec').value;
+            let color = document.getElementById('printColor').value;
+            let machine = document.getElementById('printMachine').value;
+            let qty = document.getElementById('printQty').value;
+            let gross = parseFloat(document.getElementById('printGross').value);
+            let tong = parseFloat(document.getElementById('printTong').value);
+            let box = parseFloat(document.getElementById('printBox').value);
+            let handler = document.getElementById('printHandler').value;
+            let batch = document.getElementById('printBatch').value;
+            let date = new Date().toISOString().slice(0,10);
+            if(isNaN(gross) || isNaN(tong) || isNaN(box)) { alert("请填写完整的毛重、筒重、箱重"); return; }
+            let net = gross - tong - box;
+            let inRecord = { id: Date.now().toString(), customer: `成品-${batch}`, model: spec, weight: net, date: date };
+            warehouseIn.unshift(inRecord);
+            await saveIn(inRecord);
+            let printContent = `<div style="width:100mm; height:100mm; padding:8px; font-family:'SimHei','Microsoft YaHei'; border:1px solid #ccc;"><div style="text-align:center; font-size:22px; font-weight:800;">中山市淮鸿橡筋织带有限公司</div><div style="font-size:10px; text-align:center;">地址：中山市三角镇接民村金达路三号B栋5楼</div><div style="font-size:10px; text-align:center;">电话：13535238522</div><hr style="margin:6px 0"/><div style="border:2px solid #000; padding:6px;"><div style="display:flex; justify-content:space-between; font-size:11px;"><span>规格：${spec}</span><span>包根色：${color}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>机号：${machine}</span><span>毛重：${gross} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>数量：${qty} 个</span><span>筒重：${tong} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>箱重：${box} kg</span><span>净重：${net.toFixed(2)} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>经手人：${handler}</span><span>日期：${date}</span></div><div style="font-size:11px;">批号：${batch}</div></div><div style="font-size:12px; font-weight:800; color:red; text-align:center; margin-top:6px;">⚠️ 不同机号，批号分开使用</div></div>`;
+            let printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+            document.getElementById('printSpec').value = '';
+            document.getElementById('printColor').value = '';
+            document.getElementById('printMachine').value = '';
+            document.getElementById('printQty').value = '';
+            document.getElementById('printGross').value = '';
+            document.getElementById('printTong').value = '';
+            document.getElementById('printBox').value = '';
+            document.getElementById('printHandler').value = '';
+            document.getElementById('printBatch').value = '';
+            renderInOut();
+            updateTodayCount();
+            alert(`打印成功！已自动入仓，净重：${net.toFixed(2)} kg`);
+        };
 
-    function switchTab(tab) {
-        currentTab = tab;
-        document.getElementById('craftPanel').style.display = tab==='craft'?'block':'none';
-        document.getElementById('inPanel').style.display = tab==='in'?'block':'none';
-        document.getElementById('outPanel').style.display = tab==='out'?'block':'none';
-        document.getElementById('statsPanel').style.display = tab==='stats'?'block':'none';
-        document.getElementById('printPanel').style.display = tab==='print'?'block':'none';
-        document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-        document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
-        if(tab==='stats') document.getElementById('refreshStatsBtn').click();
-        if(tab==='print') updateTodayCount();
-    }
-    document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
-    document.getElementById('globalSearchBtn').onclick = () => { if(currentTab==='craft') renderCraftList(); else renderInOut(); };
-    document.getElementById('globalSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('globalSearchBtn').click(); });
-    
-    init();
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('craftPanel').style.display = tab==='craft'?'block':'none';
+            document.getElementById('inPanel').style.display = tab==='in'?'block':'none';
+            document.getElementById('outPanel').style.display = tab==='out'?'block':'none';
+            document.getElementById('statsPanel').style.display = tab==='stats'?'block':'none';
+            document.getElementById('printPanel').style.display = tab==='print'?'block':'none';
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+            if(tab==='stats') document.getElementById('refreshStatsBtn').click();
+            if(tab==='print') updateTodayCount();
+        }
+        document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
+        document.getElementById('globalSearchBtn').onclick = () => { if(currentTab==='craft') renderCraftList(); else renderInOut(); };
+        document.getElementById('globalSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('globalSearchBtn').click(); });
+        
+        init();
+    })();
 </script>
 </body>
 </html>
