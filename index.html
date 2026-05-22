@@ -17,6 +17,7 @@
         .btn-primary { background: #1f6e8c; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
         .btn-in { background: #2e7d32; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
         .btn-out { background: #c44536; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
+        .btn-sm { padding: 4px 10px; font-size: 0.7rem; }
         .tab-bar { display: flex; border-bottom: 2px solid #e2edf5; background: #fafdff; overflow-x: auto; }
         .tab { padding: 12px 20px; cursor: pointer; font-weight: 600; color: #5e7e97; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 0.85rem; }
         .tab.active { color: #1f6e8c; border-bottom-color: #1f6e8c; background: white; }
@@ -39,12 +40,15 @@
         .form-field input { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 130px; font-size: 0.8rem; }
         .filter-bar { background: #f7fafd; border-radius: 16px; padding: 12px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .craft-layout { display: flex; flex-wrap: wrap; }
-        .craft-list { width: 250px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 480px; overflow-y: auto; }
-        .craft-detail { flex: 1; padding-left: 18px; }
-        .craft-item { padding: 8px 10px; margin: 4px 0; border-radius: 12px; cursor: pointer; background: white; border: 1px solid transparent; }
+        .craft-list { width: 260px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 520px; overflow-y: auto; }
+        .craft-detail { flex: 1; padding-left: 20px; }
+        .craft-item { padding: 10px 12px; margin: 4px 0; border-radius: 12px; cursor: pointer; background: white; border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; }
         .craft-item:hover { background: #eef5fa; }
         .craft-item.active { background: #e1f0f8; border-left: 4px solid #2c7da0; }
-        .action-btn { background: transparent; border: none; cursor: pointer; padding: 3px 8px; border-radius: 16px; }
+        .craft-title { font-weight: 600; }
+        .craft-customer { font-size: 0.7rem; color: #5e7e97; }
+        .action-btn { background: transparent; border: none; cursor: pointer; padding: 4px 8px; border-radius: 16px; font-size: 0.8rem; }
+        .action-btn:hover { background: #e0e0e0; }
         .empty-state { text-align: center; padding: 30px; color: #8aaec0; font-size: 0.8rem; }
         .report-box { background: #f9fbfe; border-radius: 20px; padding: 18px; margin-bottom: 20px; border: 1px solid #e2edf5; }
         .report-title { font-size: 1rem; font-weight: 700; color: #1f6e8c; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #cbdde9; }
@@ -53,12 +57,23 @@
         .total-row { margin-top: 10px; padding-top: 8px; font-weight: 700; border-top: 2px solid #cbdde9; }
         .loading { text-align: center; padding: 40px; color: #1f6e8c; }
         .price-total { background: #e8f5e9; font-weight: 700; color: #2e7d32; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal-container { background: white; width: 90%; max-width: 700px; max-height: 85vh; border-radius: 24px; overflow-y: auto; padding: 24px; }
+        .modal-container h3 { margin-bottom: 16px; }
+        .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .edit-field { display: flex; flex-direction: column; gap: 4px; }
+        .edit-field label { font-size: 0.7rem; font-weight: 600; color: #5e7e97; }
+        .edit-field input { border: 1px solid #cbdbe6; border-radius: 8px; padding: 6px 8px; font-size: 0.8rem; }
+        .full-width { grid-column: span 2; }
+        .material-tag { background: #eef3fc; border-radius: 20px; padding: 4px 10px; display: inline-block; margin: 2px; font-size: 0.75rem; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
         @media (max-width: 780px) {
             .craft-layout { flex-direction: column; }
-            .craft-list { width: 100%; border-right: none; }
+            .craft-list { width: 100%; border-right: none; max-height: 300px; }
             .craft-detail { padding-left: 0; }
-            .form-row { flex-direction: column; }
-            .form-field input { width: 100%; }
+            .edit-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
         }
     </style>
 </head>
@@ -84,19 +99,21 @@
     <div class="main-content">
         <div id="loadingMsg" class="loading">⏳ 正在加载...</div>
         
+        <!-- 工艺参数 -->
         <div id="craftPanel" style="display:none;">
             <div class="craft-layout">
                 <div class="craft-list">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
                         <span>📋 工艺单列表</span>
-                        <button id="addCraftBtn" class="btn-primary" style="padding:3px 12px;">+ 新增</button>
+                        <button id="addCraftBtn" class="btn-primary btn-sm">+ 新增</button>
                     </div>
                     <div id="craftList"></div>
                 </div>
-                <div class="craft-detail" id="craftDetail"><div class="empty-state">请选择工艺</div></div>
+                <div class="craft-detail" id="craftDetail"><div class="empty-state">请选择或新增工艺记录</div></div>
             </div>
         </div>
 
+        <!-- 入仓记录 -->
         <div id="inPanel" style="display:none;">
             <div class="add-form">
                 <h4>➕ 添加入仓</h4>
@@ -115,6 +132,7 @@
             <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div>
         </div>
 
+        <!-- 出仓记录 -->
         <div id="outPanel" style="display:none;">
             <div class="add-form">
                 <h4>📤 添加出仓</h4>
@@ -136,6 +154,7 @@
             <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
         </div>
 
+        <!-- 年度报表 -->
         <div id="statsPanel" style="display:none;">
             <div class="filter-bar">
                 <div class="form-field"><label>📅 年份</label><input type="number" id="statsYear" value="2024"></div>
@@ -145,6 +164,7 @@
             <div id="reportContainer"><div class="empty-state">请选择年份并点击统计</div></div>
         </div>
 
+        <!-- 打印标签 -->
         <div id="printPanel" style="display:none;">
             <div class="add-form">
                 <h4>🖨️ 成品标签打印（净重自动计算）</h4>
@@ -164,6 +184,48 @@
                 </div>
             </div>
             <div class="stats-row"><div class="stat-card"><h3>📊 今日已打印</h3><div class="number" id="todayPrintCount">0</div></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑工艺模态框 -->
+<div id="editCraftModal" class="modal-overlay">
+    <div class="modal-container">
+        <h3>✏️ 编辑工艺参数</h3>
+        <div class="edit-grid">
+            <div class="edit-field full-width"><label>📌 标题</label><input type="text" id="editTitle"></div>
+            <div class="edit-field"><label>👤 客户</label><input type="text" id="editCustomer"></div>
+            <div class="edit-field"><label>📅 日期</label><input type="date" id="editDate"></div>
+            <div class="edit-field full-width"><hr><strong>🌀 卷曲（单）</strong></div>
+            <div class="edit-field"><label>A</label><input type="text" id="editCurlSingleA"></div>
+            <div class="edit-field"><label>B</label><input type="text" id="editCurlSingleB"></div>
+            <div class="edit-field"><label>C</label><input type="text" id="editCurlSingleC"></div>
+            <div class="edit-field"><label>D</label><input type="text" id="editCurlSingleD"></div>
+            <div class="edit-field"><label>附加</label><input type="text" id="editCurlSingleExtra"></div>
+            <div class="edit-field full-width"><hr><strong>🌀 卷曲（双）</strong></div>
+            <div class="edit-field"><label>A</label><input type="text" id="editCurlDoubleA"></div>
+            <div class="edit-field"><label>B</label><input type="text" id="editCurlDoubleB"></div>
+            <div class="edit-field"><label>C</label><input type="text" id="editCurlDoubleC"></div>
+            <div class="edit-field"><label>D</label><input type="text" id="editCurlDoubleD"></div>
+            <div class="edit-field"><label>附加</label><input type="text" id="editCurlDoubleExtra"></div>
+            <div class="edit-field full-width"><hr><strong>⚙️ 牵伸</strong></div>
+            <div class="edit-field"><label>A</label><input type="text" id="editDraftA"></div>
+            <div class="edit-field"><label>B</label><input type="text" id="editDraftB"></div>
+            <div class="edit-field"><label>C</label><input type="text" id="editDraftC"></div>
+            <div class="edit-field"><label>D</label><input type="text" id="editDraftD"></div>
+            <div class="edit-field"><label>附加</label><input type="text" id="editDraftExtra"></div>
+            <div class="edit-field full-width"><hr><strong>📥 喂入</strong></div>
+            <div class="edit-field"><label>A</label><input type="text" id="editFeedA"></div>
+            <div class="edit-field"><label>B</label><input type="text" id="editFeedB"></div>
+            <div class="edit-field"><label>C</label><input type="text" id="editFeedC"></div>
+            <div class="edit-field"><label>D</label><input type="text" id="editFeedD"></div>
+            <div class="edit-field"><label>附加</label><input type="text" id="editFeedExtra"></div>
+            <div class="edit-field full-width"><hr><strong>🧬 原料（用逗号分隔）</strong></div>
+            <div class="edit-field full-width"><input type="text" id="editMaterials" placeholder="原料1, 原料2, 原料3"></div>
+        </div>
+        <div class="modal-buttons">
+            <button class="btn-outline" id="closeModalBtn">取消</button>
+            <button class="btn-primary" id="saveCraftEditBtn">保存</button>
         </div>
     </div>
 </div>
@@ -222,28 +284,200 @@
         async function saveOut(r) { await supabase.from('out_records').upsert(r); }
         async function deleteOut(id) { await supabase.from('out_records').delete().eq('id', id); }
 
-        function renderCraftList() {
-            let html = craftRecords.map(c => `<div class="craft-item ${currentCraftId===c.id?'active':''}" data-id="${c.id}"><div><span>📄 ${c.title}</span><span style="float:right"><button class="edit-craft" data-id="${c.id}">✏️</button><button class="del-craft" data-id="${c.id}">🗑️</button></span></div><div style="font-size:0.7rem">${c.customer}</div></div>`).join('');
-            document.getElementById('craftList').innerHTML = html || '<div class="empty-state">暂无</div>';
-            document.querySelectorAll('.craft-item').forEach(el => el.addEventListener('click', (e) => { if(!e.target.classList.contains('edit-craft') && !e.target.classList.contains('del-craft')) selectCraft(el.dataset.id); }));
-            document.querySelectorAll('.edit-craft').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); editCraft(btn.dataset.id); }));
-            document.querySelectorAll('.del-craft').forEach(btn => btn.addEventListener('click', async (e) => { e.stopPropagation(); if(confirm('删除工艺？')) { await deleteCraft(btn.dataset.id); craftRecords = craftRecords.filter(c=>c.id!==btn.dataset.id); if(currentCraftId===btn.dataset.id) currentCraftId=craftRecords[0]?.id||null; renderCraftList(); if(currentCraftId) renderCraftDetail(craftRecords.find(c=>c.id===currentCraftId)); else document.getElementById('craftDetail').innerHTML='<div class="empty-state">请选择工艺</div>'; } }));
+        // 打开编辑模态框
+        function openEditModal(craftId) {
+            let craft = craftRecords.find(c => c.id === craftId);
+            if (!craft) return;
+            document.getElementById('editTitle').value = craft.title;
+            document.getElementById('editCustomer').value = craft.customer || '';
+            document.getElementById('editDate').value = craft.date || '';
+            document.getElementById('editCurlSingleA').value = craft.curlSingle.values[0] || '';
+            document.getElementById('editCurlSingleB').value = craft.curlSingle.values[1] || '';
+            document.getElementById('editCurlSingleC').value = craft.curlSingle.values[2] || '';
+            document.getElementById('editCurlSingleD').value = craft.curlSingle.values[3] || '';
+            document.getElementById('editCurlSingleExtra').value = craft.curlSingle.extra || '';
+            document.getElementById('editCurlDoubleA').value = craft.curlDouble.values[0] || '';
+            document.getElementById('editCurlDoubleB').value = craft.curlDouble.values[1] || '';
+            document.getElementById('editCurlDoubleC').value = craft.curlDouble.values[2] || '';
+            document.getElementById('editCurlDoubleD').value = craft.curlDouble.values[3] || '';
+            document.getElementById('editCurlDoubleExtra').value = craft.curlDouble.extra || '';
+            document.getElementById('editDraftA').value = craft.draft.values[0] || '';
+            document.getElementById('editDraftB').value = craft.draft.values[1] || '';
+            document.getElementById('editDraftC').value = craft.draft.values[2] || '';
+            document.getElementById('editDraftD').value = craft.draft.values[3] || '';
+            document.getElementById('editDraftExtra').value = craft.draft.extra || '';
+            document.getElementById('editFeedA').value = craft.feed.values[0] || '';
+            document.getElementById('editFeedB').value = craft.feed.values[1] || '';
+            document.getElementById('editFeedC').value = craft.feed.values[2] || '';
+            document.getElementById('editFeedD').value = craft.feed.values[3] || '';
+            document.getElementById('editFeedExtra').value = craft.feed.extra || '';
+            document.getElementById('editMaterials').value = (craft.materials || []).join(', ');
+            currentCraftId = craftId;
+            document.getElementById('editCraftModal').classList.add('active');
         }
-        function selectCraft(id) { currentCraftId=id; renderCraftDetail(craftRecords.find(c=>c.id===id)); renderCraftList(); }
-        function renderCraftDetail(c) { if(!c) return; document.getElementById('craftDetail').innerHTML = `<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${c.title}</div><div>👤 ${c.customer} 📅 ${c.date}</div></div><table class="excel-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead><tbody><tr><td class="row-label">🌀卷曲单</td><td>${c.curlSingle.values[0]}</td><td>${c.curlSingle.values[1]}</td><td>${c.curlSingle.values[2]}</td><td>${c.curlSingle.values[3]}</td><td>${c.curlSingle.extra}</td></tr>
-                <tr><td class="row-label">🌀卷曲双</td><td>${c.curlDouble.values[0]}</td><td>${c.curlDouble.values[1]}</td><td>${c.curlDouble.values[2]}</td><td>${c.curlDouble.values[3]}</td><td>${c.curlDouble.extra}</td></tr>
-                <tr><td class="row-label">⚙️牵伸</td><td>${c.draft.values[0]}</td><td>${c.draft.values[1]}</td><td>${c.draft.values[2]}</td><td>${c.draft.values[3]}</td><td>${c.draft.extra}</td></tr>
-                <tr><td class="row-label">📥喂入</td><td>${c.feed.values[0]}</td><td>${c.feed.values[1]}</td><td>${c.feed.values[2]}</td><td>${c.feed.values[3]}</td><td>${c.feed.extra}</td></tr>
-            </tbody></table><div><strong>原料：</strong> ${c.materials.map(m=>`<span style="background:#f0f0f0;padding:2px 8px;margin:2px;border-radius:20px">${m}</span>`).join('')}</div>`; }
-        async function editCraft(id) { let c = craftRecords.find(c=>c.id===id); if(c){ let t=prompt("标题",c.title); if(t) c.title=t; let cu=prompt("客户",c.customer); if(cu!==null) c.customer=cu; await saveCraft(c); renderCraftList(); if(currentCraftId===id) renderCraftDetail(c); } }
-        document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("新工艺标题"); if(title) { let newCraft = { id: Date.now().toString(), title, customer: "", date: new Date().toISOString().slice(0,10), materials: [], curlSingle: {values:["","","",""],extra:""}, curlDouble: {values:["","","",""],extra:""}, draft: {values:["","","",""],extra:""}, feed: {values:["","","",""],extra:""} }; craftRecords.unshift(newCraft); await saveCraft(newCraft); renderCraftList(); selectCraft(newCraft.id); } };
+
+        // 保存编辑
+        async function saveCraftEdit() {
+            let craft = craftRecords.find(c => c.id === currentCraftId);
+            if (!craft) return;
+            craft.title = document.getElementById('editTitle').value;
+            craft.customer = document.getElementById('editCustomer').value;
+            craft.date = document.getElementById('editDate').value;
+            craft.curlSingle = {
+                values: [
+                    document.getElementById('editCurlSingleA').value,
+                    document.getElementById('editCurlSingleB').value,
+                    document.getElementById('editCurlSingleC').value,
+                    document.getElementById('editCurlSingleD').value
+                ],
+                extra: document.getElementById('editCurlSingleExtra').value
+            };
+            craft.curlDouble = {
+                values: [
+                    document.getElementById('editCurlDoubleA').value,
+                    document.getElementById('editCurlDoubleB').value,
+                    document.getElementById('editCurlDoubleC').value,
+                    document.getElementById('editCurlDoubleD').value
+                ],
+                extra: document.getElementById('editCurlDoubleExtra').value
+            };
+            craft.draft = {
+                values: [
+                    document.getElementById('editDraftA').value,
+                    document.getElementById('editDraftB').value,
+                    document.getElementById('editDraftC').value,
+                    document.getElementById('editDraftD').value
+                ],
+                extra: document.getElementById('editDraftExtra').value
+            };
+            craft.feed = {
+                values: [
+                    document.getElementById('editFeedA').value,
+                    document.getElementById('editFeedB').value,
+                    document.getElementById('editFeedC').value,
+                    document.getElementById('editFeedD').value
+                ],
+                extra: document.getElementById('editFeedExtra').value
+            };
+            craft.materials = document.getElementById('editMaterials').value.split(',').map(s => s.trim()).filter(s => s);
+            await saveCraft(craft);
+            renderCraftList();
+            renderCraftDetail(craft);
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('editCraftModal').classList.remove('active');
+        }
+
+        function renderCraftList() {
+            let container = document.getElementById('craftList');
+            if (craftRecords.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无工艺记录</div>';
+                return;
+            }
+            container.innerHTML = craftRecords.map(c => `
+                <div class="craft-item ${currentCraftId === c.id ? 'active' : ''}" data-id="${c.id}">
+                    <div style="flex:1">
+                        <div class="craft-title">📄 ${escapeHtml(c.title)}</div>
+                        <div class="craft-customer">${escapeHtml(c.customer)}</div>
+                    </div>
+                    <div>
+                        <button class="action-btn edit-craft" data-id="${c.id}" title="编辑">✏️</button>
+                        <button class="action-btn del-craft" data-id="${c.id}" title="删除">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.craft-item').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('edit-craft') || e.target.classList.contains('del-craft')) return;
+                    selectCraft(el.dataset.id);
+                });
+            });
+            document.querySelectorAll('.edit-craft').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openEditModal(btn.dataset.id);
+                });
+            });
+            document.querySelectorAll('.del-craft').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    if (confirm('确定删除该工艺记录吗？')) {
+                        await deleteCraft(btn.dataset.id);
+                        craftRecords = craftRecords.filter(c => c.id !== btn.dataset.id);
+                        if (currentCraftId === btn.dataset.id) {
+                            currentCraftId = craftRecords[0]?.id || null;
+                        }
+                        renderCraftList();
+                        if (currentCraftId) {
+                            renderCraftDetail(craftRecords.find(c => c.id === currentCraftId));
+                        } else {
+                            document.getElementById('craftDetail').innerHTML = '<div class="empty-state">请选择或新增工艺记录</div>';
+                        }
+                    }
+                });
+            });
+        }
+
+        function selectCraft(id) {
+            currentCraftId = id;
+            let craft = craftRecords.find(c => c.id === id);
+            if (craft) renderCraftDetail(craft);
+            renderCraftList();
+        }
+
+        function renderCraftDetail(craft) {
+            if (!craft) return;
+            let html = `
+                <div style="border-left:6px solid #2c7da0; padding-left:15px; margin-bottom:20px;">
+                    <div style="font-size:1.5rem; font-weight:700;">${escapeHtml(craft.title)}</div>
+                    <div style="font-size:0.8rem; color:#5e7e97;">👤 ${escapeHtml(craft.customer)} &nbsp; 📅 ${craft.date || ''}</div>
+                </div>
+                <table class="excel-table">
+                    <thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead>
+                    <tbody>
+                        <tr><td class="row-label">🌀 卷曲(单)</td><td>${craft.curlSingle.values[0]}</td><td>${craft.curlSingle.values[1]}</td><td>${craft.curlSingle.values[2]}</td><td>${craft.curlSingle.values[3]}</td><td>${escapeHtml(craft.curlSingle.extra)}</td></tr>
+                        <tr><td class="row-label">🌀 卷曲(双)</td><td>${craft.curlDouble.values[0]}</td><td>${craft.curlDouble.values[1]}</td><td>${craft.curlDouble.values[2]}</td><td>${craft.curlDouble.values[3]}</td><td>${escapeHtml(craft.curlDouble.extra)}</td></tr>
+                        <tr><td class="row-label">⚙️ 牵伸</td><td>${craft.draft.values[0]}</td><td>${craft.draft.values[1]}</td><td>${craft.draft.values[2]}</td><td>${craft.draft.values[3]}</td><td class="extra-col">${escapeHtml(craft.draft.extra)}</td></tr>
+                        <tr><td class="row-label">📥 喂入</td><td>${craft.feed.values[0]}</td><td>${craft.feed.values[1]}</td><td>${craft.feed.values[2]}</td><td>${craft.feed.values[3]}</td><td class="extra-col">${escapeHtml(craft.feed.extra)}</td></tr>
+                    </tbody>
+                </table>
+                <div style="background:#f7fafc; padding:12px; border-radius:16px; margin-top:15px;">
+                    <strong>🧬 原料组成：</strong> ${craft.materials.map(m => `<span style="background:white; padding:2px 10px; border-radius:20px; margin:3px; display:inline-block;">${escapeHtml(m)}</span>`).join('')}
+                </div>
+            `;
+            document.getElementById('craftDetail').innerHTML = html;
+        }
+
+        // 新增工艺
+        document.getElementById('addCraftBtn').onclick = async () => {
+            let title = prompt("请输入工艺标题 (例: 10570/39)");
+            if (!title) return;
+            let newCraft = {
+                id: Date.now().toString(),
+                title: title,
+                customer: "",
+                date: new Date().toISOString().slice(0,10),
+                materials: [],
+                curlSingle: { values: ["","","",""], extra: "" },
+                curlDouble: { values: ["","","",""], extra: "" },
+                draft: { values: ["","","",""], extra: "" },
+                feed: { values: ["","","",""], extra: "" }
+            };
+            craftRecords.unshift(newCraft);
+            await saveCraft(newCraft);
+            renderCraftList();
+            selectCraft(newCraft.id);
+        };
 
         function renderInOut() {
             let kw = document.getElementById('globalSearch').value.toLowerCase();
             let inData = kw ? warehouseIn.filter(i=>i.customer?.toLowerCase().includes(kw)||i.model?.toLowerCase().includes(kw)) : warehouseIn;
             let outData = kw ? warehouseOut.filter(i=>i.customer?.toLowerCase().includes(kw)||i.model?.toLowerCase().includes(kw)) : warehouseOut;
-            document.getElementById('inTableBody').innerHTML = inData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="5">暂无</td></tr>';
-            document.getElementById('outTableBody').innerHTML = outData.map(i => `<tr><td>${i.customer}</td><td>${i.model}</td><td>${i.weight}</td><td>${i.price || 0}</td><td class="price-total">${((i.weight||0)*(i.price||0)).toFixed(2)}</td><td>${i.date}</td><td><button class="action-btn" onclick="delOut('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="7">暂无</td></tr>';
+            document.getElementById('inTableBody').innerHTML = inData.map(i => `<tr><td>${escapeHtml(i.customer)}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="5" class="empty-state">暂无入仓记录</td></tr>';
+            document.getElementById('outTableBody').innerHTML = outData.map(i => `<tr><td>${escapeHtml(i.customer)}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.price || 0}</td><td class="price-total">${((i.weight||0)*(i.price||0)).toFixed(2)}</td><td>${i.date}</td><td><button class="action-btn" onclick="delOut('${i.id}')">🗑️</button></td></tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无出仓记录</td></tr>';
             let inW = warehouseIn.reduce((s,i)=>s+(+i.weight||0),0);
             let outW = warehouseOut.reduce((s,i)=>s+(+i.weight||0),0);
             let outA = warehouseOut.reduce((s,i)=>s+((+i.weight||0)*(+i.price||0)),0);
@@ -253,6 +487,7 @@
             document.getElementById('outTotalAmount').innerText = outA.toFixed(2);
             document.getElementById('outTotalCount').innerText = warehouseOut.length;
         }
+
         window.delIn = async (id) => { if(confirm('删除？')) { await deleteIn(id); warehouseIn = warehouseIn.filter(i=>i.id!==id); renderInOut(); } };
         window.delOut = async (id) => { if(confirm('删除？')) { await deleteOut(id); warehouseOut = warehouseOut.filter(i=>i.id!==id); renderInOut(); } };
         
@@ -325,6 +560,11 @@
         document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
         document.getElementById('globalSearchBtn').onclick = () => { if(currentTab==='craft') renderCraftList(); else renderInOut(); };
         document.getElementById('globalSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('globalSearchBtn').click(); });
+        document.getElementById('closeModalBtn').onclick = closeModal;
+        document.getElementById('saveCraftEditBtn').onclick = saveCraftEdit;
+        window.onclick = (e) => { if(e.target === document.getElementById('editCraftModal')) closeModal(); };
+        
+        function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
         
         init();
     })();
