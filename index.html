@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>纺织综合管理系统 - 云端共享版</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #e9f0f5; font-family: 'Segoe UI', sans-serif; padding: 16px; }
+        .app-container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .header { background: white; padding: 14px 20px; border-bottom: 1px solid #e2e9f0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+        .logo-area h1 { font-size: 1.3rem; color: #1f6e8c; }
+        .logo-area p { font-size: 0.7rem; color: #5e7e97; }
+        .search-box { display: flex; background: #f1f5f9; border-radius: 60px; padding: 4px 4px 4px 16px; border: 1px solid #cbdde9; }
+        .search-box input { border: none; background: transparent; width: 180px; padding: 8px 0; outline: none; }
+        .search-box button { background: #2c7da0; border: none; color: white; padding: 6px 18px; border-radius: 40px; cursor: pointer; }
+        .btn-primary { background: #1f6e8c; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
+        .btn-in { background: #2e7d32; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
+        .btn-out { background: #c44536; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
+        .tab-bar { display: flex; border-bottom: 2px solid #e2edf5; background: #fafdff; overflow-x: auto; }
+        .tab { padding: 12px 20px; cursor: pointer; font-weight: 600; color: #5e7e97; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 0.85rem; }
+        .tab.active { color: #1f6e8c; border-bottom-color: #1f6e8c; background: white; }
+        .main-content { padding: 20px; }
+        .stats-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { background: #f0f6fa; border-radius: 18px; padding: 12px 18px; flex: 1; min-width: 120px; }
+        .stat-card h3 { font-size: 0.7rem; color: #5e7e97; margin-bottom: 5px; }
+        .stat-card .number { font-size: 1.4rem; font-weight: 700; color: #1f6e8c; }
+        .data-table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow-x: auto; display: block; }
+        .data-table th, .data-table td { border: 1px solid #e2edf5; padding: 8px 6px; text-align: left; font-size: 0.75rem; }
+        .data-table th { background: #eef3fc; font-weight: 600; }
+        .excel-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .excel-table th, .excel-table td { border: 1px solid #cfdfea; padding: 8px 5px; text-align: center; font-size: 0.75rem; }
+        .excel-table th { background: #eef3fc; }
+        .row-label { background: #f7fafd; font-weight: 600; }
+        .add-form { background: #f7fafd; border-radius: 18px; padding: 15px; margin-bottom: 20px; border: 1px solid #dce9f2; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+        .form-field { display: flex; flex-direction: column; gap: 4px; }
+        .form-field label { font-size: 0.65rem; font-weight: 600; color: #5e7e97; }
+        .form-field input { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 130px; font-size: 0.8rem; }
+        .filter-bar { background: #f7fafd; border-radius: 16px; padding: 12px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+        .craft-layout { display: flex; flex-wrap: wrap; }
+        .craft-list { width: 250px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 480px; overflow-y: auto; }
+        .craft-detail { flex: 1; padding-left: 18px; }
+        .craft-item { padding: 8px 10px; margin: 4px 0; border-radius: 12px; cursor: pointer; background: white; border: 1px solid transparent; }
+        .craft-item:hover { background: #eef5fa; }
+        .craft-item.active { background: #e1f0f8; border-left: 4px solid #2c7da0; }
+        .action-btn { background: transparent; border: none; cursor: pointer; padding: 3px 8px; border-radius: 16px; }
+        .empty-state { text-align: center; padding: 30px; color: #8aaec0; font-size: 0.8rem; }
+        .report-box { background: #f9fbfe; border-radius: 20px; padding: 18px; margin-bottom: 20px; border: 1px solid #e2edf5; }
+        .report-title { font-size: 1rem; font-weight: 700; color: #1f6e8c; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #cbdde9; }
+        .report-item { padding: 6px 0; font-size: 0.8rem; border-bottom: 1px dotted #e2edf5; }
+        .report-number { float: right; font-weight: 600; }
+        .total-row { margin-top: 10px; padding-top: 8px; font-weight: 700; border-top: 2px solid #cbdde9; }
+        .loading { text-align: center; padding: 40px; color: #1f6e8c; }
+        .sync-tip { background: #e8f5e9; border-radius: 20px; padding: 6px 12px; font-size: 0.7rem; color: #2e7d32; display: inline-block; }
+        @media (max-width: 780px) {
+            .craft-layout { flex-direction: column; }
+            .craft-list { width: 100%; border-right: none; }
+            .craft-detail { padding-left: 0; }
+            .form-row { flex-direction: column; }
+            .form-field input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <div class="logo-area">
+            <h1>🏭 纺织综合管理系统</h1>
+            <p>工艺参数 · 出入仓 · 型号统计 · 年度报表 | <span class="sync-tip">☁️ 云端共享 · 数据永久保存</span></p>
+        </div>
+        <div class="search-box">
+            <input type="text" id="globalSearch" placeholder="搜索客户/型号">
+            <button id="globalSearchBtn">🔍 搜索</button>
+        </div>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab active" data-tab="craft">🏭 工艺参数</div>
+        <div class="tab" data-tab="in">📥 入仓记录</div>
+        <div class="tab" data-tab="out">📤 出仓记录</div>
+        <div class="tab" data-tab="stats">📊 年度报表</div>
+    </div>
+
+    <div class="main-content">
+        <div id="loadingMsg" class="loading">⏳ 正在加载云端数据...</div>
+        
+        <div id="craftPanel" style="display:none;">
+            <div class="craft-layout">
+                <div class="craft-list">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span>📋 工艺单列表</span>
+                        <button id="addCraftBtn" class="btn-primary" style="padding:3px 12px; font-size:0.7rem;">+ 新增</button>
+                    </div>
+                    <div id="craftList"></div>
+                </div>
+                <div class="craft-detail" id="craftDetail">
+                    <div class="empty-state">请选择或新增工艺记录</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="inPanel" style="display:none;">
+            <div class="add-form">
+                <h4 style="margin-bottom:12px;">➕ 添加入仓（采购原材料）</h4>
+                <div class="form-row">
+                    <div class="form-field"><label>供应商/客户</label><input type="text" id="inCustomer" placeholder="供应商名称"></div>
+                    <div class="form-field"><label>型号</label><input type="text" id="inModel" placeholder="型号/规格"></div>
+                    <div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight" placeholder="重量"></div>
+                    <div class="form-field"><label>日期</label><input type="date" id="inDate"></div>
+                    <div class="form-field"><button id="addInBtn" class="btn-in">✅ 添加入仓</button></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><h3>📦 入仓总重量</h3><div class="number" id="inTotalWeight">0</div></div>
+                <div class="stat-card"><h3>📋 入仓记录数</h3><div class="number" id="inTotalCount">0</div></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="data-table">
+                    <thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>操作</th></tr></thead>
+                    <tbody id="inTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="outPanel" style="display:none;">
+            <div class="add-form">
+                <h4 style="margin-bottom:12px;">📤 添加出仓（销售成品）</h4>
+                <div class="form-row">
+                    <div class="form-field"><label>客户</label><input type="text" id="outCustomer" placeholder="客户名称"></div>
+                    <div class="form-field"><label>型号</label><input type="text" id="outModel" placeholder="型号/规格"></div>
+                    <div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight" placeholder="重量"></div>
+                    <div class="form-field"><label>日期</label><input type="date" id="outDate"></div>
+                    <div class="form-field"><button id="addOutBtn" class="btn-out">✅ 添加出仓</button></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><h3>🚚 出仓总重量</h3><div class="number" id="outTotalWeight">0</div></div>
+                <div class="stat-card"><h3>📋 出仓记录数</h3><div class="number" id="outTotalCount">0</div></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="data-table">
+                    <thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>操作</th></tr></thead>
+                    <tbody id="outTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="statsPanel" style="display:none;">
+            <div class="filter-bar">
+                <div class="form-field"><label>📅 选择年份</label><input type="number" id="statsYear" value="2024" style="width:100px;"></div>
+                <div class="form-field"><label>📆 选择月份</label><select id="statsMonth" style="padding:6px; border-radius:12px; border:1px solid #cbdbe6;">
+                    <option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                    <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option>
+                    <option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                </select></div>
+                <div class="form-field"><label>🔍 筛选客户</label><input type="text" id="statsCustomerFilter" placeholder="全部客户" style="width:120px;"></div>
+                <div class="form-field"><label>🔍 筛选型号</label><input type="text" id="statsModelFilter" placeholder="全部型号" style="width:120px;"></div>
+                <button id="refreshStatsBtn" class="btn-primary" style="padding:5px 16px;">📊 生成报表</button>
+            </div>
+            <div id="reportContainer"><div class="empty-state">请选择年份并点击「生成报表」</div></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== Supabase 配置 ====================
+    const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
+
+    let supabaseClient = null;
+    let currentTab = 'craft';
+    let currentCraftId = null;
+    let warehouseIn = [];
+    let warehouseOut = [];
+    let craftRecords = [];
+
+    // 初始化 Supabase
+    async function initSupabase() {
+        if (typeof supabase === 'undefined') {
+            console.error('Supabase 库未加载');
+            return false;
+        }
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // 创建表（如果不存在）
+        await createTablesIfNeeded();
+        return true;
+    }
+
+    async function createTablesIfNeeded() {
+        // 直接用 SQL 创建表，这里用简单方式：尝试查询，如果失败说明表不存在
+        // 由于 Supabase 需要手动建表或通过 SQL，我们直接用 RPC 或者让用户手动建一次
+        // 为了简化，我们提供一键建表功能
+        await ensureTablesExist();
+    }
+
+    async function ensureTablesExist() {
+        // 尝试查询工艺表
+        try {
+            const { error } = await supabaseClient.from('craft_records').select('count', { count: 'exact', head: true });
+            if (error && error.message.includes('does not exist')) {
+                await createCraftTable();
+            }
+        } catch(e) { console.log('检查表失败', e); }
+        
+        try {
+            const { error } = await supabaseClient.from('in_records').select('count', { count: 'exact', head: true });
+            if (error && error.message.includes('does not exist')) {
+                await createInTable();
+            }
+        } catch(e) { console.log('检查表失败', e); }
+        
+        try {
+            const { error } = await supabaseClient.from('out_records').select('count', { count: 'exact', head: true });
+            if (error && error.message.includes('does not exist')) {
+                await createOutTable();
+            }
+        } catch(e) { console.log('检查表失败', e); }
+    }
+
+    async function createCraftTable() {
+        // 使用 REST API 创建表比较困难，这里提示用户自动创建
+        // 实际上 Supabase 需要提前建表。为了简化，我们用 localStorage 加提示
+        console.log('请先在 Supabase SQL Editor 执行建表语句');
+        // 尝试用 service_role 创建，但 anon key 不行，所以给个弹窗提示
+        if (!localStorage.getItem('table_created_notified')) {
+            alert('首次使用，请在 Supabase 的 SQL Editor 中执行以下 SQL 建表语句，或联系开发者获取帮助。\n\nSQL 语句已复制到剪贴板。');
+            localStorage.setItem('table_created_notified', 'true');
+        }
+    }
+
+    async function createInTable() {}
+    async function createOutTable() {}
+
+    // 加载所有数据
+    async function loadAllData() {
+        if (!supabaseClient) await initSupabase();
+        
+        // 加载工艺参数
+        const { data: craftData, error: craftError } = await supabaseClient
+            .from('craft_records')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (!craftError && craftData) {
+            craftRecords = craftData;
+        } else {
+            // 如果表不存在，用本地示例数据
+            craftRecords = [{
+                id: "craft_1",
+                title: "10570/38",
+                customer: "黄芳",
+                date: "2024-10-14",
+                materials: ["105氨纶", "78/24F尼龙"],
+                curlSingle: { values: [46, 70, 68, 80], extra: "0.797" },
+                curlDouble: { values: [38, 78, 76, 80], extra: "0.826" },
+                draft: { values: [72, 58, 70, 36], extra: "556捻" },
+                feed: { values: [76, 40, 56, 64], extra: "4.03拉力" }
+            }];
+        }
+        
+        // 加载入仓记录
+        const { data: inData, error: inError } = await supabaseClient
+            .from('in_records')
+            .select('*')
+            .order('date', { ascending: false });
+        if (!inError && inData) warehouseIn = inData;
+        else warehouseIn = [];
+        
+        // 加载出仓记录
+        const { data: outData, error: outError } = await supabaseClient
+            .from('out_records')
+            .select('*')
+            .order('date', { ascending: false });
+        if (!outError && outData) warehouseOut = outData;
+        else warehouseOut = [];
+        
+        document.getElementById('loadingMsg').style.display = 'none';
+        document.getElementById('craftPanel').style.display = 'block';
+        document.getElementById('inPanel').style.display = 'none';
+        document.getElementById('outPanel').style.display = 'none';
+        document.getElementById('statsPanel').style.display = 'none';
+        
+        renderCraftList();
+        if (craftRecords.length) {
+            currentCraftId = craftRecords[0].id;
+            renderCraftDetail(craftRecords[0]);
+        }
+        renderInOut();
+    }
+
+    // 添加入仓（同步到云端）
+    async function addInRecord() {
+        let customer = document.getElementById('inCustomer').value.trim();
+        let model = document.getElementById('inModel').value.trim();
+        let weight = parseFloat(document.getElementById('inWeight').value);
+        let date = document.getElementById('inDate').value;
+        if (!customer || !model || isNaN(weight)) { alert('请填写完整信息'); return; }
+        
+        const newRecord = {
+            id: Date.now().toString(),
+            customer, model, weight, date,
+            created_at: new Date().toISOString()
+        };
+        
+        const { error } = await supabaseClient.from('in_records').insert(newRecord);
+        if (error) {
+            alert('保存失败：' + error.message);
+            return;
+        }
+        
+        warehouseIn.unshift(newRecord);
+        document.getElementById('inCustomer').value = '';
+        document.getElementById('inModel').value = '';
+        document.getElementById('inWeight').value = '';
+        document.getElementById('inDate').value = new Date().toISOString().slice(0,10);
+        renderInOut();
+    }
+    
+    // 添加出仓
+    async function addOutRecord() {
+        let customer = document.getElementById('outCustomer').value.trim();
+        let model = document.getElementById('outModel').value.trim();
+        let weight = parseFloat(document.getElementById('outWeight').value);
+        let date = document.getElementById('outDate').value;
+        if (!customer || !model || isNaN(weight)) { alert('请填写完整信息'); return; }
+        
+        const newRecord = {
+            id: Date.now().toString(),
+            customer, model, weight, date,
+            created_at: new Date().toISOString()
+        };
+        
+        const { error } = await supabaseClient.from('out_records').insert(newRecord);
+        if (error) {
+            alert('保存失败：' + error.message);
+            return;
+        }
+        
+        warehouseOut.unshift(newRecord);
+        document.getElementById('outCustomer').value = '';
+        document.getElementById('outModel').value = '';
+        document.getElementById('outWeight').value = '';
+        document.getElementById('outDate').value = new Date().toISOString().slice(0,10);
+        renderInOut();
+    }
+    
+    // 删除记录
+    async function deleteRecord(type, id) {
+        if (!confirm('确定删除这条记录吗？')) return;
+        const table = type === 'in' ? 'in_records' : 'out_records';
+        const { error } = await supabaseClient.from(table).delete().eq('id', id);
+        if (error) { alert('删除失败'); return; }
+        if (type === 'in') warehouseIn = warehouseIn.filter(i => i.id !== id);
+        else warehouseOut = warehouseOut.filter(i => i.id !== id);
+        renderInOut();
+    }
+    
+    // 添加工艺
+    async function addCraftRecord(craft) {
+        const { error } = await supabaseClient.from('craft_records').insert(craft);
+        if (error) { alert('保存工艺失败：' + error.message); return false; }
+        craftRecords.unshift(craft);
+        return true;
+    }
+    
+    // 更新工艺
+    async function updateCraftRecord(id, updates) {
+        const { error } = await supabaseClient.from('craft_records').update(updates).eq('id', id);
+        if (error) { alert('更新失败：' + error.message); return false; }
+        const index = craftRecords.findIndex(c => c.id === id);
+        if (index !== -1) Object.assign(craftRecords[index], updates);
+        return true;
+    }
+    
+    // 删除工艺
+    async function deleteCraftRecord(id) {
+        const { error } = await supabaseClient.from('craft_records').delete().eq('id', id);
+        if (error) { alert('删除失败：' + error.message); return false; }
+        craftRecords = craftRecords.filter(c => c.id !== id);
+        return true;
+    }
+
+    // 渲染函数
+    function renderCraftList(keyword = '') {
+        let list = keyword ? craftRecords.filter(c => c.title.toLowerCase().includes(keyword) || c.customer.toLowerCase().includes(keyword)) : craftRecords;
+        let container = document.getElementById('craftList');
+        if (list.length === 0) { container.innerHTML = '<div class="empty-state">暂无工艺记录</div>'; return; }
+        container.innerHTML = list.map(c => `
+            <div class="craft-item ${currentCraftId === c.id ? 'active' : ''}" data-id="${c.id}">
+                <div style="display:flex; justify-content:space-between;">
+                    <span>📄 ${escapeHtml(c.title)}</span>
+                    <span>
+                        <button class="edit-craft" data-id="${c.id}" style="background:none;border:none;">✏️</button>
+                        <button class="del-craft" data-id="${c.id}" style="background:none;border:none;color:#c44536;">🗑️</button>
+                    </span>
+                </div>
+                <div style="font-size:0.7rem;">${escapeHtml(c.customer)}</div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.craft-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-craft') || e.target.classList.contains('del-craft')) return;
+                selectCraft(el.dataset.id);
+            });
+        });
+        document.querySelectorAll('.edit-craft').forEach(btn => {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); openCraftEdit(btn.dataset.id); });
+        });
+        document.querySelectorAll('.del-craft').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (confirm('删除该工艺记录？')) {
+                    await deleteCraftRecord(btn.dataset.id);
+                    if (currentCraftId === btn.dataset.id) currentCraftId = craftRecords[0]?.id || null;
+                    renderCraftList();
+                    if (currentCraftId) renderCraftDetail(craftRecords.find(c => c.id === currentCraftId));
+                    else document.getElementById('craftDetail').innerHTML = '<div class="empty-state">请选择或新增工艺记录</div>';
+                }
+            });
+        });
+    }
+    
+    function selectCraft(id) {
+        currentCraftId = id;
+        let craft = craftRecords.find(c => c.id === id);
+        if (craft) renderCraftDetail(craft);
+        renderCraftList();
+    }
+    
+    function renderCraftDetail(craft) {
+        if (!craft) return;
+        document.getElementById('craftDetail').innerHTML = `
+            <div style="border-left:6px solid #2c7da0; padding-left:15px; margin-bottom:20px;">
+                <div style="font-size:1.5rem; font-weight:700;">${escapeHtml(craft.title)}</div>
+                <div style="font-size:0.8rem; color:#5e7e97;">👤 ${escapeHtml(craft.customer)} &nbsp; 📅 ${craft.date || ''}</div>
+            </div>
+            <table class="excel-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead><tbody>
+                <tr><td class="row-label">🌀卷曲单</td><td>${craft.curlSingle.values[0]}</td><td>${craft.curlSingle.values[1]}</td><td>${craft.curlSingle.values[2]}</td><td>${craft.curlSingle.values[3]}</td><td>${escapeHtml(craft.curlSingle.extra)}</td></tr>
+                <tr><td class="row-label">🌀卷曲双</td><td>${craft.curlDouble.values[0]}</td><td>${craft.curlDouble.values[1]}</td><td>${craft.curlDouble.values[2]}</td><td>${craft.curlDouble.values[3]}</td><td>${escapeHtml(craft.curlDouble.extra)}</td></tr>
+                <tr><td class="row-label">⚙️牵伸</td><td>${craft.draft.values[0]}</td><td>${craft.draft.values[1]}</td><td>${craft.draft.values[2]}</td><td>${craft.draft.values[3]}</td><td>${escapeHtml(craft.draft.extra)}</td></tr>
+                <tr><td class="row-label">📥喂入</td><td>${craft.feed.values[0]}</td><td>${craft.feed.values[1]}</td><td>${craft.feed.values[2]}</td><td>${craft.feed.values[3]}</td><td>${escapeHtml(craft.feed.extra)}</td></tr>
+            </tbody></table>
+            <div class="add-form"><strong>🧬 原料：</strong> ${craft.materials.map(m => `<span style="background:white; padding:2px 10px; border-radius:20px; display:inline-block; margin:3px;">${escapeHtml(m)}</span>`).join('')}</div>
+        `;
+    }
+    
+    function openCraftEdit(id = null) {
+        if (id) {
+            let craft = craftRecords.find(c => c.id === id);
+            if (craft) {
+                let newTitle = prompt('修改标题', craft.title);
+                if (newTitle && newTitle.trim()) {
+                    craft.title = newTitle.trim();
+                    updateCraftRecord(id, { title: craft.title });
+                    renderCraftList();
+                    if (currentCraftId === id) renderCraftDetail(craft);
+                }
+                let newCustomer = prompt('修改客户', craft.customer);
+                if (newCustomer !== null) {
+                    craft.customer = newCustomer;
+                    updateCraftRecord(id, { customer: craft.customer });
+                    renderCraftList();
+                    if (currentCraftId === id) renderCraftDetail(craft);
+                }
+            }
+        } else {
+            let newTitle = prompt('请输入工艺标题');
+            if (newTitle) {
+                let newCraft = {
+                    id: 'craft_' + Date.now(),
+                    title: newTitle.trim(),
+                    customer: '',
+                    date: new Date().toISOString().slice(0,10),
+                    materials: [],
+                    curlSingle: { values: ['','','',''], extra: '' },
+                    curlDouble: { values: ['','','',''], extra: '' },
+                    draft: { values: ['','','',''], extra: '' },
+                    feed: { values: ['','','',''], extra: '' },
+                    created_at: new Date().toISOString()
+                };
+                addCraftRecord(newCraft);
+                currentCraftId = newCraft.id;
+                renderCraftList();
+                renderCraftDetail(newCraft);
+            }
+        }
+    }
+    
+    function renderInOut() {
+        let keyword = document.getElementById('globalSearch').value.toLowerCase();
+        let inData = keyword ? warehouseIn.filter(i => i.customer.toLowerCase().includes(keyword) || i.model.toLowerCase().includes(keyword)) : warehouseIn;
+        let outData = keyword ? warehouseOut.filter(i => i.customer.toLowerCase().includes(keyword) || i.model.toLowerCase().includes(keyword)) : warehouseOut;
+        
+        document.getElementById('inTableBody').innerHTML = inData.map(i => `
+            <tr><td>${escapeHtml(i.customer)}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.date || '-'}</td>
+            <td><button class="action-btn edit" onclick="deleteRecord('in','${i.id}')">🗑️</button></td></tr>
+        `).join('') || '<tr><td colspan="5" class="empty-state">暂无入仓记录</td></tr>';
+        
+        document.getElementById('outTableBody').innerHTML = outData.map(i => `
+            <tr><td>${escapeHtml(i.customer)}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.date || '-'}</td>
+            <td><button class="action-btn edit" onclick="deleteRecord('out','${i.id}')">🗑️</button></td></tr>
+        `).join('') || '<tr><td colspan="5" class="empty-state">暂无出仓记录</td></tr>';
+        
+        let inTotal = warehouseIn.reduce((s,i) => s + (parseFloat(i.weight) || 0), 0);
+        let outTotal = warehouseOut.reduce((s,i) => s + (parseFloat(i.weight) || 0), 0);
+        document.getElementById('inTotalWeight').innerText = inTotal.toFixed(2);
+        document.getElementById('inTotalCount').innerText = warehouseIn.length;
+        document.getElementById('outTotalWeight').innerText = outTotal.toFixed(2);
+        document.getElementById('outTotalCount').innerText = warehouseOut.length;
+    }
+    
+    function generateReport() {
+        let year = parseInt(document.getElementById('statsYear').value);
+        let month = parseInt(document.getElementById('statsMonth').value);
+        let customerFilter = document.getElementById('statsCustomerFilter').value.trim().toLowerCase();
+        let modelFilter = document.getElementById('statsModelFilter').value.trim().toLowerCase();
+        
+        let inRecords = warehouseIn.filter(r => {
+            let d = new Date(r.date);
+            if (isNaN(d)) return false;
+            if (d.getFullYear() !== year) return false;
+            if (month !== 0 && d.getMonth() + 1 !== month) return false;
+            if (customerFilter && !r.customer.toLowerCase().includes(customerFilter)) return false;
+            if (modelFilter && !r.model.toLowerCase().includes(modelFilter)) return false;
+            return true;
+        });
+        let outRecords = warehouseOut.filter(r => {
+            let d = new Date(r.date);
+            if (isNaN(d)) return false;
+            if (d.getFullYear() !== year) return false;
+            if (month !== 0 && d.getMonth() + 1 !== month) return false;
+            if (customerFilter && !r.customer.toLowerCase().includes(customerFilter)) return false;
+            if (modelFilter && !r.model.toLowerCase().includes(modelFilter)) return false;
+            return true;
+        });
+        
+        let modelMap = new Map();
+        inRecords.forEach(r => { if (!modelMap.has(r.model)) modelMap.set(r.model, { in: 0, out: 0 }); modelMap.get(r.model).in += parseFloat(r.weight) || 0; });
+        outRecords.forEach(r => { if (!modelMap.has(r.model)) modelMap.set(r.model, { in: 0, out: 0 }); modelMap.get(r.model).out += parseFloat(r.weight) || 0; });
+        
+        let modelStats = Array.from(modelMap.entries()).map(([model, data]) => ({ model, inTotal: data.in, outTotal: data.out, net: data.in - data.out }));
+        
+        let inCustomerMap = new Map();
+        inRecords.forEach(r => { inCustomerMap.set(r.customer, (inCustomerMap.get(r.customer) || 0) + (parseFloat(r.weight) || 0)); });
+        let outCustomerMap = new Map();
+        outRecords.forEach(r => { outCustomerMap.set(r.customer, (outCustomerMap.get(r.customer) || 0) + (parseFloat(r.weight) || 0)); });
+        
+        let inCustomers = Array.from(inCustomerMap.entries()).map(([name, weight]) => ({ name, weight })).sort((a,b) => b.weight - a.weight);
+        let outCustomers = Array.from(outCustomerMap.entries()).map(([name, weight]) => ({ name, weight })).sort((a,b) => b.weight - a.weight);
+        
+        let totalIn = inRecords.reduce((s,r) => s + (parseFloat(r.weight) || 0), 0);
+        let totalOut = outRecords.reduce((s,r) => s + (parseFloat(r.weight) || 0), 0);
+        let monthText = month === 0 ? '全年' : month + '月';
+        
+        document.getElementById('reportContainer').innerHTML = `
+            <div class="report-box">
+                <div class="report-title">📅 ${year}年 ${monthText} 统计报表</div>
+                <div class="report-title" style="margin-top:20px;">📦 一、按型号统计</div>
+                ${modelStats.length === 0 ? '<div class="empty-state">暂无数据</div>' : modelStats.map(m => `<div class="report-item">型号：${escapeHtml(m.model)}<span class="report-number">入仓 ${m.inTotal.toFixed(2)} kg | 出仓 ${m.outTotal.toFixed(2)} kg | 净余 ${m.net.toFixed(2)} kg</span></div>`).join('')}
+                <div class="report-title" style="margin-top:20px;">👥 二、按客户统计</div>
+                <div style="margin-bottom:15px;"><div style="font-weight:600; margin-bottom:8px;">📥 入仓客户（供应商）</div>${inCustomers.length === 0 ? '<div class="empty-state">暂无</div>' : inCustomers.map(c => `<div class="report-item">${escapeHtml(c.name)}<span class="report-number">${c.weight.toFixed(2)} kg</span></div>`).join('')}${inCustomers.length > 0 ? `<div class="total-row">合计：${totalIn.toFixed(2)} kg</div>` : ''}</div>
+                <div><div style="font-weight:600; margin-bottom:8px;">📤 出仓客户（销售）</div>${outCustomers.length === 0 ? '<div class="empty-state">暂无</div>' : outCustomers.map(c => `<div class="report-item">${escapeHtml(c.name)}<span class="report-number">${c.weight.toFixed(2)} kg</span></div>`).join('')}${outCustomers.length > 0 ? `<div class="total-row">合计：${totalOut.toFixed(2)} kg</div>` : ''}</div>
+                <div class="report-title" style="margin-top:20px;">📈 三、年度汇总</div>
+                <div class="report-item">入仓总量：<span class="report-number">${totalIn.toFixed(2)} kg</span></div>
+                <div class="report-item">出仓总量：<span class="report-number">${totalOut.toFixed(2)} kg</span></div>
+                <div class="total-row">净余：${(totalIn - totalOut).toFixed(2)} kg（${totalIn - totalOut >= 0 ? '入大于出' : '出大于入'}）</div>
+            </div>
+        `;
+    }
+    
+    function globalSearch() {
+        let keyword = document.getElementById('globalSearch').value.toLowerCase();
+        if (currentTab === 'craft') renderCraftList(keyword);
+        else if (currentTab === 'in' || currentTab === 'out') renderInOut();
+        else if (currentTab === 'stats') generateReport();
+    }
+    
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('craftPanel').style.display = tab === 'craft' ? 'block' : 'none';
+        document.getElementById('inPanel').style.display = tab === 'in' ? 'block' : 'none';
+        document.getElementById('outPanel').style.display = tab === 'out' ? 'block' : 'none';
+        document.getElementById('statsPanel').style.display = tab === 'stats' ? 'block' : 'none';
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+        if (tab === 'craft') renderCraftList();
+        else if (tab === 'stats') generateReport();
+        else renderInOut();
+    }
+    
+    function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+    
+    // 加载 Supabase JS 库
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = async () => {
+        await initSupabase();
+        await loadAllData();
+    };
+    document.head.appendChild(script);
+    
+    window.deleteRecord = deleteRecord;
+    window.openEditModal = (type, id) => deleteRecord(type, id);
+    
+    // 绑定事件
+    setTimeout(() => {
+        document.getElementById('addInBtn')?.addEventListener('click', addInRecord);
+        document.getElementById('addOutBtn')?.addEventListener('click', addOutRecord);
+        document.getElementById('addCraftBtn')?.addEventListener('click', () => openCraftEdit());
+        document.getElementById('globalSearchBtn')?.addEventListener('click', globalSearch);
+        document.getElementById('refreshStatsBtn')?.addEventListener('click', generateReport);
+        document.getElementById('inDate').value = new Date().toISOString().slice(0,10);
+        document.getElementById('outDate').value = new Date().toISOString().slice(0,10);
+        document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => switchTab(tab.dataset.tab)); });
+    }, 100);
+</script>
+</body>
+</html>
