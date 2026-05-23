@@ -5,75 +5,399 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>纺织综合管理系统</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #e9f0f5; font-family: 'Segoe UI', sans-serif; padding: 16px; }
-        .app-container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-        .header { background: white; padding: 14px 20px; border-bottom: 1px solid #e2e9f0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
-        .logo-area h1 { font-size: 1.3rem; color: #1f6e8c; }
-        .logo-area p { font-size: 0.7rem; color: #5e7e97; }
-        .search-box { display: flex; background: #f1f5f9; border-radius: 60px; padding: 4px 4px 4px 16px; border: 1px solid #cbdde9; }
-        .search-box input { border: none; background: transparent; width: 180px; padding: 8px 0; outline: none; }
-        .search-box button { background: #2c7da0; border: none; color: white; padding: 6px 18px; border-radius: 40px; cursor: pointer; }
-        .btn-primary { background: #1f6e8c; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
-        .btn-in { background: #2e7d32; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
-        .btn-out { background: #c44536; color: white; border: none; padding: 6px 16px; border-radius: 30px; cursor: pointer; }
-        .btn-sm { padding: 4px 10px; font-size: 0.7rem; }
-        .tab-bar { display: flex; border-bottom: 2px solid #e2edf5; background: #fafdff; overflow-x: auto; }
-        .tab { padding: 12px 20px; cursor: pointer; font-weight: 600; color: #5e7e97; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 0.85rem; }
-        .tab.active { color: #1f6e8c; border-bottom-color: #1f6e8c; background: white; }
-        .main-content { padding: 20px; }
-        .stats-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .stat-card { background: #f0f6fa; border-radius: 18px; padding: 12px 18px; flex: 1; min-width: 120px; }
-        .stat-card h3 { font-size: 0.7rem; color: #5e7e97; margin-bottom: 5px; }
-        .stat-card .number { font-size: 1.4rem; font-weight: 700; color: #1f6e8c; }
-        .data-table { width: 100%; border-collapse: collapse; border-radius: 14px; overflow-x: auto; display: block; }
-        .data-table th, .data-table td { border: 1px solid #e2edf5; padding: 8px 6px; text-align: left; font-size: 0.75rem; }
-        .data-table th { background: #eef3fc; font-weight: 600; }
-        .excel-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .excel-table th, .excel-table td { border: 1px solid #cfdfea; padding: 8px 5px; text-align: center; font-size: 0.75rem; }
-        .excel-table th { background: #eef3fc; }
-        .row-label { background: #f7fafd; font-weight: 600; }
-        .add-form { background: #f7fafd; border-radius: 18px; padding: 15px; margin-bottom: 20px; border: 1px solid #dce9f2; }
-        .form-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
-        .form-field { display: flex; flex-direction: column; gap: 4px; }
-        .form-field label { font-size: 0.65rem; font-weight: 600; color: #5e7e97; }
-        .form-field input { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 130px; font-size: 0.8rem; }
-        .filter-bar { background: #f7fafd; border-radius: 16px; padding: 12px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
-        .craft-layout { display: flex; flex-wrap: wrap; }
-        .craft-list { width: 260px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 520px; overflow-y: auto; }
-        .craft-detail { flex: 1; padding-left: 20px; }
-        .craft-item { padding: 10px 12px; margin: 4px 0; border-radius: 12px; cursor: pointer; background: white; border: 1px solid transparent; display: flex; justify-content: space-between; align-items: center; }
-        .craft-item:hover { background: #eef5fa; }
-        .craft-item.active { background: #e1f0f8; border-left: 4px solid #2c7da0; }
-        .craft-title { font-weight: 600; }
-        .craft-customer { font-size: 0.7rem; color: #5e7e97; }
-        .action-btn { background: transparent; border: none; cursor: pointer; padding: 4px 8px; border-radius: 16px; font-size: 0.8rem; }
-        .action-btn:hover { background: #e0e0e0; }
-        .empty-state { text-align: center; padding: 30px; color: #8aaec0; font-size: 0.8rem; }
-        .report-box { background: #f9fbfe; border-radius: 20px; padding: 18px; margin-bottom: 20px; border: 1px solid #e2edf5; }
-        .report-title { font-size: 1rem; font-weight: 700; color: #1f6e8c; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #cbdde9; }
-        .report-item { padding: 6px 0; font-size: 0.8rem; border-bottom: 1px dotted #e2edf5; }
-        .report-number { float: right; font-weight: 600; }
-        .total-row { margin-top: 10px; padding-top: 8px; font-weight: 700; border-top: 2px solid #cbdde9; }
-        .loading { text-align: center; padding: 40px; color: #1f6e8c; }
-        .price-total { background: #e8f5e9; font-weight: 700; color: #2e7d32; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-overlay.active { display: flex; }
-        .modal-container { background: white; width: 90%; max-width: 700px; max-height: 85vh; border-radius: 24px; overflow-y: auto; padding: 24px; }
-        .modal-container h3 { margin-bottom: 16px; }
-        .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .edit-field { display: flex; flex-direction: column; gap: 4px; }
-        .edit-field label { font-size: 0.7rem; font-weight: 600; color: #5e7e97; }
-        .edit-field input { border: 1px solid #cbdbe6; border-radius: 8px; padding: 6px 8px; font-size: 0.8rem; }
-        .full-width { grid-column: span 2; }
-        .material-tag { background: #eef3fc; border-radius: 20px; padding: 4px 10px; display: inline-block; margin: 2px; font-size: 0.75rem; }
-        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #e9f0f5;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 16px;
+        }
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .header {
+            background: white;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e2e9f0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-area h1 {
+            font-size: 1.3rem;
+            color: #1f6e8c;
+        }
+        .logo-area p {
+            font-size: 0.7rem;
+            color: #5e7e97;
+        }
+        .search-box {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 60px;
+            padding: 4px 4px 4px 16px;
+            border: 1px solid #cbdde9;
+        }
+        .search-box input {
+            border: none;
+            background: transparent;
+            width: 180px;
+            padding: 8px 0;
+            outline: none;
+        }
+        .search-box button {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #1f6e8c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .btn-in {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .btn-out {
+            background: #c44536;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 0.7rem;
+        }
+        .tab-bar {
+            display: flex;
+            border-bottom: 2px solid #e2edf5;
+            background: #fafdff;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #5e7e97;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+        .tab.active {
+            color: #1f6e8c;
+            border-bottom-color: #1f6e8c;
+            background: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: #f0f6fa;
+            border-radius: 18px;
+            padding: 12px 18px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .stat-card h3 {
+            font-size: 0.7rem;
+            color: #5e7e97;
+            margin-bottom: 5px;
+        }
+        .stat-card .number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f6e8c;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 14px;
+            overflow-x: auto;
+            display: block;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2edf5;
+            padding: 8px 6px;
+            text-align: left;
+            font-size: 0.75rem;
+        }
+        .data-table th {
+            background: #eef3fc;
+            font-weight: 600;
+        }
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .excel-table th, .excel-table td {
+            border: 1px solid #cfdfea;
+            padding: 8px 5px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .excel-table th {
+            background: #eef3fc;
+        }
+        .row-label {
+            background: #f7fafd;
+            font-weight: 600;
+        }
+        .add-form {
+            background: #f7fafd;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #dce9f2;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .form-field label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #5e7e97;
+        }
+        .form-field input {
+            border: 1px solid #cbdbe6;
+            border-radius: 12px;
+            padding: 6px 10px;
+            width: 130px;
+            font-size: 0.8rem;
+        }
+        .form-field input[readonly] {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .filter-bar {
+            background: #f7fafd;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        .craft-layout {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .craft-list {
+            width: 260px;
+            background: #fafdff;
+            border-right: 1px solid #e2edf5;
+            padding: 10px;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        .craft-detail {
+            flex: 1;
+            padding-left: 20px;
+        }
+        .craft-item {
+            padding: 10px 12px;
+            margin: 4px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            background: white;
+            border: 1px solid transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .craft-item:hover {
+            background: #eef5fa;
+        }
+        .craft-item.active {
+            background: #e1f0f8;
+            border-left: 4px solid #2c7da0;
+        }
+        .craft-title {
+            font-weight: 600;
+        }
+        .craft-customer {
+            font-size: 0.7rem;
+            color: #5e7e97;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+        }
+        .action-btn:hover {
+            background: #e0e0e0;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #8aaec0;
+            font-size: 0.8rem;
+        }
+        .report-box {
+            background: #f9fbfe;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid #e2edf5;
+        }
+        .report-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1f6e8c;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #cbdde9;
+        }
+        .report-item {
+            padding: 6px 0;
+            font-size: 0.8rem;
+            border-bottom: 1px dotted #e2edf5;
+        }
+        .report-number {
+            float: right;
+            font-weight: 600;
+        }
+        .total-row {
+            margin-top: 10px;
+            padding-top: 8px;
+            font-weight: 700;
+            border-top: 2px solid #cbdde9;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #1f6e8c;
+        }
+        .price-total {
+            background: #e8f5e9;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-container {
+            background: white;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            border-radius: 24px;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        .modal-container h3 {
+            margin-bottom: 16px;
+        }
+        .edit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .edit-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .edit-field label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #5e7e97;
+        }
+        .edit-field input {
+            border: 1px solid #cbdbe6;
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-size: 0.8rem;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .material-tag {
+            background: #eef3fc;
+            border-radius: 20px;
+            padding: 4px 10px;
+            display: inline-block;
+            margin: 2px;
+            font-size: 0.75rem;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
         @media (max-width: 780px) {
-            .craft-layout { flex-direction: column; }
-            .craft-list { width: 100%; border-right: none; max-height: 300px; }
-            .craft-detail { padding-left: 0; }
-            .edit-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
+            .craft-layout {
+                flex-direction: column;
+            }
+            .craft-list {
+                width: 100%;
+                border-right: none;
+                max-height: 300px;
+            }
+            .craft-detail {
+                padding-left: 0;
+            }
+            .edit-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
         }
     </style>
 </head>
@@ -97,10 +421,8 @@
         <div class="tab" data-tab="print">🖨️ 打印标签</div>
     </div>
     <div class="main-content">
-        <div id="loadingMsg" class="loading">⏳ 正在加载...</div>
-        
         <!-- 工艺参数 -->
-        <div id="craftPanel" style="display:none;">
+        <div id="craftPanel">
             <div class="craft-layout">
                 <div class="craft-list">
                     <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
@@ -169,18 +491,17 @@
             <div class="add-form">
                 <h4>🖨️ 成品标签打印（净重自动计算）</h4>
                 <div class="form-row">
-                    <div class="form-field"><label>规格</label><input type="text" id="printSpec"></div>
-                    <div class="form-field"><label>包根色</label><input type="text" id="printColor"></div>
-                    <div class="form-field"><label>机号</label><input type="text" id="printMachine"></div>
-                    <div class="form-field"><label>数量(个)</label><input type="number" id="printQty"></div>
-                    <div class="form-field"><label>毛重(kg)</label><input type="number" id="printGross" step="0.01"></div>
-                    <div class="form-field"><label>筒重(kg)</label><input type="number" id="printTong" step="0.01"></div>
-                    <div class="form-field"><label>箱重(kg)</label><input type="number" id="printBox" step="0.01"></div>
-                    <div class="form-field"><label>经手人</label><input type="text" id="printHandler"></div>
-                    <div class="form-field"><label>批号</label><input type="text" id="printBatch"></div>
-                </div>
-                <div class="form-row" style="margin-top:12px;">
-                    <div class="form-field"><button id="printLabelBtn" class="btn-primary">🏷️ 打印并自动入仓</button></div>
+                    <div class="form-field"><label>规格</label><input type="text" id="printSpec" placeholder="例: 32S/2"></div>
+                    <div class="form-field"><label>色号</label><input type="text" id="printColor" placeholder="例: 黑色"></div>
+                    <div class="form-field"><label>机号</label><input type="text" id="printMachine" placeholder="例: 12#"></div>
+                    <div class="form-field"><label>数量(个)</label><input type="number" id="printQty" placeholder="0"></div>
+                    <div class="form-field"><label>毛重(kg)</label><input type="number" id="printGross" step="0.01" placeholder="0"></div>
+                    <div class="form-field"><label>筒重(kg)</label><input type="number" id="printTong" step="0.01" placeholder="0"></div>
+                    <div class="form-field"><label>箱重(kg)</label><input type="number" id="printBox" step="0.01" placeholder="0"></div>
+                    <div class="form-field"><label>净重(kg)</label><input type="text" id="printNet" readonly placeholder="自动计算"></div>
+                    <div class="form-field"><label>包装</label><input type="text" id="printHandler" placeholder="例: 张三"></div>
+                    <div class="form-field"><label>批号</label><input type="text" id="printBatch" placeholder="例: B20240523"></div>
+                    <div class="form-field"><button id="printLabelBtn" class="btn-primary">🖨️ 打印标签(自动入仓)</button></div>
                 </div>
             </div>
             <div class="stats-row"><div class="stat-card"><h3>📊 今日已打印</h3><div class="number" id="todayPrintCount">0</div></div></div>
@@ -230,12 +551,9 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    (async function() {
-        const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
-        let supabase;
+    // 纯本地存储版本，无Supabase依赖
+    (function() {
         let currentTab = 'craft';
         let currentCraftId = null;
         let craftRecords = [];
@@ -248,45 +566,50 @@
             document.getElementById('outTotal').value = (w * p).toFixed(2);
         }
 
-        async function init() {
-            try {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                await loadData();
-                document.getElementById('loadingMsg').style.display = 'none';
-                document.getElementById('craftPanel').style.display = 'block';
-                renderCraftList();
-                if(craftRecords.length) { currentCraftId = craftRecords[0].id; renderCraftDetail(craftRecords[0]); }
-                renderInOut();
-                updateTodayCount();
-                document.getElementById('inDate').valueAsDate = new Date();
-                document.getElementById('outDate').valueAsDate = new Date();
-                document.getElementById('outWeight').addEventListener('input', calculateTotal);
-                document.getElementById('outPrice').addEventListener('input', calculateTotal);
-            } catch(e) {
-                console.error('初始化失败:', e);
-                document.getElementById('loadingMsg').innerHTML = '加载失败，请刷新页面重试';
+        // 计算并更新净重
+        function updateNetWeight() {
+            let gross = parseFloat(document.getElementById('printGross').value) || 0;
+            let tong = parseFloat(document.getElementById('printTong').value) || 0;
+            let box = parseFloat(document.getElementById('printBox').value) || 0;
+            let net = gross - tong - box;
+            if (net < 0) net = 0;
+            document.getElementById('printNet').value = net.toFixed(2);
+        }
+
+        function loadData() {
+            // 从localStorage加载数据
+            let storedCrafts = localStorage.getItem('textile_crafts');
+            let storedIn = localStorage.getItem('textile_in');
+            let storedOut = localStorage.getItem('textile_out');
+            
+            if (storedCrafts) {
+                craftRecords = JSON.parse(storedCrafts);
+            } else {
+                craftRecords = [{ id:"1", title:"10570/38", customer:"黄芳", date:"2024-10-14", materials:["105氨纶","78/24F尼龙"], curlSingle:{values:[46,70,68,80],extra:"0.797"}, curlDouble:{values:[38,78,76,80],extra:"0.826"}, draft:{values:[72,58,70,36],extra:"556捻"}, feed:{values:[76,40,56,64],extra:"4.03拉力"} }];
+                saveData();
+            }
+            
+            if (storedIn) {
+                warehouseIn = JSON.parse(storedIn);
+            } else {
+                warehouseIn = [];
+            }
+            
+            if (storedOut) {
+                warehouseOut = JSON.parse(storedOut);
+            } else {
+                warehouseOut = [];
             }
         }
 
-        async function loadData() {
-            let { data: c } = await supabase.from('craft_records').select('*');
-            craftRecords = (c && c.length) ? c : [{ id:"1", title:"10570/38", customer:"黄芳", date:"2024-10-14", materials:["105氨纶","78/24F尼龙"], curlSingle:{values:[46,70,68,80],extra:"0.797"}, curlDouble:{values:[38,78,76,80],extra:"0.826"}, draft:{values:[72,58,70,36],extra:"556捻"}, feed:{values:[76,40,56,64],extra:"4.03拉力"} }];
-            let { data: i } = await supabase.from('in_records').select('*');
-            warehouseIn = i || [];
-            let { data: o } = await supabase.from('out_records').select('*');
-            warehouseOut = o || [];
+        function saveData() {
+            localStorage.setItem('textile_crafts', JSON.stringify(craftRecords));
+            localStorage.setItem('textile_in', JSON.stringify(warehouseIn));
+            localStorage.setItem('textile_out', JSON.stringify(warehouseOut));
         }
 
-        async function saveCraft(r) { await supabase.from('craft_records').upsert(r); }
-        async function deleteCraft(id) { await supabase.from('craft_records').delete().eq('id', id); }
-        async function saveIn(r) { await supabase.from('in_records').upsert(r); }
-        async function deleteIn(id) { await supabase.from('in_records').delete().eq('id', id); }
-        async function saveOut(r) { await supabase.from('out_records').upsert(r); }
-        async function deleteOut(id) { await supabase.from('out_records').delete().eq('id', id); }
-
-        // 打开编辑模态框
         function openEditModal(craftId) {
-            let craft = craftRecords.find(c => c.id === craftId);
+            let craft = craftRecords.find(c => c.id == craftId);
             if (!craft) return;
             document.getElementById('editTitle').value = craft.title;
             document.getElementById('editCustomer').value = craft.customer || '';
@@ -316,9 +639,8 @@
             document.getElementById('editCraftModal').classList.add('active');
         }
 
-        // 保存编辑
-        async function saveCraftEdit() {
-            let craft = craftRecords.find(c => c.id === currentCraftId);
+        function saveCraftEdit() {
+            let craft = craftRecords.find(c => c.id == currentCraftId);
             if (!craft) return;
             craft.title = document.getElementById('editTitle').value;
             craft.customer = document.getElementById('editCustomer').value;
@@ -360,7 +682,7 @@
                 extra: document.getElementById('editFeedExtra').value
             };
             craft.materials = document.getElementById('editMaterials').value.split(',').map(s => s.trim()).filter(s => s);
-            await saveCraft(craft);
+            saveData();
             renderCraftList();
             renderCraftDetail(craft);
             closeModal();
@@ -377,7 +699,7 @@
                 return;
             }
             container.innerHTML = craftRecords.map(c => `
-                <div class="craft-item ${currentCraftId === c.id ? 'active' : ''}" data-id="${c.id}">
+                <div class="craft-item ${currentCraftId == c.id ? 'active' : ''}" data-id="${c.id}">
                     <div style="flex:1">
                         <div class="craft-title">📄 ${escapeHtml(c.title)}</div>
                         <div class="craft-customer">${escapeHtml(c.customer)}</div>
@@ -402,17 +724,17 @@
                 });
             });
             document.querySelectorAll('.del-craft').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
+                btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     if (confirm('确定删除该工艺记录吗？')) {
-                        await deleteCraft(btn.dataset.id);
-                        craftRecords = craftRecords.filter(c => c.id !== btn.dataset.id);
-                        if (currentCraftId === btn.dataset.id) {
+                        craftRecords = craftRecords.filter(c => c.id != btn.dataset.id);
+                        if (currentCraftId == btn.dataset.id) {
                             currentCraftId = craftRecords[0]?.id || null;
                         }
+                        saveData();
                         renderCraftList();
                         if (currentCraftId) {
-                            renderCraftDetail(craftRecords.find(c => c.id === currentCraftId));
+                            renderCraftDetail(craftRecords.find(c => c.id == currentCraftId));
                         } else {
                             document.getElementById('craftDetail').innerHTML = '<div class="empty-state">请选择或新增工艺记录</div>';
                         }
@@ -423,7 +745,7 @@
 
         function selectCraft(id) {
             currentCraftId = id;
-            let craft = craftRecords.find(c => c.id === id);
+            let craft = craftRecords.find(c => c.id == id);
             if (craft) renderCraftDetail(craft);
             renderCraftList();
         }
@@ -440,8 +762,8 @@
                     <tbody>
                         <tr><td class="row-label">🌀 卷曲(单)</td><td>${craft.curlSingle.values[0]}</td><td>${craft.curlSingle.values[1]}</td><td>${craft.curlSingle.values[2]}</td><td>${craft.curlSingle.values[3]}</td><td>${escapeHtml(craft.curlSingle.extra)}</td></tr>
                         <tr><td class="row-label">🌀 卷曲(双)</td><td>${craft.curlDouble.values[0]}</td><td>${craft.curlDouble.values[1]}</td><td>${craft.curlDouble.values[2]}</td><td>${craft.curlDouble.values[3]}</td><td>${escapeHtml(craft.curlDouble.extra)}</td></tr>
-                        <tr><td class="row-label">⚙️ 牵伸</td><td>${craft.draft.values[0]}</td><td>${craft.draft.values[1]}</td><td>${craft.draft.values[2]}</td><td>${craft.draft.values[3]}</td><td class="extra-col">${escapeHtml(craft.draft.extra)}</td></tr>
-                        <tr><td class="row-label">📥 喂入</td><td>${craft.feed.values[0]}</td><td>${craft.feed.values[1]}</td><td>${craft.feed.values[2]}</td><td>${craft.feed.values[3]}</td><td class="extra-col">${escapeHtml(craft.feed.extra)}</td></tr>
+                        <tr><td class="row-label">⚙️ 牵伸</td><td>${craft.draft.values[0]}</td><td>${craft.draft.values[1]}</td><td>${craft.draft.values[2]}</td><td>${craft.draft.values[3]}</td><td>${escapeHtml(craft.draft.extra)}</td></tr>
+                        <tr><td class="row-label">📥 喂入</td><td>${craft.feed.values[0]}</td><td>${craft.feed.values[1]}</td><td>${craft.feed.values[2]}</td><td>${craft.feed.values[3]}</td><td>${escapeHtml(craft.feed.extra)}</td></tr>
                     </tbody>
                 </table>
                 <div style="background:#f7fafc; padding:12px; border-radius:16px; margin-top:15px;">
@@ -451,8 +773,7 @@
             document.getElementById('craftDetail').innerHTML = html;
         }
 
-        // 新增工艺
-        document.getElementById('addCraftBtn').onclick = async () => {
+        document.getElementById('addCraftBtn').onclick = () => {
             let title = prompt("请输入工艺标题 (例: 10570/39)");
             if (!title) return;
             let newCraft = {
@@ -467,7 +788,7 @@
                 feed: { values: ["","","",""], extra: "" }
             };
             craftRecords.unshift(newCraft);
-            await saveCraft(newCraft);
+            saveData();
             renderCraftList();
             selectCraft(newCraft.id);
         };
@@ -488,11 +809,11 @@
             document.getElementById('outTotalCount').innerText = warehouseOut.length;
         }
 
-        window.delIn = async (id) => { if(confirm('删除？')) { await deleteIn(id); warehouseIn = warehouseIn.filter(i=>i.id!==id); renderInOut(); } };
-        window.delOut = async (id) => { if(confirm('删除？')) { await deleteOut(id); warehouseOut = warehouseOut.filter(i=>i.id!==id); renderInOut(); } };
+        window.delIn = (id) => { if(confirm('删除？')) { warehouseIn = warehouseIn.filter(i=>i.id!=id); saveData(); renderInOut(); } };
+        window.delOut = (id) => { if(confirm('删除？')) { warehouseOut = warehouseOut.filter(i=>i.id!=id); saveData(); renderInOut(); } };
         
-        document.getElementById('addInBtn').onclick = async () => { let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, w=parseFloat(document.getElementById('inWeight').value), d=document.getElementById('inDate').value; if(!c||!m||isNaN(w)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, date:d}; warehouseIn.unshift(rec); await saveIn(rec); renderInOut(); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inWeight').value=''; };
-        document.getElementById('addOutBtn').onclick = async () => { let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), d=document.getElementById('outDate').value; if(!c||!m||isNaN(w)||isNaN(p)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, price:p, date:d}; warehouseOut.unshift(rec); await saveOut(rec); renderInOut(); document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value=''; };
+        document.getElementById('addInBtn').onclick = () => { let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, w=parseFloat(document.getElementById('inWeight').value), d=document.getElementById('inDate').value; if(!c||!m||isNaN(w)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, date:d}; warehouseIn.unshift(rec); saveData(); renderInOut(); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inWeight').value=''; };
+        document.getElementById('addOutBtn').onclick = () => { let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), d=document.getElementById('outDate').value; if(!c||!m||isNaN(w)||isNaN(p)) {alert("完整填写");return;} let rec={id:Date.now().toString(), customer:c, model:m, weight:w, price:p, date:d}; warehouseOut.unshift(rec); saveData(); renderInOut(); document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value=''; };
 
         document.getElementById('refreshStatsBtn').onclick = () => {
             let year = parseInt(document.getElementById('statsYear').value);
@@ -510,27 +831,111 @@
             let count = warehouseIn.filter(i => i.date === today).length;
             document.getElementById('todayPrintCount').innerText = count;
         }
-        document.getElementById('printLabelBtn').onclick = async () => {
-            let spec = document.getElementById('printSpec').value;
-            let color = document.getElementById('printColor').value;
-            let machine = document.getElementById('printMachine').value;
-            let qty = document.getElementById('printQty').value;
-            let gross = parseFloat(document.getElementById('printGross').value);
-            let tong = parseFloat(document.getElementById('printTong').value);
-            let box = parseFloat(document.getElementById('printBox').value);
-            let handler = document.getElementById('printHandler').value;
-            let batch = document.getElementById('printBatch').value;
+
+        // 打印标签
+        function openTagPrintWindow() {
+            let spec = document.getElementById('printSpec').value || '';
+            let color = document.getElementById('printColor').value || '';
+            let machine = document.getElementById('printMachine').value || '';
+            let qty = document.getElementById('printQty').value || '0';
+            let gross = parseFloat(document.getElementById('printGross').value) || 0;
+            let tong = parseFloat(document.getElementById('printTong').value) || 0;
+            let box = parseFloat(document.getElementById('printBox').value) || 0;
+            let handler = document.getElementById('printHandler').value || '';
+            let batch = document.getElementById('printBatch').value || '';
             let date = new Date().toISOString().slice(0,10);
-            if(isNaN(gross) || isNaN(tong) || isNaN(box)) { alert("请填写完整的毛重、筒重、箱重"); return; }
+            
             let net = gross - tong - box;
-            let inRecord = { id: Date.now().toString(), customer: `成品-${batch}`, model: spec, weight: net, date: date };
-            warehouseIn.unshift(inRecord);
-            await saveIn(inRecord);
-            let printContent = `<div style="width:100mm; height:100mm; padding:8px; font-family:'SimHei','Microsoft YaHei'; border:1px solid #ccc;"><div style="text-align:center; font-size:22px; font-weight:800;">中山市淮鸿橡筋织带有限公司</div><div style="font-size:10px; text-align:center;">地址：中山市三角镇接民村金达路三号B栋5楼</div><div style="font-size:10px; text-align:center;">电话：13535238522</div><hr style="margin:6px 0"/><div style="border:2px solid #000; padding:6px;"><div style="display:flex; justify-content:space-between; font-size:11px;"><span>规格：${spec}</span><span>包根色：${color}</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>机号：${machine}</span><span>毛重：${gross} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>数量：${qty} 个</span><span>筒重：${tong} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>箱重：${box} kg</span><span>净重：${net.toFixed(2)} kg</span></div><div style="display:flex; justify-content:space-between; font-size:11px;"><span>经手人：${handler}</span><span>日期：${date}</span></div><div style="font-size:11px;">批号：${batch}</div></div><div style="font-size:12px; font-weight:800; color:red; text-align:center; margin-top:6px;">⚠️ 不同机号，批号分开使用</div></div>`;
-            let printWindow = window.open('', '_blank');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.print();
+            if (net < 0) net = 0;
+            
+            const tagHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>成品标签</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #ddd; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'SimSun', '宋体', monospace; }
+    .label { width: 100mm; height: 100mm; background: white; border: 1px solid #000; padding: 3mm; }
+    .company { text-align: center; font-size: 18pt; font-weight: bold; }
+    .address { text-align: center; font-size: 11pt; line-height: 1.2; }
+    .solid-line { border-top: 0.5px solid #000; margin: 2mm 0; }
+    .thick-solid { border-top: 0.8px solid #000; margin: 2mm 0; }
+    .two-col { display: flex; justify-content: space-between; margin: 2mm 0 0 0; }
+    .left-col, .right-col { width: 45%; }
+    .field { margin-bottom: 5mm; display: flex; align-items: baseline; flex-wrap: wrap; }
+    .field-name { font-size: 11pt; font-weight: bold; white-space: nowrap; }
+    .field-line { flex: 1; border-bottom: 0.5px solid #000; margin-left: 2mm; height: auto; align-self: center; transform: translateY(1.5mm); }
+    .red .field-name { color: #c00; font-weight: bold; }
+    .red .field-line { border-bottom-color: #c00; }
+    .footer { text-align: center; font-size: 16pt; font-weight: bold; color: #c00; margin-top: 1mm; padding-top: 0; border-top: 0.8px solid #000; }
+    @page { size: 100mm 100mm; margin: 0mm; }
+    @media print { body { background: white; padding: 0; margin: 0; } .label { border: none; } }
+</style>
+<script>
+    window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 200); };
+<\/script>
+</head>
+<body>
+<div class="label">
+    <div class="company">中山市淮鸿橡筋织带有限公司</div>
+    <div class="address">地址：中山市三角镇接民村金达路三号B栋五楼</div>
+    <div class="address">电话：13535238522</div>
+    <div class="thick-solid" style="margin-bottom: 7mm;"></div>
+    <div class="two-col">
+        <div class="left-col">
+            <div class="field"><span class="field-name">规格</span><span class="field-line">${escapeHtml(spec)}</span></div>
+            <div class="field"><span class="field-name">机号</span><span class="field-line">${escapeHtml(machine)}</span></div>
+            <div class="field"><span class="field-name">毛重</span><span class="field-line">${gross.toFixed(2)} kg</span></div>
+            <div class="field"><span class="field-name">箱重</span><span class="field-line">${box.toFixed(2)} kg</span></div>
+            <div class="field red"><span class="field-name">净重</span><span class="field-line">${net.toFixed(2)} kg</span></div>
+            <div class="field"><span class="field-name">日期</span><span class="field-line">${date}</span></div>
+        </div>
+        <div class="right-col">
+            <div class="field"><span class="field-name">色号</span><span class="field-line">${escapeHtml(color)}</span></div>
+            <div class="field"><span class="field-name">数量</span><span class="field-line">${escapeHtml(qty)} 个</span></div>
+            <div class="field"><span class="field-name">筒重</span><span class="field-line">${tong.toFixed(2)} kg</span></div>
+            <div class="field"><span class="field-name">包装</span><span class="field-line">${escapeHtml(handler)}</span></div>
+            <div class="field"><span class="field-name">批号</span><span class="field-line">${escapeHtml(batch)}</span></div>
+            <div style="height: 5mm;"></div>
+        </div>
+    </div>
+    <div class="thick-solid"></div>
+    <div class="footer">不同机号、批号分开使用</div>
+</div>
+</body>
+</html>`;
+            
+            const printWin = window.open('', '_blank');
+            printWin.document.write(tagHtml);
+            printWin.document.close();
+        }
+        
+        // 打印并入仓
+        document.getElementById('printLabelBtn').onclick = () => {
+            let spec = document.getElementById('printSpec').value;
+            let batch = document.getElementById('printBatch').value;
+            let gross = parseFloat(document.getElementById('printGross').value) || 0;
+            let tong = parseFloat(document.getElementById('printTong').value) || 0;
+            let box = parseFloat(document.getElementById('printBox').value) || 0;
+            let net = gross - tong - box;
+            if (net < 0) net = 0;
+            let date = new Date().toISOString().slice(0,10);
+            
+            if (net > 0 && spec && batch) {
+                let inRecord = { id: Date.now().toString(), customer: `成品-${batch}`, model: spec, weight: net, date: date };
+                warehouseIn.unshift(inRecord);
+                saveData();
+                renderInOut();
+                updateTodayCount();
+                alert(`已自动入仓，净重：${net.toFixed(2)} kg`);
+            } else if (net <= 0) {
+                alert(`净重为${net.toFixed(2)} kg，未入仓（净重须大于0）`);
+            } else if (!spec || !batch) {
+                alert("请填写规格和批号");
+                return;
+            }
+            
+            openTagPrintWindow();
+            
             document.getElementById('printSpec').value = '';
             document.getElementById('printColor').value = '';
             document.getElementById('printMachine').value = '';
@@ -538,11 +943,9 @@
             document.getElementById('printGross').value = '';
             document.getElementById('printTong').value = '';
             document.getElementById('printBox').value = '';
+            document.getElementById('printNet').value = '';
             document.getElementById('printHandler').value = '';
             document.getElementById('printBatch').value = '';
-            renderInOut();
-            updateTodayCount();
-            alert(`打印成功！已自动入仓，净重：${net.toFixed(2)} kg`);
         };
 
         function switchTab(tab) {
@@ -557,16 +960,29 @@
             if(tab==='stats') document.getElementById('refreshStatsBtn').click();
             if(tab==='print') updateTodayCount();
         }
+        
         document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
         document.getElementById('globalSearchBtn').onclick = () => { if(currentTab==='craft') renderCraftList(); else renderInOut(); };
         document.getElementById('globalSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') document.getElementById('globalSearchBtn').click(); });
         document.getElementById('closeModalBtn').onclick = closeModal;
         document.getElementById('saveCraftEditBtn').onclick = saveCraftEdit;
+        document.getElementById('printGross').addEventListener('input', updateNetWeight);
+        document.getElementById('printTong').addEventListener('input', updateNetWeight);
+        document.getElementById('printBox').addEventListener('input', updateNetWeight);
+        document.getElementById('outWeight').addEventListener('input', calculateTotal);
+        document.getElementById('outPrice').addEventListener('input', calculateTotal);
         window.onclick = (e) => { if(e.target === document.getElementById('editCraftModal')) closeModal(); };
         
         function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
         
-        init();
+        // 初始化
+        loadData();
+        renderCraftList();
+        if(craftRecords.length) { currentCraftId = craftRecords[0].id; renderCraftDetail(craftRecords[0]); }
+        renderInOut();
+        updateTodayCount();
+        document.getElementById('inDate').valueAsDate = new Date();
+        document.getElementById('outDate').valueAsDate = new Date();
     })();
 </script>
 </body>
