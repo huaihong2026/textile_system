@@ -305,11 +305,6 @@
             font-weight: 700;
             border-top: 2px solid #cbdde9;
         }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #1f6e8c;
-        }
         .price-total {
             background: #e8f5e9;
             font-weight: 700;
@@ -365,14 +360,6 @@
         }
         .full-width {
             grid-column: span 2;
-        }
-        .material-tag {
-            background: #eef3fc;
-            border-radius: 20px;
-            padding: 4px 10px;
-            display: inline-block;
-            margin: 2px;
-            font-size: 0.75rem;
         }
         .modal-buttons {
             display: flex;
@@ -473,7 +460,7 @@
                 <div class="stat-card"><h3>💰 出仓总金额</h3><div class="number" id="outTotalAmount">0</div></div>
                 <div class="stat-card"><h3>📋 出仓记录数</h3><div class="number" id="outTotalCount">0</div></div>
             </div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th><tr></thead><tbody id="outTableBody"></tbody></table></div>
         </div>
 
         <!-- 年度报表 -->
@@ -499,8 +486,8 @@
                     <div class="form-field"><label>筒重(kg)</label><input type="number" id="printTong" step="0.01" placeholder="0"></div>
                     <div class="form-field"><label>箱重(kg)</label><input type="number" id="printBox" step="0.01" placeholder="0"></div>
                     <div class="form-field"><label>净重(kg)</label><input type="text" id="printNet" readonly placeholder="自动计算"></div>
-                    <div class="form-field"><label>包装</label><input type="text" id="printHandler" placeholder="例: 张三"></div>
-                    <div class="form-field"><label>批号</label><input type="text" id="printBatch" placeholder="例: B20240523"></div>
+                    <div class="form-field"><label>包装</label><input type="text" id="printHandler" placeholder="例: 张三(选填)"></div>
+                    <div class="form-field"><label>批号</label><input type="text" id="printBatch" placeholder="例: B20240523(选填)"></div>
                     <div class="form-field"><button id="printLabelBtn" class="btn-primary">🖨️ 打印标签(自动入仓)</button></div>
                 </div>
             </div>
@@ -552,7 +539,6 @@
 </div>
 
 <script>
-    // 纯本地存储版本，无Supabase依赖
     (function() {
         let currentTab = 'craft';
         let currentCraftId = null;
@@ -566,7 +552,6 @@
             document.getElementById('outTotal').value = (w * p).toFixed(2);
         }
 
-        // 计算并更新净重
         function updateNetWeight() {
             let gross = parseFloat(document.getElementById('printGross').value) || 0;
             let tong = parseFloat(document.getElementById('printTong').value) || 0;
@@ -577,7 +562,6 @@
         }
 
         function loadData() {
-            // 从localStorage加载数据
             let storedCrafts = localStorage.getItem('textile_crafts');
             let storedIn = localStorage.getItem('textile_in');
             let storedOut = localStorage.getItem('textile_out');
@@ -832,7 +816,7 @@
             document.getElementById('todayPrintCount').innerText = count;
         }
 
-        // 打印标签
+        // ========== 跳过浏览器打印预览，直接调用系统原生打印 ==========
         function openTagPrintWindow() {
             let spec = document.getElementById('printSpec').value || '';
             let color = document.getElementById('printColor').value || '';
@@ -853,26 +837,22 @@
 <head><meta charset="UTF-8"><title>成品标签</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #ddd; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'SimSun', '宋体', monospace; }
-    .label { width: 100mm; height: 100mm; background: white; border: 1px solid #000; padding: 3mm; }
+    body { background: white; margin: 0; padding: 0; font-family: 'SimSun', '宋体', monospace; }
+    .label { width: 100mm; height: 100mm; background: white; border: 1px solid #000; padding: 3mm; margin: 0 auto; }
     .company { text-align: center; font-size: 18pt; font-weight: bold; }
     .address { text-align: center; font-size: 11pt; line-height: 1.2; }
-    .solid-line { border-top: 0.5px solid #000; margin: 2mm 0; }
     .thick-solid { border-top: 0.8px solid #000; margin: 2mm 0; }
     .two-col { display: flex; justify-content: space-between; margin: 2mm 0 0 0; }
     .left-col, .right-col { width: 45%; }
     .field { margin-bottom: 5mm; display: flex; align-items: baseline; flex-wrap: wrap; }
     .field-name { font-size: 11pt; font-weight: bold; white-space: nowrap; }
-    .field-line { flex: 1; border-bottom: 0.5px solid #000; margin-left: 2mm; height: auto; align-self: center; transform: translateY(1.5mm); }
+    .field-line { flex: 1; border-bottom: 0.5px solid #000; margin-left: 2mm; height: auto; align-self: center; transform: translateY(1.5mm); padding-left: 2mm; }
     .red .field-name { color: #c00; font-weight: bold; }
     .red .field-line { border-bottom-color: #c00; }
     .footer { text-align: center; font-size: 16pt; font-weight: bold; color: #c00; margin-top: 1mm; padding-top: 0; border-top: 0.8px solid #000; }
     @page { size: 100mm 100mm; margin: 0mm; }
-    @media print { body { background: white; padding: 0; margin: 0; } .label { border: none; } }
+    @media print { body { margin: 0; padding: 0; } .label { border: none; margin: 0; } }
 </style>
-<script>
-    window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 200); };
-<\/script>
 </head>
 <body>
 <div class="label">
@@ -901,15 +881,39 @@
     <div class="thick-solid"></div>
     <div class="footer">不同机号、批号分开使用</div>
 </div>
+<script>
+    window.onload = function() {
+        setTimeout(function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+        }, 300);
+    };
+<\/script>
 </body>
 </html>`;
             
-            const printWin = window.open('', '_blank');
-            printWin.document.write(tagHtml);
-            printWin.document.close();
+            // 使用 iframe 方式打印，跳过浏览器预览冲突
+            var iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            
+            var doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(tagHtml);
+            doc.close();
+            
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+            
+            setTimeout(function() {
+                document.body.removeChild(iframe);
+            }, 2000);
         }
         
-        // 打印并入仓
+        // 打印并入仓 - 批号非必填
         document.getElementById('printLabelBtn').onclick = () => {
             let spec = document.getElementById('printSpec').value;
             let batch = document.getElementById('printBatch').value;
@@ -920,17 +924,21 @@
             if (net < 0) net = 0;
             let date = new Date().toISOString().slice(0,10);
             
-            if (net > 0 && spec && batch) {
-                let inRecord = { id: Date.now().toString(), customer: `成品-${batch}`, model: spec, weight: net, date: date };
+            if (!spec) {
+                alert("请填写规格");
+                return;
+            }
+            
+            if (net > 0) {
+                let batchCode = batch || "无批号";
+                let inRecord = { id: Date.now().toString(), customer: `成品-${batchCode}`, model: spec, weight: net, date: date };
                 warehouseIn.unshift(inRecord);
                 saveData();
                 renderInOut();
                 updateTodayCount();
                 alert(`已自动入仓，净重：${net.toFixed(2)} kg`);
-            } else if (net <= 0) {
+            } else {
                 alert(`净重为${net.toFixed(2)} kg，未入仓（净重须大于0）`);
-            } else if (!spec || !batch) {
-                alert("请填写规格和批号");
                 return;
             }
             
@@ -975,7 +983,6 @@
         
         function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
         
-        // 初始化
         loadData();
         renderCraftList();
         if(craftRecords.length) { currentCraftId = craftRecords[0].id; renderCraftDetail(craftRecords[0]); }
