@@ -36,12 +36,10 @@
         .form-field { display: flex; flex-direction: column; gap: 4px; }
         .form-field label { font-size: 0.65rem; font-weight: 600; color: #5e7e97; }
         .form-field input { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 130px; font-size: 0.8rem; }
-        .empty-state { text-align: center; padding: 30px; color: #8aaec0; }
         .action-btn { background: transparent; border: none; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; color: #c44536; }
         .action-btn:hover { background: #e0e0e0; border-radius: 16px; }
+        .empty-state { text-align: center; padding: 30px; color: #8aaec0; }
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; background: #fff3e0; color: #f57c00; }
-        .report-title { font-size: 1rem; font-weight: 700; color: #1f6e8c; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #cbdde9; }
-        .report-item { padding: 6px 0; font-size: 0.8rem; border-bottom: 1px dotted #e2edf5; }
         .craft-layout { display: flex; flex-wrap: wrap; }
         .craft-list { width: 260px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 520px; overflow-y: auto; }
         .craft-detail { flex: 1; padding-left: 20px; }
@@ -71,13 +69,25 @@
         <div class="tab" data-tab="waste">🗑️ 废置</div>
     </div>
     <div class="main-content">
-        <div id="dashboardPanel"><div class="stats-row"><div class="stat-card" onclick="switchTab('in')"><h3>📥 今日入库</h3><div class="number" id="todayInWeight">0</div><div class="small-note">点击查看</div></div><div class="stat-card" onclick="switchTab('out')"><h3>📤 今日出库</h3><div class="number" id="todayOutWeight">0</div><div class="small-note">点击查看</div></div><div class="stat-card" onclick="switchTab('in')"><h3>📋 待分配</h3><div class="number" id="pendingAssignCount">0</div><div class="small-note">点击处理</div></div><div class="stat-card" onclick="switchTab('order')"><h3>⏳ 待生产</h3><div class="number" id="pendingOrderCount">0</div><div class="small-note">点击查看</div></div></div><div class="stats-row"><div class="stat-card"><h3>📦 总库存</h3><div class="number" id="totalStock">0</div><div class="small-note">kg</div></div><div class="stat-card"><h3>📋 工艺数</h3><div class="number" id="craftCount">0</div></div></div><div class="add-form"><div class="report-title">📌 待处理</div><div id="pendingTasks">加载中...</div></div></div>
+        <div id="dashboardPanel">
+            <div class="stats-row">
+                <div class="stat-card" onclick="switchTab('in')"><h3>📥 今日入库</h3><div class="number" id="todayInWeight">0</div><div class="small-note">点击查看</div></div>
+                <div class="stat-card" onclick="switchTab('out')"><h3>📤 今日出库</h3><div class="number" id="todayOutWeight">0</div><div class="small-note">点击查看</div></div>
+                <div class="stat-card" onclick="switchTab('in')"><h3>📋 待分配</h3><div class="number" id="pendingAssignCount">0</div><div class="small-note">点击处理</div></div>
+                <div class="stat-card" onclick="switchTab('order')"><h3>⏳ 待生产</h3><div class="number" id="pendingOrderCount">0</div><div class="small-note">点击查看</div></div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><h3>📦 总库存</h3><div class="number" id="totalStock">0</div><div class="small-note">kg</div></div>
+                <div class="stat-card"><h3>📋 工艺数</h3><div class="number" id="craftCount">0</div></div>
+            </div>
+            <div class="add-form"><div class="report-title">📌 待处理</div><div id="pendingTasks">加载中...</div></div>
+        </div>
         <div id="craftPanel" style="display:none;"><div class="craft-layout"><div class="craft-list"><div style="display:flex; justify-content:space-between;"><span>📋 工艺列表</span><button id="addCraftBtn" class="btn-primary btn-sm">+新增</button></div><div id="craftList"></div></div><div class="craft-detail" id="craftDetail"><div class="empty-state">选择或新增工艺</div></div></div></div>
-        <div id="inPanel" style="display:none;"><div class="add-form"><h4>➕ 添加入仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="inCustomer" placeholder="留空待分配"></div><div class="form-field"><label>型号</label><input type="text" id="inModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight"></div><div class="form-field"><label>日期</label><input type="date" id="inDate"></div><div class="form-field"><button id="addInBtn" class="btn-in">✅ 添加入仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>📦 入仓总重</h3><div class="number" id="inTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="inTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div></div>
-        <div id="outPanel" style="display:none;"><div class="add-form"><h4>📤 添加出仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="outCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="outModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight"></div><div class="form-field"><label>日期</label><input type="date" id="outDate"></div><div class="form-field"><button id="addOutBtn" class="btn-out">✅ 添加出仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>🚚 出仓总重</h3><div class="number" id="outTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="outTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody><tr></div></div>
+        <div id="inPanel" style="display:none;"><div class="add-form"><h4>➕ 添加入仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="inCustomer" placeholder="留空待分配"></div><div class="form-field"><label>型号</label><input type="text" id="inModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight"></div><div class="form-field"><label>日期</label><input type="date" id="inDate"></div><div class="form-field"><button id="addInBtn" class="btn-in">✅ 添加入仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>📦 入仓总重</h3><div class="number" id="inTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="inTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody><tr></div></div>
+        <div id="outPanel" style="display:none;"><div class="add-form"><h4>📤 添加出仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="outCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="outModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight"></div><div class="form-field"><label>日期</label><input type="date" id="outDate"></div><div class="form-field"><button id="addOutBtn" class="btn-out">✅ 添加出仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>🚚 出仓总重</h3><div class="number" id="outTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="outTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div></div>
         <div id="statsPanel" style="display:none;"><div class="add-form"><div class="form-row"><div class="form-field"><label>年份</label><input type="number" id="statsYear" value="2024"></div><div class="form-field"><label>月份</label><select id="statsMonth"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div><button id="refreshStatsBtn" class="btn-primary">📊 统计</button></div></div><div id="reportContainer"></div></div>
         <div id="printPanel" style="display:none;"><div class="add-form"><h4>🖨️ 打印标签（净重自动计算）</h4><div class="form-row"><div class="form-field"><label>规格</label><input type="text" id="printSpec"></div><div class="form-field"><label>色号</label><input type="text" id="printColor"></div><div class="form-field"><label>机号</label><input type="text" id="printMachine"></div><div class="form-field"><label>数量</label><input type="number" id="printQty"></div><div class="form-field"><label>毛重</label><input type="number" id="printGross"></div><div class="form-field"><label>筒重</label><input type="number" id="printTong"></div><div class="form-field"><label>箱重</label><input type="number" id="printBox"></div><div class="form-field"><label>净重</label><input type="text" id="printNet" readonly></div><div class="form-field"><label>包装</label><input type="text" id="printHandler"></div><div class="form-field"><label>批号</label><input type="text" id="printBatch"></div><div class="form-field"><button id="printLabelBtn" class="btn-primary">🖨️ 打印并自动入仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>今日已打印</h3><div class="number" id="todayPrintCount">0</div></div></div></div>
-        <div id="orderPanel" style="display:none;"><div class="add-form"><h4>➕ 新增订单</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="orderCustomer"></div><div class="form-field"><label>规格</label><input type="text" id="orderSpec"></div><div class="form-field"><label>数量</label><input type="number" id="orderQty"></div><div class="form-field"><label>备注</label><input type="text" id="orderRemark"></div><div class="form-field"><button id="addOrderBtn" class="btn-primary">✅ 新增</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>订单总数</h3><div class="number" id="orderTotalCount">0</div></div><div class="stat-card"><h3>待生产</h3><div class="number" id="orderPendingCount">0</div></div><div class="stat-card"><h3>生产中</h3><div class="number" id="orderProducingCount">0</div></div><div class="stat-card"><h3>已完成</h3><div class="number" id="orderCompletedCount">0</div></div></div><div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody></table></div></div>
+        <div id="orderPanel" style="display:none;"><div class="add-form"><h4>➕ 新增订单</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="orderCustomer"></div><div class="form-field"><label>规格</label><input type="text" id="orderSpec"></div><div class="form-field"><label>数量</label><input type="number" id="orderQty"></div><div class="form-field"><label>备注</label><input type="text" id="orderRemark"></div><div class="form-field"><button id="addOrderBtn" class="btn-primary">✅ 新增</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>订单总数</h3><div class="number" id="orderTotalCount">0</div></div><div class="stat-card"><h3>待生产</h3><div class="number" id="orderPendingCount">0</div></div><div class="stat-card"><h3>生产中</h3><div class="number" id="orderProducingCount">0</div></div><div class="stat-card"><h3>已完成</h3><div class="number" id="orderCompletedCount">0</div></div></div><div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody></td></div></div>
         <div id="wastePanel" style="display:none;"><div class="add-form"><h4>🗑️ 申请废置</h4><div class="form-row"><div class="form-field"><label>型号</label><input type="text" id="wasteModel"></div><div class="form-field"><label>数量(kg)</label><input type="number" id="wasteQty"></div><div class="form-field"><label>原因</label><input type="text" id="wasteReason"></div><div class="form-field"><button id="addWasteBtn" class="btn-waste">📝 申请</button></div></div></div><div><table class="data-table"><thead><tr><th>型号</th><th>数量</th><th>原因</th><th>申请人</th><th>状态</th><th>日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></table></div></div>
     </div>
 </div>
@@ -85,32 +95,54 @@
 <script>
 const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
-let supabase, currentTab = 'dashboard', currentCraftId = null;
-let craftRecords = [], warehouseIn = [], warehouseOut = [], orderRecords = [], wasteRecords = [];
+
+let currentTab = 'dashboard';
+let currentCraftId = null;
+let craftRecords = [];
+let warehouseIn = [];
+let warehouseOut = [];
+let orderRecords = [];
+let wasteRecords = [];
+let supabaseClient = null;
 
 async function init() {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     await loadAll();
     renderAll();
     setupEvents();
 }
+
 async function loadAll() {
     try {
-        let { data: c } = await supabase.from('craft_records').select('*'); craftRecords = c || [];
-        let { data: i } = await supabase.from('in_records').select('*'); warehouseIn = i || [];
-        let { data: o } = await supabase.from('out_records').select('*'); warehouseOut = o || [];
-        let { data: ord } = await supabase.from('order_progress').select('*'); orderRecords = ord || [];
-        let { data: w } = await supabase.from('waste_records').select('*'); wasteRecords = w || [];
+        let { data: c } = await supabaseClient.from('craft_records').select('*');
+        craftRecords = c || [];
+        let { data: i } = await supabaseClient.from('in_records').select('*');
+        warehouseIn = i || [];
+        let { data: o } = await supabaseClient.from('out_records').select('*');
+        warehouseOut = o || [];
+        let { data: ord } = await supabaseClient.from('order_progress').select('*');
+        orderRecords = ord || [];
+        let { data: w } = await supabaseClient.from('waste_records').select('*');
+        wasteRecords = w || [];
     } catch(e) { console.error(e); setTimeout(loadAll, 3000); }
 }
-function renderAll() { renderDashboard(); renderCraftList(); renderInOut(); renderOrderList(); renderWasteList(); document.getElementById('craftCount').innerText = craftRecords.length; }
+
+function renderAll() {
+    renderDashboard();
+    renderCraftList();
+    renderInOut();
+    renderOrderList();
+    renderWasteList();
+    document.getElementById('craftCount').innerText = craftRecords.length;
+}
+
 function renderDashboard() {
     let today = new Date().toISOString().slice(0,10);
-    let todayIn = warehouseIn.filter(i => i.date === today).reduce((s,i)=>s+(+i.weight||0),0);
+    let todayIn = warehouseIn.filter(i => i.date === today && !i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
     let todayOut = warehouseOut.filter(o => o.date === today).reduce((s,o)=>s+(+o.weight||0),0);
-    let pendingAssign = warehouseIn.filter(i => i.customer === '待分配' || !i.customer).length;
+    let pendingAssign = warehouseIn.filter(i => (i.customer === '待分配' || !i.customer) && !i.is_waste).length;
     let pendingOrders = orderRecords.filter(o => o.status === '待生产').length;
-    let totalStock = warehouseIn.reduce((s,i)=>s+(+i.weight||0),0) - warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
+    let totalStock = warehouseIn.filter(i => !i.is_waste).reduce((s,i)=>s+(+i.weight||0),0) - warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
     document.getElementById('todayInWeight').innerText = todayIn.toFixed(2);
     document.getElementById('todayOutWeight').innerText = todayOut.toFixed(2);
     document.getElementById('pendingAssignCount').innerText = pendingAssign;
@@ -124,29 +156,32 @@ function renderDashboard() {
     if(!tasks) tasks = '暂无待处理 ✓';
     document.getElementById('pendingTasks').innerHTML = '<div class="report-item">'+tasks+'</div>';
 }
+
 function renderCraftList() {
     let container = document.getElementById('craftList');
     if(!craftRecords.length) { container.innerHTML = '<div class="empty-state">暂无工艺</div>'; return; }
     container.innerHTML = craftRecords.map(c => `<div class="craft-item ${currentCraftId==c.id?'active':''}" data-id="${c.id}"><div>📄 ${escapeHtml(c.title)}<br><small>${escapeHtml(c.customer)}</small></div><div><button class="action-btn edit-craft" data-id="${c.id}">✏️</button><button class="action-btn del-craft" data-id="${c.id}">🗑️</button></div></div>`).join('');
     document.querySelectorAll('.edit-craft').forEach(btn => btn.onclick = (e) => { e.stopPropagation(); openEditModal(btn.dataset.id); });
-    document.querySelectorAll('.del-craft').forEach(btn => btn.onclick = async (e) => { e.stopPropagation(); if(confirm('删除？')) { await supabase.from('craft_records').delete().eq('id', btn.dataset.id); await loadAll(); renderAll(); } });
+    document.querySelectorAll('.del-craft').forEach(btn => btn.onclick = async (e) => { e.stopPropagation(); if(confirm('删除？')) { await supabaseClient.from('craft_records').delete().eq('id', btn.dataset.id); await loadAll(); renderAll(); } });
     document.querySelectorAll('.craft-item').forEach(el => el.onclick = (e) => { if(!e.target.classList.contains('action-btn')) selectCraft(el.dataset.id); });
 }
-function selectCraft(id) { currentCraftId = id; let craft = craftRecords.find(c => c.id == id); if(craft) document.getElementById('craftDetail').innerHTML = `<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${escapeHtml(craft.title)}</div><div>${escapeHtml(craft.customer)} ${craft.date||''}</div></div><div style="margin-top:15px"><strong>原料：</strong> ${(craft.materials||[]).join(', ')}</div>`; renderCraftList(); }
-function openEditModal(id) { let craft = craftRecords.find(c => c.id == id); if(!craft) return; let newTitle = prompt("新标题", craft.title); if(newTitle){ craft.title=newTitle; supabase.from('craft_records').update({title:newTitle}).eq('id',id); loadAll(); renderAll(); } }
-document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("工艺标题"); if(title) { await supabase.from('craft_records').insert({ id:Date.now().toString(), title, customer:"", date:new Date().toISOString().slice(0,10), materials:[] }); await loadAll(); renderAll(); } };
+function selectCraft(id) { currentCraftId = id; let craft = craftRecords.find(c => c.id == id); if(craft) renderCraftDetail(craft); renderCraftList(); }
+function renderCraftDetail(craft) { if(!craft) return; document.getElementById('craftDetail').innerHTML = `<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${escapeHtml(craft.title)}</div><div>${escapeHtml(craft.customer)} ${craft.date||''}</div></div><div style="margin-top:15px"><strong>原料：</strong> ${(craft.materials||[]).join(', ')}</div>`; }
+function openEditModal(id) { let craft = craftRecords.find(c=>c.id==id); if(!craft) return; let newTitle=prompt("新标题",craft.title); if(newTitle){ craft.title=newTitle; supabaseClient.from('craft_records').update({title:newTitle}).eq('id',id); loadAll(); renderAll(); } }
+document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("工艺标题"); if(title) { await supabaseClient.from('craft_records').insert({ id:Date.now().toString(), title, customer:"", date:new Date().toISOString().slice(0,10), materials:[] }); await loadAll(); renderAll(); } };
+
 function renderInOut() {
-    document.getElementById('inTableBody').innerHTML = warehouseIn.map(i => `<tr><td>${escapeHtml(i.customer||'待分配')}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button>${(i.customer==='待分配'||!i.customer)?`<button class="action-btn" onclick="assignIn('${i.id}','${escapeHtml(i.model)}')">📌分配</button>`:''}</td></tr>`).join('')||'<tr><td colspan="5">暂无</td></tr>';
-    document.getElementById('outTableBody').innerHTML = warehouseOut.map(o => `<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${o.weight}</td><td>${o.date}</td><td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无</td></tr>';
-    let inW = warehouseIn.reduce((s,i)=>s+(+i.weight||0),0);
+    document.getElementById('inTableBody').innerHTML = warehouseIn.map(i => `<tr><td>${escapeHtml(i.customer||'待分配')}${i.is_waste?'(废置)':''}</td><td>${escapeHtml(i.model)}${i.waste_reason?'('+i.waste_reason+')':''}${i.is_waste?'<span style="color:red">已废置</span>':''}</td><td>${i.weight}kg</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button>${(i.customer==='待分配'||!i.customer)&&!i.is_waste?`<button class="action-btn" onclick="assignIn('${i.id}','${escapeHtml(i.model)}')">📌分配</button>`:''}</td></tr>`).join('')||'<tr><td colspan="5">暂无</td></tr>';
+    document.getElementById('outTableBody').innerHTML = warehouseOut.map(o => `<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${o.weight}kg</td><td>${o.date}</td><td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无</td></tr>';
+    let inW = warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
     let outW = warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
     document.getElementById('inTotalWeight').innerText = inW.toFixed(2);
-    document.getElementById('inTotalCount').innerText = warehouseIn.length;
+    document.getElementById('inTotalCount').innerText = warehouseIn.filter(i=>!i.is_waste).length;
     document.getElementById('outTotalWeight').innerText = outW.toFixed(2);
     document.getElementById('outTotalCount').innerText = warehouseOut.length;
 }
-window.delIn = async (id) => { if(confirm('删除？')){ await supabase.from('in_records').delete().eq('id',id); await loadAll(); renderAll(); } };
-window.delOut = async (id) => { if(confirm('删除？')){ await supabase.from('out_records').delete().eq('id',id); await loadAll(); renderAll(); } };
+window.delIn = async (id) => { if(confirm('删除？')){ await supabaseClient.from('in_records').delete().eq('id',id); await loadAll(); renderAll(); } };
+window.delOut = async (id) => { if(confirm('删除？')){ await supabaseClient.from('out_records').delete().eq('id',id); await loadAll(); renderAll(); } };
 window.assignIn = async (inId, model) => {
     let pending = orderRecords.filter(o=>o.product_spec===model && o.status==='待生产');
     if(!pending.length){ alert('无匹配订单'); return; }
@@ -154,8 +189,8 @@ window.assignIn = async (inId, model) => {
     let idx = prompt(`选择订单序号:\n${list}`)-1;
     if(idx>=0 && idx<pending.length){
         let matched = pending[idx];
-        await supabase.from('order_progress').update({ status:'已入库' }).eq('id',matched.id);
-        await supabase.from('in_records').update({ customer:matched.customer||'已分配' }).eq('id',inId);
+        await supabaseClient.from('order_progress').update({ status:'已入库' }).eq('id',matched.id);
+        await supabaseClient.from('in_records').update({ customer:matched.customer||'已分配' }).eq('id',inId);
         await loadAll(); renderAll();
         alert(`已关联 ${matched.order_no}`);
     }
@@ -167,7 +202,7 @@ document.getElementById('addInBtn').onclick = async () => {
     let d = document.getElementById('inDate').value || new Date().toISOString().slice(0,10);
     if(!m||isNaN(w)){ alert("请填型号和重量"); return; }
     if(!c) c='待分配';
-    await supabase.from('in_records').insert({ id:Date.now().toString(), customer:c, model:m, weight:w, date:d, scan_by:'电脑端' });
+    await supabaseClient.from('in_records').insert({ id:Date.now().toString(), customer:c, model:m, weight:w, date:d, scan_by:'电脑端' });
     await loadAll(); renderAll();
     document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inWeight').value='';
 };
@@ -177,7 +212,7 @@ document.getElementById('addOutBtn').onclick = async () => {
     let w = parseFloat(document.getElementById('outWeight').value);
     let d = document.getElementById('outDate').value || new Date().toISOString().slice(0,10);
     if(!m||isNaN(w)){ alert("请填型号和重量"); return; }
-    await supabase.from('out_records').insert({ id:Date.now().toString(), customer:c, model:m, weight:w, date:d, scan_by:'电脑端' });
+    await supabaseClient.from('out_records').insert({ id:Date.now().toString(), customer:c, model:m, weight:w, date:d, scan_by:'电脑端' });
     await loadAll(); renderAll();
     document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value='';
 };
@@ -189,7 +224,7 @@ document.getElementById('addOrderBtn').onclick = async () => {
     if(!s||isNaN(q)){ alert("请填规格和数量"); return; }
     let today = new Date();
     let no = 'D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0');
-    await supabase.from('order_progress').insert({ id:Date.now().toString(), order_no:no, customer:c, product_spec:s, quantity:q, remark:r, status:'待生产', created_date:today.toISOString().slice(0,10) });
+    await supabaseClient.from('order_progress').insert({ id:Date.now().toString(), order_no:no, customer:c, product_spec:s, quantity:q, remark:r, status:'待生产', created_date:today.toISOString().slice(0,10) });
     await loadAll(); renderAll();
     document.getElementById('orderCustomer').value=''; document.getElementById('orderSpec').value=''; document.getElementById('orderQty').value=''; document.getElementById('orderRemark').value='';
 };
@@ -198,22 +233,22 @@ document.getElementById('addWasteBtn').onclick = async () => {
     let q = parseFloat(document.getElementById('wasteQty').value);
     let r = document.getElementById('wasteReason').value.trim();
     if(!m||isNaN(q)||!r){ alert("完整填写"); return; }
-    await supabase.from('waste_records').insert({ id:Date.now().toString(), model:m, waste_qty:q, reason:r, operator:'管理员', date:new Date().toISOString().slice(0,10), confirmed:false });
+    await supabaseClient.from('waste_records').insert({ id:Date.now().toString(), model:m, waste_qty:q, reason:r, operator:'管理员', date:new Date().toISOString().slice(0,10), confirmed:false });
     await loadAll(); renderAll();
     document.getElementById('wasteModel').value=''; document.getElementById('wasteQty').value=''; document.getElementById('wasteReason').value='';
 };
 async function renderOrderList() {
     let html = orderRecords.map(o => `<tr><td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td><td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty-input" style="width:70px"></td><td><select data-id="${o.id}" class="order-status-select"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td><td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark-input" style="width:80px"></td><td>${o.created_date}</td><td><button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="8">暂无订单</td></tr>';
     document.getElementById('orderTableBody').innerHTML = html;
-    document.querySelectorAll('.order-qty-input').forEach(inp => inp.onchange = async (e) => { await supabase.from('order_progress').update({ quantity:parseFloat(e.target.value) }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); });
-    document.querySelectorAll('.order-status-select').forEach(sel => sel.onchange = async (e) => { await supabase.from('order_progress').update({ status:e.target.value }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); renderDashboard(); });
-    document.querySelectorAll('.order-remark-input').forEach(inp => inp.onchange = async (e) => { await supabase.from('order_progress').update({ remark:e.target.value }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); });
+    document.querySelectorAll('.order-qty-input').forEach(inp => inp.onchange = async (e) => { await supabaseClient.from('order_progress').update({ quantity:parseFloat(e.target.value) }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); });
+    document.querySelectorAll('.order-status-select').forEach(sel => sel.onchange = async (e) => { await supabaseClient.from('order_progress').update({ status:e.target.value }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); renderDashboard(); });
+    document.querySelectorAll('.order-remark-input').forEach(inp => inp.onchange = async (e) => { await supabaseClient.from('order_progress').update({ remark:e.target.value }).eq('id',e.target.dataset.id); await loadAll(); renderOrderList(); });
     document.getElementById('orderTotalCount').innerText = orderRecords.length;
     document.getElementById('orderPendingCount').innerText = orderRecords.filter(o=>o.status==='待生产').length;
     document.getElementById('orderProducingCount').innerText = orderRecords.filter(o=>o.status==='生产中').length;
     document.getElementById('orderCompletedCount').innerText = orderRecords.filter(o=>o.status==='已入库').length;
 }
-window.deleteOrder = async (id) => { if(confirm('删除订单？')){ await supabase.from('order_progress').delete().eq('id',id); await loadAll(); renderAll(); } };
+window.deleteOrder = async (id) => { if(confirm('删除订单？')){ await supabaseClient.from('order_progress').delete().eq('id',id); await loadAll(); renderAll(); } };
 async function renderWasteList() {
     let html = wasteRecords.map(w => `<tr><td>${escapeHtml(w.model)}</td><td>${w.waste_qty}kg</td><td>${escapeHtml(w.reason)}</td><td>${escapeHtml(w.operator)}</td><td><span class="status-badge">${w.confirmed?'已确认':'待确认'}</span></td><td>${w.date}</td><td>${!w.confirmed?`<button class="action-btn" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无废置</td></tr>';
     document.getElementById('wasteTableBody').innerHTML = html;
@@ -221,16 +256,16 @@ async function renderWasteList() {
 window.confirmWaste = async (id) => {
     let waste = wasteRecords.find(w=>w.id===id);
     if(waste && confirm(`确认废置 ${waste.waste_qty}kg？`)){
-        await supabase.from('in_records').insert({ id:Date.now().toString()+'_waste', customer:'废置', model:waste.model, weight:-waste.waste_qty, date:new Date().toISOString().slice(0,10), scan_by:'电脑端' });
-        await supabase.from('waste_records').update({ confirmed:true }).eq('id',id);
+        await supabaseClient.from('in_records').insert({ id:Date.now().toString()+'_waste', customer:'废置', model:waste.model, weight:-waste.waste_qty, date:new Date().toISOString().slice(0,10), is_waste:true, waste_reason:waste.reason, scan_by:'电脑端' });
+        await supabaseClient.from('waste_records').update({ confirmed:true }).eq('id',id);
         await loadAll(); renderAll();
         alert('废置已确认，库存已扣减');
     }
 };
-window.deleteWaste = async (id) => { if(confirm('删除？')){ await supabase.from('waste_records').delete().eq('id',id); await loadAll(); renderAll(); } };
+window.deleteWaste = async (id) => { if(confirm('删除？')){ await supabaseClient.from('waste_records').delete().eq('id',id); await loadAll(); renderAll(); } };
 document.getElementById('refreshStatsBtn').onclick = () => {
     let y=+document.getElementById('statsYear').value, m=+document.getElementById('statsMonth').value;
-    let inF = warehouseIn.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && (m===0||d.getMonth()+1===m);});
+    let inF = warehouseIn.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && (m===0||d.getMonth()+1===m) && !r.is_waste;});
     let outF = warehouseOut.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && (m===0||d.getMonth()+1===m);});
     document.getElementById('reportContainer').innerHTML = `<div class="add-form"><div>入仓: ${inF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>出仓: ${outF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>净余: ${(inF.reduce((s,i)=>s+(+i.weight||0),0)-outF.reduce((s,i)=>s+(+i.weight||0),0)).toFixed(2)} kg</div></div>`;
 };
@@ -273,7 +308,7 @@ document.getElementById('printLabelBtn').onclick = async () => {
     if(!spec){ alert("请填规格"); return; }
     if(net>0){
         let batchCode = batch || "无批号";
-        await supabase.from('in_records').insert({ id:Date.now().toString(), customer:`成品-${batchCode}`, model:spec, weight:net, date:date, scan_by:'电脑端' });
+        await supabaseClient.from('in_records').insert({ id:Date.now().toString(), customer:`成品-${batchCode}`, model:spec, weight:net, date:date, scan_by:'电脑端' });
         await loadAll(); renderAll(); updateTodayCount();
         alert(`已入仓，净重：${net.toFixed(2)} kg`);
     } else { alert(`净重${net.toFixed(2)}kg未入仓`); return; }
