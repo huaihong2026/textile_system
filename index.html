@@ -21,7 +21,7 @@
         .card{background:#f0f6fa;border-radius:16px;padding:10px 16px;flex:1;min-width:100px;cursor:pointer}
         .card h3{font-size:.65rem;color:#666}
         .card .num{font-size:1.3rem;font-weight:700;color:#1f6e8c}
-        table{width:100%;border-collapse:collapse}
+        table{width:100%;border-collapse:collapse;margin-top:10px}
         th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:.75rem}
         th{background:#eef3fc}
         .form-box{background:#f7fafd;border-radius:16px;padding:12px;margin-bottom:16px}
@@ -37,6 +37,8 @@
         .craft-detail{flex:1;padding-left:16px}
         .craft-item{padding:8px 10px;margin:4px 0;border-radius:10px;cursor:pointer;background:#fff;border:1px solid #ddd;display:flex;justify-content:space-between}
         .craft-item.active{background:#e1f0f8;border-left:3px solid #2c7da0}
+        .status-pending{background:#fff3e0;color:#f57c00;padding:2px 8px;border-radius:20px;display:inline-block}
+        .status-done{background:#e8f5e9;color:#388e3c;padding:2px 8px;border-radius:20px;display:inline-block}
         @media(max-width:700px){.craft-list{width:100%;border-right:none}.craft-detail{padding-left:0}}
     </style>
 </head>
@@ -57,217 +59,457 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SB_URL = 'https://xngvmdoewlmxnsthbqxw.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuZ3ZtZG9ld2xteG5zdGhicXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NjM3MzMsImV4cCI6MjA5NTMzOTczM30.Djx4HvAyqHtjVSoIq_puI5Km0uSq_pHkzGQ-Rfz-p9s';
+// ========== 使用您的旧项目配置（已验证可用）==========
+const SB_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2c25jampzc3F3b3VzdnBkdndlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0Mjk1MzksImV4cCI6MjA5NTAwNTUzOX0.5k0jbvR4uX8jl1sNrZDkCdl_GCZljIpCCz5VdCMgBYs';
 
-let supabase = window.supabase.createClient(SB_URL, SB_KEY);
-let crafts=[], ins=[], outs=[], orders=[], wastes=[];
-let currentCraft=null;
+let supabase = null;
+let crafts = [], ins = [], outs = [], orders = [], wastes = [];
+let currentCraft = null;
+let currentTab = 'dash';
+let mainDiv = null;
 
-async function loadAll(){
-    let{data:c}=await supabase.from('craft_records').select('*'); crafts=c||[];
-    let{data:i}=await supabase.from('in_records').select('*'); ins=i||[];
-    let{data:o}=await supabase.from('out_records').select('*'); outs=o||[];
-    let{data:od}=await supabase.from('order_progress').select('*'); orders=od||[];
-    let{data:w}=await supabase.from('waste_records').select('*'); wastes=w||[];
-    render();
+function escape(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+// 数据加载
+async function loadData() {
+    try {
+        supabase = window.supabase.createClient(SB_URL, SB_KEY);
+        let { data:c } = await supabase.from('craft_records').select('*'); crafts = c || [];
+        let { data:i } = await supabase.from('in_records').select('*'); ins = i || [];
+        let { data:o } = await supabase.from('out_records').select('*'); outs = o || [];
+        let { data:od } = await supabase.from('order_progress').select('*'); orders = od || [];
+        let { data:w } = await supabase.from('waste_records').select('*'); wastes = w || [];
+        console.log('数据加载成功', { crafts, ins, outs, orders, wastes });
+    } catch(e) { console.error('加载失败', e); }
+    renderAll();
 }
 
-function render(){
-    let today=new Date().toISOString().slice(0,10);
-    let inToday=ins.filter(i=>i.date===today&&!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
-    let outToday=outs.filter(o=>o.date===today).reduce((s,o)=>s+(+o.weight||0),0);
-    let pending=ins.filter(i=>(i.customer==='待分配'||!i.customer)&&!i.is_waste).length;
-    let pendingOrd=orders.filter(o=>o.status==='待生产').length;
-    let stock=ins.reduce((s,i)=>s+(+i.weight||0),0)-outs.reduce((s,o)=>s+(+o.weight||0),0);
-    
-    let html=`
-        <div id="dashPage"><div class="cards"><div class="card" onclick="goTo('in')"><h3>📥 今日入库</h3><div class="num">${inToday}</div></div><div class="card" onclick="goTo('out')"><h3>📤 今日出库</h3><div class="num">${outToday}</div></div><div class="card" onclick="goTo('in')"><h3>📋 待分配</h3><div class="num">${pending}</div></div><div class="card" onclick="goTo('order')"><h3>⏳ 待生产</h3><div class="num">${pendingOrd}</div></div></div><div class="cards"><div class="card"><h3>📦 总库存</h3><div class="num">${stock}</div></div></div></div>
-        <div id="craftPage" style="display:none"><div class="craft-layout"><div class="craft-list"><div style="display:flex;justify-content:space-between"><span>📋 工艺列表</span><button id="addCraftBtn" class="btn-sm" style="padding:3px 10px">+新增</button></div><div id="craftList"></div></div><div class="craft-detail" id="craftDetail"><div class="empty">选择或新增工艺</div></div></div></div>
-        <div id="inPage" style="display:none"><div class="form-box"><h4>➕ 添加入仓</h4><div class="row"><div class="field"><label>客户(选填)</label><input type="text" id="inCus" placeholder="留空待分配"></div><div class="field"><label>型号</label><input type="text" id="inModel"></div><div class="field"><label>重量(kg)</label><input type="number" id="inW"></div><div class="field"><label>日期</label><input type="date" id="inDate"></div><button id="addInBtn">✅ 添加</button></div></div><div><table><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>状态</th><th>操作</th></tr></thead><tbody id="inList"></tbody></table></div></div>
-        <div id="outPage" style="display:none"><div class="form-box"><h4>📤 添加出仓</h4><div class="row"><div class="field"><label>客户(选填)</label><input type="text" id="outCus"></div><div class="field"><label>型号</label><input type="text" id="outModel"></div><div class="field"><label>重量(kg)</label><input type="number" id="outW"></div><div class="field"><label>日期</label><input type="date" id="outDate"></div><button id="addOutBtn">✅ 添加</button></div></div><div><table><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="outList"></tbody></td></div></div>
-        <div id="statsPage" style="display:none"><div class="form-box"><div class="row"><div class="field"><label>年份</label><input type="number" id="statsYear" value="2024"></div><div class="field"><label>月份</label><select id="statsMonth"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div><button id="refreshStats">📊 统计</button></div></div><div id="statsRes"></div></div>
-        <div id="printPage" style="display:none"><div class="form-box"><h4>🖨️ 打印标签</h4><div class="row"><div class="field"><label>规格</label><input type="text" id="pSpec"></div><div class="field"><label>色号</label><input type="text" id="pColor"></div><div class="field"><label>机号</label><input type="text" id="pMachine"></div><div class="field"><label>数量</label><input type="number" id="pQty"></div><div class="field"><label>毛重</label><input type="number" id="pGross"></div><div class="field"><label>筒重</label><input type="number" id="pTong"></div><div class="field"><label>箱重</label><input type="number" id="pBox"></div><div class="field"><label>净重</label><input type="text" id="pNet" readonly></div><div class="field"><label>包装</label><input type="text" id="pHandler"></div><div class="field"><label>批号</label><input type="text" id="pBatch"></div><button id="printBtn">🖨️ 打印</button></div></div></div>
-        <div id="orderPage" style="display:none"><div class="form-box"><h4>➕ 新增订单</h4><div class="row"><div class="field"><label>客户</label><input type="text" id="orderCus"></div><div class="field"><label>规格</label><input type="text" id="orderSpec"></div><div class="field"><label>数量</label><input type="number" id="orderQty"></div><div class="field"><label>备注</label><input type="text" id="orderRemark"></div><button id="addOrderBtn">✅ 新增</button></div></div><div><tr><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>日期</th><th>操作</th></tr></thead><tbody id="orderList"></tbody></table></div></div>
-        <div id="wastePage" style="display:none"><div class="form-box"><h4>🗑️ 申请废置</h4><div class="row"><div class="field"><label>型号</label><input type="text" id="wasteModel"></div><div class="field"><label>数量</label><input type="number" id="wasteQty"></div><div class="field"><label>原因</label><input type="text" id="wasteReason"></div><button id="addWasteBtn">📝 申请</button></div></div><div><tr><thead><tr><th>型号</th><th>数量</th><th>原因</th><th>申请人</th><th>状态</th><th>日期</th><th>操作</th></tr></thead><tbody id="wasteList"></tbody></tr></div></div>
+// 渲染仪表盘
+function renderDashboard(container) {
+    let today = new Date().toISOString().slice(0,10);
+    let inToday = ins.filter(i=>i.date===today && !i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
+    let outToday = outs.filter(o=>o.date===today).reduce((s,o)=>s+(+o.weight||0),0);
+    let pendingAssign = ins.filter(i=>(i.customer==='待分配'||!i.customer) && !i.is_waste).length;
+    let pendingOrders = orders.filter(o=>o.status==='待生产').length;
+    let totalStock = ins.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0) - outs.reduce((s,o)=>s+(+o.weight||0),0);
+    let pendingWaste = wastes.filter(w=>!w.confirmed).length;
+    let tasks = '';
+    if(pendingAssign>0) tasks += `📋 ${pendingAssign} 条待分配客户<br>`;
+    if(pendingOrders>0) tasks += `📋 ${pendingOrders} 个订单待生产<br>`;
+    if(pendingWaste>0) tasks += `🗑️ ${pendingWaste} 个废置待确认`;
+    if(!tasks) tasks = '暂无待处理 ✓';
+    container.innerHTML = `
+        <div class="cards">
+            <div class="card" onclick="switchTab('in')"><h3>📥 今日入库</h3><div class="num">${inToday.toFixed(2)}</div></div>
+            <div class="card" onclick="switchTab('out')"><h3>📤 今日出库</h3><div class="num">${outToday.toFixed(2)}</div></div>
+            <div class="card" onclick="switchTab('in')"><h3>📋 待分配</h3><div class="num">${pendingAssign}</div></div>
+            <div class="card" onclick="switchTab('order')"><h3>⏳ 待生产</h3><div class="num">${pendingOrders}</div></div>
+        </div>
+        <div class="cards">
+            <div class="card"><h3>📦 总库存</h3><div class="num">${totalStock.toFixed(2)} kg</div></div>
+            <div class="card"><h3>📋 工艺数</h3><div class="num">${crafts.length}</div></div>
+        </div>
+        <div class="form-box"><div>${tasks}</div></div>
     `;
-    document.getElementById('main').innerHTML=html;
-    renderCrafts(); renderInOut(); renderOrders(); renderWastes();
-    bindPageEvents();
 }
 
-function renderCrafts(){
-    let c=document.getElementById('craftList');
-    if(!crafts.length){c.innerHTML='<div class="empty">暂无工艺</div>';return;}
-    c.innerHTML=crafts.map(c=>`<div class="craft-item ${currentCraft==c.id?'active':''}" data-id="${c.id}"><div>📄 ${escape(c.title)}<br><small>${escape(c.customer)}</small></div><div><button class="btn-del edit-craft" data-id="${c.id}">✏️</button><button class="btn-del del-craft" data-id="${c.id}">🗑️</button></div></div>`).join('');
-    document.querySelectorAll('.edit-craft').forEach(btn=>btn.onclick=e=>{e.stopPropagation();let id=btn.dataset.id;let c=crafts.find(c=>c.id==id);if(c){let newTitle=prompt("新标题",c.title);if(newTitle){c.title=newTitle;supabase.from('craft_records').update({title:newTitle}).eq('id',id);loadAll();}}});
-    document.querySelectorAll('.del-craft').forEach(btn=>btn.onclick=async e=>{e.stopPropagation();if(confirm('删除？')){await supabase.from('craft_records').delete().eq('id',btn.dataset.id);await loadAll();}});
-    document.querySelectorAll('.craft-item').forEach(el=>el.onclick=e=>{if(!e.target.classList.contains('btn-del')){currentCraft=el.dataset.id;let c=crafts.find(c=>c.id==currentCraft);if(c)document.getElementById('craftDetail').innerHTML=`<div style="border-left:3px solid #2c7da0;padding-left:12px"><div style="font-size:1.2rem">${escape(c.title)}</div><div>${escape(c.customer)} ${c.date||''}</div></div><div style="margin-top:12px"><strong>原料：</strong> ${(c.materials||[]).join(', ')}</div>`;renderCrafts();}});
-    document.getElementById('addCraftBtn').onclick=async()=>{let title=prompt("工艺标题");if(title){await supabase.from('craft_records').insert({id:Date.now().toString(),title,customer:"",date:new Date().toISOString().slice(0,10),materials:[]});await loadAll();}};
-}
-
-function renderInOut(){
-    let inList = document.getElementById('inList');
-    if(inList){
-        inList.innerHTML = ins.map(i => `
-            <tr>
-                <td>${escape(i.customer||'待分配')}${i.is_waste?'(废置)':''}</td>
-                <td>${escape(i.model)}${i.waste_reason?'('+i.waste_reason+')':''}${i.is_waste?'<span style="color:red">已废置</span>':''}</td>
-                <td>${i.weight} kg</td>
-                <td>${i.date}</td>
-                <td><span style="background:#fff3e0;padding:2px 8px;border-radius:20px;color:#f57c00">${i.customer==='待分配'||!i.customer?'待分配':'已入库'}</span></td>
-                <td>
-                    <button class="btn-del" onclick="delIn('${i.id}')">🗑️</button>
-                    ${(i.customer==='待分配'||!i.customer)&&!i.is_waste? `<button class="btn-del" onclick="assignOrder('${i.id}','${escape(i.model)}')">📌分配</button>` : ''}
-                </td>
-            </tr>
-        `).join('') || '<tr><td colspan="6" class="empty">暂无</td></tr>';
+// 渲染工艺页面
+function renderCraftPage(container) {
+    container.innerHTML = `<div class="craft-layout"><div class="craft-list"><div style="display:flex;justify-content:space-between"><span>📋 工艺列表</span><button id="addCraftBtn" style="padding:3px 10px">+新增</button></div><div id="craftList"></div></div><div class="craft-detail" id="craftDetail"></div></div>`;
+    let craftListDiv = document.getElementById('craftList');
+    craftListDiv.innerHTML = '';
+    crafts.forEach(c => {
+        let div = document.createElement('div');
+        div.className = `craft-item ${currentCraft == c.id ? 'active' : ''}`;
+        div.setAttribute('data-id', c.id);
+        div.innerHTML = `<div>📄 ${escape(c.title)}<br><small>${escape(c.customer)}</small></div><div><button class="btn-del edit-craft" data-id="${c.id}">✏️</button><button class="btn-del del-craft" data-id="${c.id}">🗑️</button></div>`;
+        div.onclick = (e) => { if(!e.target.classList.contains('btn-del')) selectCraft(c.id); };
+        div.querySelector('.edit-craft').onclick = (e) => { e.stopPropagation(); editCraft(c.id); };
+        div.querySelector('.del-craft').onclick = async (e) => { e.stopPropagation(); if(confirm('删除？')){ await supabase.from('craft_records').delete().eq('id',c.id); await loadData(); } };
+        craftListDiv.appendChild(div);
+    });
+    let detailDiv = document.getElementById('craftDetail');
+    if(currentCraft){
+        let c = crafts.find(c => c.id == currentCraft);
+        if(c) detailDiv.innerHTML = `<div style="border-left:3px solid #2c7da0;padding-left:12px"><div style="font-size:1.2rem">${escape(c.title)}</div><div>${escape(c.customer)} ${c.date||''}</div></div><div style="margin-top:12px"><strong>原料：</strong> ${(c.materials||[]).join(', ')}</div>`;
+        else detailDiv.innerHTML = '<div class="empty">选择或新增工艺</div>';
+    } else {
+        detailDiv.innerHTML = '<div class="empty">选择或新增工艺</div>';
     }
-    let outList = document.getElementById('outList');
-    if(outList){
-        outList.innerHTML = outs.map(o => `
-            <tr>
-                <td>${escape(o.customer||'-')}</td>
-                <td>${escape(o.model)}</td>
-                <td>${o.weight} kg</td>
-                <td>${o.date}</td>
-                <td><button class="btn-del" onclick="delOut('${o.id}')">🗑️</button></td>
-            </tr>
-        `).join('') || '<tr><td colspan="5" class="empty">暂无</td></tr>';
+    document.getElementById('addCraftBtn').onclick = async () => { let title = prompt("工艺标题"); if(title){ await supabase.from('craft_records').insert({id:Date.now().toString(), title, customer:"", date:new Date().toISOString().slice(0,10), materials:[]}); await loadData(); } };
+}
+function selectCraft(id) { currentCraft = id; renderAll(); }
+async function editCraft(id) { let c = crafts.find(c=>c.id==id); if(c){ let newTitle = prompt("新标题",c.title); if(newTitle){ await supabase.from('craft_records').update({title:newTitle}).eq('id',id); await loadData(); } } }
+
+// 渲染入仓页面
+function renderInPage(container) {
+    container.innerHTML = `
+        <div class="form-box"><h4>➕ 添加入仓</h4><div class="row"><div class="field"><label>客户(选填)</label><input type="text" id="inCus" placeholder="留空待分配"></div><div class="field"><label>型号</label><input type="text" id="inModel"></div><div class="field"><label>重量(kg)</label><input type="number" id="inW"></div><div class="field"><label>日期</label><input type="date" id="inDate"></div><button id="addInBtn">✅ 添加</button></div></div>
+        <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>状态</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div>
+    `;
+    let tbody = document.getElementById('inTableBody');
+    tbody.innerHTML = '';
+    ins.forEach(i => {
+        let row = tbody.insertRow();
+        row.insertCell(0).innerText = escape(i.customer||'待分配') + (i.is_waste?'(废置)':'');
+        row.insertCell(1).innerHTML = escape(i.model) + (i.is_waste?'<span style="color:red">已废置</span>':'');
+        row.insertCell(2).innerText = i.weight + ' kg';
+        row.insertCell(3).innerText = i.date;
+        let statusSpan = document.createElement('span');
+        statusSpan.className = (i.customer==='待分配'||!i.customer) ? 'status-pending' : 'status-done';
+        statusSpan.innerText = (i.customer==='待分配'||!i.customer) ? '待分配' : '已入库';
+        row.insertCell(4).appendChild(statusSpan);
+        let btnCell = row.insertCell(5);
+        let delBtn = document.createElement('button');
+        delBtn.className = 'btn-del';
+        delBtn.innerText = '🗑️';
+        delBtn.onclick = async () => { if(confirm('删除？')){ await supabase.from('in_records').delete().eq('id',i.id); await loadData(); } };
+        btnCell.appendChild(delBtn);
+        if((i.customer==='待分配'||!i.customer) && !i.is_waste){
+            let assignBtn = document.createElement('button');
+            assignBtn.className = 'btn-del';
+            assignBtn.innerText = '📌分配';
+            assignBtn.onclick = () => assignOrder(i.id, i.model);
+            btnCell.appendChild(assignBtn);
+        }
+    });
+    if(!ins.length){ let row = tbody.insertRow(); let cell = row.insertCell(0); cell.colSpan = 6; cell.className = 'empty'; cell.innerText = '暂无'; }
+    document.getElementById('addInBtn').onclick = async () => {
+        let c = document.getElementById('inCus').value||'待分配';
+        let m = document.getElementById('inModel').value;
+        let w = parseFloat(document.getElementById('inW').value);
+        let d = document.getElementById('inDate').value||new Date().toISOString().slice(0,10);
+        if(!m||isNaN(w)){ alert("请填型号和重量"); return; }
+        await supabase.from('in_records').insert({id:Date.now().toString(), customer:c, model:m, weight:w, date:d});
+        await loadData();
+        document.getElementById('inCus').value=''; document.getElementById('inModel').value=''; document.getElementById('inW').value='';
+    };
+}
+
+// 渲染出仓页面
+function renderOutPage(container) {
+    container.innerHTML = `
+        <div class="form-box"><h4>📤 添加出仓</h4><div class="row"><div class="field"><label>客户(选填)</label><input type="text" id="outCus"></div><div class="field"><label>型号</label><input type="text" id="outModel"></div><div class="field"><label>重量(kg)</label><input type="number" id="outW"></div><div class="field"><label>日期</label><input type="date" id="outDate"></div><button id="addOutBtn">✅ 添加</button></div></div>
+        <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
+    `;
+    let tbody = document.getElementById('outTableBody');
+    tbody.innerHTML = '';
+    outs.forEach(o => {
+        let row = tbody.insertRow();
+        row.insertCell(0).innerText = escape(o.customer||'-');
+        row.insertCell(1).innerText = escape(o.model);
+        row.insertCell(2).innerText = o.weight + ' kg';
+        row.insertCell(3).innerText = o.date;
+        let delBtn = document.createElement('button');
+        delBtn.className = 'btn-del';
+        delBtn.innerText = '🗑️';
+        delBtn.onclick = async () => { if(confirm('删除？')){ await supabase.from('out_records').delete().eq('id',o.id); await loadData(); } };
+        row.insertCell(4).appendChild(delBtn);
+    });
+    if(!outs.length){ let row = tbody.insertRow(); let cell = row.insertCell(0); cell.colSpan = 5; cell.className = 'empty'; cell.innerText = '暂无'; }
+    document.getElementById('addOutBtn').onclick = async () => {
+        let c = document.getElementById('outCus').value||'-';
+        let m = document.getElementById('outModel').value;
+        let w = parseFloat(document.getElementById('outW').value);
+        let d = document.getElementById('outDate').value||new Date().toISOString().slice(0,10);
+        if(!m||isNaN(w)){ alert("请填型号和重量"); return; }
+        await supabase.from('out_records').insert({id:Date.now().toString(), customer:c, model:m, weight:w, date:d});
+        await loadData();
+        document.getElementById('outCus').value=''; document.getElementById('outModel').value=''; document.getElementById('outW').value='';
+    };
+}
+
+// 报表页面
+function renderStatsPage(container) {
+    container.innerHTML = `<div class="form-box"><div class="row"><div class="field"><label>年份</label><input type="number" id="statsYear" value="2024"></div><div class="field"><label>月份</label><select id="statsMonth"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div><button id="refreshStatsBtn">📊 统计</button></div></div><div id="statsResult"></div>`;
+    document.getElementById('refreshStatsBtn').onclick = () => {
+        let y = +document.getElementById('statsYear').value, m = +document.getElementById('statsMonth').value;
+        let inF = ins.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && (m===0||d.getMonth()+1===m) && !r.is_waste;});
+        let outF = outs.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && (m===0||d.getMonth()+1===m);});
+        document.getElementById('statsResult').innerHTML = `<div class="form-box"><div>入仓: ${inF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>出仓: ${outF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>净余: ${(inF.reduce((s,i)=>s+(+i.weight||0),0)-outF.reduce((s,i)=>s+(+i.weight||0),0)).toFixed(2)} kg</div></div>`;
+    };
+}
+
+// 打印标签页面
+function renderPrintPage(container) {
+    container.innerHTML = `
+        <div class="form-box">
+            <h4>🖨️ 打印标签</h4>
+            <div class="row">
+                <div class="field"><label>规格</label><input type="text" id="pSpec"></div>
+                <div class="field"><label>色号</label><input type="text" id="pColor"></div>
+                <div class="field"><label>机号</label><input type="text" id="pMachine"></div>
+                <div class="field"><label>数量</label><input type="number" id="pQty"></div>
+                <div class="field"><label>毛重</label><input type="number" id="pGross"></div>
+                <div class="field"><label>筒重</label><input type="number" id="pTong"></div>
+                <div class="field"><label>箱重</label><input type="number" id="pBox"></div>
+                <div class="field"><label>净重</label><input type="text" id="pNet" readonly></div>
+                <div class="field"><label>包装</label><input type="text" id="pHandler"></div>
+                <div class="field"><label>批号</label><input type="text" id="pBatch"></div>
+                <button id="printBtn">🖨️ 打印</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('printBtn').onclick = () => printTag();
+    document.getElementById('pGross').addEventListener('input', updateNet);
+    document.getElementById('pTong').addEventListener('input', updateNet);
+    document.getElementById('pBox').addEventListener('input', updateNet);
+}
+function updateNet() {
+    let g = +document.getElementById('pGross').value||0, t = +document.getElementById('pTong').value||0, b = +document.getElementById('pBox').value||0;
+    document.getElementById('pNet').value = (g-t-b<0?0:g-t-b).toFixed(2);
+}
+async function printTag() {
+    let spec = document.getElementById('pSpec').value;
+    let batch = document.getElementById('pBatch').value;
+    let gross = +document.getElementById('pGross').value||0;
+    let tong = +document.getElementById('pTong').value||0;
+    let box = +document.getElementById('pBox').value||0;
+    let net = gross - tong - box; if(net<0) net=0;
+    if(!spec){ alert("请填规格"); return; }
+    if(net>0){
+        await supabase.from('in_records').insert({id:Date.now().toString(), customer:`成品-${batch||"无批号"}`, model:spec, weight:net, date:new Date().toISOString().slice(0,10)});
+        await loadData();
+        alert(`已入仓，净重：${net.toFixed(2)} kg`);
+    } else { alert(`净重${net.toFixed(2)}kg未入仓`); return; }
+    let qrData = JSON.stringify({
+        spec: spec,
+        color: document.getElementById('pColor').value,
+        machine: document.getElementById('pMachine').value,
+        qty: document.getElementById('pQty').value,
+        gross: gross,
+        tong: tong,
+        box: box,
+        net: net,
+        handler: document.getElementById('pHandler').value,
+        batch: batch,
+        date: new Date().toISOString().slice(0,10)
+    });
+    let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    let tagHtml = `<!DOCTYPE html>
+    <html>
+    <head><meta charset="UTF-8"><title>成品标签</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:white;margin:0;padding:0;font-family:'SimSun','宋体',monospace;}
+        .label{width:100mm;height:100mm;background:white;border:1px solid #000;padding:3mm;margin:0 auto;position:relative;}
+        .company{text-align:center;font-size:18pt;font-weight:bold;}
+        .address{text-align:center;font-size:11pt;line-height:1.2;}
+        .top-line{border-top:0.5px solid #000;margin:2mm 0;}
+        .mid-line{border-top:0.5px solid #000;margin:4mm 0 2mm 0;}
+        .two-col{display:flex;justify-content:space-between;margin:2mm 0 0 0;}
+        .left-col,.right-col{width:45%;}
+        .field{margin-bottom:2mm;display:flex;align-items:baseline;}
+        .field-name{width:12mm;font-size:13pt;font-weight:bold;flex-shrink:0;}
+        .field-value{font-size:13pt;padding-left:2mm;font-weight:bold;}
+        .red .field-name{color:#c00;}.red .field-value{color:#c00;font-weight:bold;}
+        .date-row{display:flex;align-items:baseline;margin-top:2mm;width:100%;}
+        .date-row .field-name{width:12mm;font-size:13pt;font-weight:bold;}
+        .date-row .field-value{flex:1;font-size:13pt;padding-left:2mm;font-weight:bold;}
+        .qr-area{position:absolute;bottom:3mm;right:17mm;width:25mm;height:25mm;text-align:center;}
+        .qr-img{width:100%;height:100%;}
+        .footer{position:absolute;bottom:11mm;left:7mm;font-size:16pt;font-weight:bold;color:#c00;line-height:1.3;}
+        @page{size:100mm 100mm;margin:0mm;}
+        @media print{body{margin:0;padding:0;}.label{border:none;}}
+    </style>
+    </head>
+    <body>
+    <div class="label">
+        <div class="company">中山市淮鸿橡筋织带有限公司</div>
+        <div class="address">地址：中山市三角镇接民村金达路三号B栋五楼</div>
+        <div class="address">电话：13535238522</div>
+        <div class="top-line"></div>
+        <div class="two-col">
+            <div class="left-col">
+                <div class="field"><span class="field-name">规格</span><span class="field-value">${escape(spec)}</span></div>
+                <div class="field"><span class="field-name">机号</span><span class="field-value">${escape(document.getElementById('pMachine').value)}</span></div>
+                <div class="field"><span class="field-name">毛重</span><span class="field-value">${gross.toFixed(2)} kg</span></div>
+                <div class="field"><span class="field-name">箱重</span><span class="field-value">${box.toFixed(2)} kg</span></div>
+                <div class="field red"><span class="field-name">净重</span><span class="field-value">${net.toFixed(2)} kg</span></div>
+            </div>
+            <div class="right-col">
+                <div class="field"><span class="field-name">色号</span><span class="field-value">${escape(document.getElementById('pColor').value)}</span></div>
+                <div class="field"><span class="field-name">数量</span><span class="field-value">${escape(document.getElementById('pQty').value)} 个</span></div>
+                <div class="field"><span class="field-name">筒重</span><span class="field-value">${tong.toFixed(2)} kg</span></div>
+                <div class="field"><span class="field-name">包装</span><span class="field-value">${escape(document.getElementById('pHandler').value)}</span></div>
+                <div class="field"><span class="field-name">批号</span><span class="field-value">${escape(batch)}</span></div>
+            </div>
+        </div>
+        <div class="date-row"><span class="field-name">日期</span><span class="field-value">${new Date().toISOString().slice(0,10)}</span></div>
+        <div class="mid-line"></div>
+        <div class="footer">不同机号、批号<br>分开使用</div>
+        <div class="qr-area"><img class="qr-img" src="${qrUrl}"></div>
+    </div>
+    <script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},500);},300);};<\/script>
+    </body>
+    </html>`;
+    let iframe = document.createElement('iframe');
+    iframe.style.position = 'absolute';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    document.body.appendChild(iframe);
+    let doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(tagHtml);
+    doc.close();
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    setTimeout(() => document.body.removeChild(iframe), 2000);
+    document.getElementById('pSpec').value = '';
+    document.getElementById('pColor').value = '';
+    document.getElementById('pMachine').value = '';
+    document.getElementById('pQty').value = '';
+    document.getElementById('pGross').value = '';
+    document.getElementById('pTong').value = '';
+    document.getElementById('pBox').value = '';
+    document.getElementById('pNet').value = '';
+    document.getElementById('pHandler').value = '';
+    document.getElementById('pBatch').value = '';
+}
+
+// 订单页面
+function renderOrderPage(container) {
+    container.innerHTML = `
+        <div class="form-box"><h4>➕ 新增订单</h4><div class="row"><div class="field"><label>客户</label><input type="text" id="orderCus"></div><div class="field"><label>规格</label><input type="text" id="orderSpec"></div><div class="field"><label>数量</label><input type="number" id="orderQty"></div><div class="field"><label>备注</label><input type="text" id="orderRemark"></div><button id="addOrderBtn">✅ 新增</button></div></div>
+        <div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody></table></div>
+    `;
+    let tbody = document.getElementById('orderTableBody');
+    tbody.innerHTML = '';
+    orders.forEach(o => {
+        let row = tbody.insertRow();
+        row.insertCell(0).innerText = o.order_no;
+        row.insertCell(1).innerText = escape(o.customer||'-');
+        row.insertCell(2).innerText = escape(o.product_spec);
+        let qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.value = o.quantity;
+        qtyInput.style.width = '70px';
+        qtyInput.onchange = async () => { await supabase.from('order_progress').update({quantity:parseFloat(qtyInput.value)}).eq('id',o.id); await loadData(); };
+        row.insertCell(3).appendChild(qtyInput);
+        let statusSelect = document.createElement('select');
+        ['待生产','生产中','已入库'].forEach(s => { let opt = document.createElement('option'); opt.value = s; opt.innerText = s; if(o.status === s) opt.selected = true; statusSelect.appendChild(opt); });
+        statusSelect.onchange = async () => { await supabase.from('order_progress').update({status:statusSelect.value}).eq('id',o.id); await loadData(); };
+        row.insertCell(4).appendChild(statusSelect);
+        let remarkInput = document.createElement('input');
+        remarkInput.type = 'text';
+        remarkInput.value = o.remark||'';
+        remarkInput.style.width = '80px';
+        remarkInput.onchange = async () => { await supabase.from('order_progress').update({remark:remarkInput.value}).eq('id',o.id); await loadData(); };
+        row.insertCell(5).appendChild(remarkInput);
+        row.insertCell(6).innerText = o.created_date;
+        let delBtn = document.createElement('button');
+        delBtn.className = 'btn-del';
+        delBtn.innerText = '🗑️';
+        delBtn.onclick = async () => { if(confirm('删除订单？')){ await supabase.from('order_progress').delete().eq('id',o.id); await loadData(); } };
+        row.insertCell(7).appendChild(delBtn);
+    });
+    if(!orders.length){ let row = tbody.insertRow(); let cell = row.insertCell(0); cell.colSpan = 8; cell.className = 'empty'; cell.innerText = '暂无'; }
+    document.getElementById('addOrderBtn').onclick = async () => {
+        let c = document.getElementById('orderCus').value||null;
+        let s = document.getElementById('orderSpec').value;
+        let q = parseFloat(document.getElementById('orderQty').value);
+        let r = document.getElementById('orderRemark').value;
+        if(!s||isNaN(q)){ alert("请填规格和数量"); return; }
+        let today = new Date();
+        let no = 'D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0');
+        await supabase.from('order_progress').insert({id:Date.now().toString(), order_no:no, customer:c, product_spec:s, quantity:q, remark:r, status:'待生产', created_date:today.toISOString().slice(0,10)});
+        await loadData();
+        document.getElementById('orderCus').value=''; document.getElementById('orderSpec').value=''; document.getElementById('orderQty').value=''; document.getElementById('orderRemark').value='';
+    };
+}
+
+// 废置页面
+function renderWastePage(container) {
+    container.innerHTML = `
+        <div class="form-box"><h4>🗑️ 申请废置</h4><div class="row"><div class="field"><label>型号</label><input type="text" id="wasteModel"></div><div class="field"><label>数量(kg)</label><input type="number" id="wasteQty"></div><div class="field"><label>原因</label><input type="text" id="wasteReason"></div><button id="addWasteBtn">📝 申请</button></div></div>
+        <div><table class="data-table"><thead><tr><th>型号</th><th>数量</th><th>原因</th><th>申请人</th><th>状态</th><th>日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></table></div>
+    `;
+    let tbody = document.getElementById('wasteTableBody');
+    tbody.innerHTML = '';
+    wastes.forEach(w => {
+        let row = tbody.insertRow();
+        row.insertCell(0).innerText = escape(w.model);
+        row.insertCell(1).innerText = w.waste_qty + ' kg';
+        row.insertCell(2).innerText = escape(w.reason);
+        row.insertCell(3).innerText = escape(w.operator);
+        let statusSpan = document.createElement('span');
+        statusSpan.className = w.confirmed ? 'status-done' : 'status-pending';
+        statusSpan.innerText = w.confirmed ? '已确认' : '待确认';
+        row.insertCell(4).appendChild(statusSpan);
+        row.insertCell(5).innerText = w.date;
+        let btnCell = row.insertCell(6);
+        if(!w.confirmed){
+            let confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn-del';
+            confirmBtn.innerText = '✅确认';
+            confirmBtn.onclick = () => confirmWaste(w.id);
+            btnCell.appendChild(confirmBtn);
+        }
+        let delBtn = document.createElement('button');
+        delBtn.className = 'btn-del';
+        delBtn.innerText = '🗑️';
+        delBtn.onclick = async () => { if(confirm('删除？')){ await supabase.from('waste_records').delete().eq('id',w.id); await loadData(); } };
+        btnCell.appendChild(delBtn);
+    });
+    if(!wastes.length){ let row = tbody.insertRow(); let cell = row.insertCell(0); cell.colSpan = 7; cell.className = 'empty'; cell.innerText = '暂无'; }
+    document.getElementById('addWasteBtn').onclick = async () => {
+        let m = document.getElementById('wasteModel').value;
+        let q = parseFloat(document.getElementById('wasteQty').value);
+        let r = document.getElementById('wasteReason').value;
+        if(!m||isNaN(q)||!r){ alert("完整填写"); return; }
+        await supabase.from('waste_records').insert({id:Date.now().toString(), model:m, waste_qty:q, reason:r, operator:'管理员', date:new Date().toISOString().slice(0,10), confirmed:false});
+        await loadData();
+        document.getElementById('wasteModel').value=''; document.getElementById('wasteQty').value=''; document.getElementById('wasteReason').value='';
+    };
+}
+async function confirmWaste(id) {
+    let w = wastes.find(w=>w.id===id);
+    if(w && confirm(`确认废置 ${w.waste_qty}kg？`)){
+        await supabase.from('in_records').insert({id:Date.now().toString()+'_waste', customer:'废置', model:w.model, weight:-w.waste_qty, date:new Date().toISOString().slice(0,10), is_waste:true, waste_reason:w.reason});
+        await supabase.from('waste_records').update({confirmed:true}).eq('id',id);
+        await loadData();
+        alert('废置已确认');
+    }
+}
+async function assignOrder(inId, model){
+    let pending = orders.filter(o=>o.product_spec===model && o.status==='待生产');
+    if(!pending.length){ alert('无匹配订单'); return; }
+    let list = pending.map((o,i)=>`${i+1}. ${o.order_no} ${o.customer||''}`).join('\n');
+    let idx = prompt(`选择订单序号:\n${list}`)-1;
+    if(idx>=0 && idx<pending.length){
+        let matched = pending[idx];
+        await supabase.from('order_progress').update({status:'已入库'}).eq('id',matched.id);
+        await supabase.from('in_records').update({customer:matched.customer||'已分配'}).eq('id',inId);
+        await loadData();
+        alert(`已关联 ${matched.order_no}`);
     }
 }
 
-function renderOrders(){
-    let list = document.getElementById('orderList');
-    if(list){
-        list.innerHTML = orders.map(o => `
-            <tr>
-                <td>${escape(o.order_no)}</td>
-                <td>${escape(o.customer||'-')}</td>
-                <td>${escape(o.product_spec)}</td>
-                <td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:70px"></td>
-                <td><select data-id="${o.id}" class="order-status">
-                    <option ${o.status==='待生产'?'selected':''}>待生产</option>
-                    <option ${o.status==='生产中'?'selected':''}>生产中</option>
-                    <option ${o.status==='已入库'?'selected':''}>已入库</option>
-                </select></td>
-                <td><input type="text" value="${escape(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:80px"></td>
-                <td>${o.created_date}</td>
-                <td><button class="btn-del" onclick="delOrder('${o.id}')">🗑️</button></td>
-            </tr>
-        `).join('') || '<tr><td colspan="8" class="empty">暂无</td></tr>';
-        document.querySelectorAll('.order-qty').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id);await loadAll();});
-        document.querySelectorAll('.order-status').forEach(sel=>sel.onchange=async e=>{await supabase.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id);await loadAll();});
-        document.querySelectorAll('.order-remark').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id);await loadAll();});
-    }
+// 主渲染
+function renderAll() {
+    if(!mainDiv) mainDiv = document.getElementById('main');
+    mainDiv.innerHTML = '';
+    if(currentTab === 'dash') renderDashboard(mainDiv);
+    else if(currentTab === 'craft') renderCraftPage(mainDiv);
+    else if(currentTab === 'in') renderInPage(mainDiv);
+    else if(currentTab === 'out') renderOutPage(mainDiv);
+    else if(currentTab === 'stats') renderStatsPage(mainDiv);
+    else if(currentTab === 'print') renderPrintPage(mainDiv);
+    else if(currentTab === 'order') renderOrderPage(mainDiv);
+    else if(currentTab === 'waste') renderWastePage(mainDiv);
 }
-
-function renderWastes(){
-    let list = document.getElementById('wasteList');
-    if(list){
-        list.innerHTML = wastes.map(w => `
-            <tr>
-                <td>${escape(w.model)}</td>
-                <td>${w.waste_qty} kg</td>
-                <td>${escape(w.reason)}</td>
-                <td>${escape(w.operator)}</td>
-                <td><span class="${w.confirmed?'status-done':'status-pending'}">${w.confirmed?'已确认':'待确认'}</span></td>
-                <td>${w.date}</td>
-                <td>${!w.confirmed?`<button class="btn-del" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="btn-del" onclick="delWaste('${w.id}')">🗑️</button></td>
-            </tr>
-        `).join('') || '<tr><td colspan="7" class="empty">暂无</td></tr>';
-    }
-}
-
-function bindPageEvents(){
-    document.getElementById('addInBtn').onclick=async()=>{
-        let c=document.getElementById('inCus').value||'待分配';
-        let m=document.getElementById('inModel').value;
-        let w=parseFloat(document.getElementById('inW').value);
-        let d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10);
-        if(!m||isNaN(w)){alert("请填型号和重量");return;}
-        await supabase.from('in_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});
-        await loadAll();
-        document.getElementById('inCus').value='';document.getElementById('inModel').value='';document.getElementById('inW').value='';
-    };
-    document.getElementById('addOutBtn').onclick=async()=>{
-        let c=document.getElementById('outCus').value||'-';
-        let m=document.getElementById('outModel').value;
-        let w=parseFloat(document.getElementById('outW').value);
-        let d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10);
-        if(!m||isNaN(w)){alert("请填型号和重量");return;}
-        await supabase.from('out_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});
-        await loadAll();
-        document.getElementById('outCus').value='';document.getElementById('outModel').value='';document.getElementById('outW').value='';
-    };
-    document.getElementById('addOrderBtn').onclick=async()=>{
-        let c=document.getElementById('orderCus').value||null;
-        let s=document.getElementById('orderSpec').value;
-        let q=parseFloat(document.getElementById('orderQty').value);
-        let r=document.getElementById('orderRemark').value;
-        if(!s||isNaN(q)){alert("请填规格和数量");return;}
-        let today=new Date();
-        let no='D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0');
-        await supabase.from('order_progress').insert({id:Date.now().toString(),order_no:no,customer:c,product_spec:s,quantity:q,remark:r,status:'待生产',created_date:today.toISOString().slice(0,10)});
-        await loadAll();
-        document.getElementById('orderCus').value='';document.getElementById('orderSpec').value='';document.getElementById('orderQty').value='';document.getElementById('orderRemark').value='';
-    };
-    document.getElementById('addWasteBtn').onclick=async()=>{
-        let m=document.getElementById('wasteModel').value;
-        let q=parseFloat(document.getElementById('wasteQty').value);
-        let r=document.getElementById('wasteReason').value;
-        if(!m||isNaN(q)||!r){alert("完整填写");return;}
-        await supabase.from('waste_records').insert({id:Date.now().toString(),model:m,waste_qty:q,reason:r,operator:'管理员',date:new Date().toISOString().slice(0,10),confirmed:false});
-        await loadAll();
-        document.getElementById('wasteModel').value='';document.getElementById('wasteQty').value='';document.getElementById('wasteReason').value='';
-    };
-    document.getElementById('refreshStats').onclick=()=>{
-        let y=+document.getElementById('statsYear').value,m=+document.getElementById('statsMonth').value;
-        let inF=ins.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m)&&!r.is_waste;});
-        let outF=outs.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m);});
-        document.getElementById('statsRes').innerHTML=`<div class="form-box"><div>入仓: ${inF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>出仓: ${outF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>净余: ${(inF.reduce((s,i)=>s+(+i.weight||0),0)-outF.reduce((s,i)=>s+(+i.weight||0),0)).toFixed(2)} kg</div></div>`;
-    };
-    document.getElementById('printBtn').onclick=()=>{
-        let spec=document.getElementById('pSpec').value;
-        let batch=document.getElementById('pBatch').value;
-        let gross=+document.getElementById('pGross').value||0;
-        let tong=+document.getElementById('pTong').value||0;
-        let box=+document.getElementById('pBox').value||0;
-        let net=gross-tong-box;if(net<0)net=0;
-        if(!spec){alert("请填规格");return;}
-        if(net>0){supabase.from('in_records').insert({id:Date.now().toString(),customer:`成品-${batch||"无批号"}`,model:spec,weight:net,date:new Date().toISOString().slice(0,10)});loadAll();alert(`已入仓，净重：${net.toFixed(2)} kg`);}
-        else{alert(`净重${net.toFixed(2)}kg未入仓`);return;}
-        let qrData=JSON.stringify({spec,color:document.getElementById('pColor').value,machine:document.getElementById('pMachine').value,qty:document.getElementById('pQty').value,gross,tong,box,net,handler:document.getElementById('pHandler').value,batch,date:new Date().toISOString().slice(0,10)});
-        let qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
-        let tagHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>成品标签</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:white;margin:0;padding:0;font-family:'SimSun','宋体',monospace;}.label{width:100mm;height:100mm;background:white;border:1px solid #000;padding:3mm;margin:0 auto;position:relative;}.company{text-align:center;font-size:18pt;font-weight:bold;}.address{text-align:center;font-size:11pt;line-height:1.2;}.top-line{border-top:0.5px solid #000;margin:2mm 0;}.mid-line{border-top:0.5px solid #000;margin:4mm 0 2mm 0;}.two-col{display:flex;justify-content:space-between;margin:2mm 0 0 0;}.left-col,.right-col{width:45%;}.field{margin-bottom:2mm;display:flex;align-items:baseline;}.field-name{width:12mm;font-size:13pt;font-weight:bold;flex-shrink:0;}.field-value{font-size:13pt;padding-left:2mm;font-weight:bold;}.red .field-name{color:#c00;}.red .field-value{color:#c00;font-weight:bold;}.date-row{display:flex;align-items:baseline;margin-top:2mm;width:100%;}.date-row .field-name{width:12mm;font-size:13pt;font-weight:bold;}.date-row .field-value{flex:1;font-size:13pt;padding-left:2mm;font-weight:bold;}.qr-area{position:absolute;bottom:3mm;right:17mm;width:25mm;height:25mm;text-align:center;}.qr-img{width:100%;height:100%;}.footer{position:absolute;bottom:11mm;left:7mm;font-size:16pt;font-weight:bold;color:#c00;line-height:1.3;}@page{size:100mm 100mm;margin:0mm;}@media print{body{margin:0;padding:0;}.label{border:none;}}</style></head><body><div class="label"><div class="company">中山市淮鸿橡筋织带有限公司</div><div class="address">地址：中山市三角镇接民村金达路三号B栋五楼</div><div class="address">电话：13535238522</div><div class="top-line"></div><div class="two-col"><div class="left-col"><div class="field"><span class="field-name">规格</span><span class="field-value">${escape(spec)}</span></div><div class="field"><span class="field-name">机号</span><span class="field-value">${escape(document.getElementById('pMachine').value)}</span></div><div class="field"><span class="field-name">毛重</span><span class="field-value">${gross.toFixed(2)} kg</span></div><div class="field"><span class="field-name">箱重</span><span class="field-value">${box.toFixed(2)} kg</span></div><div class="field red"><span class="field-name">净重</span><span class="field-value">${net.toFixed(2)} kg</span></div></div><div class="right-col"><div class="field"><span class="field-name">色号</span><span class="field-value">${escape(document.getElementById('pColor').value)}</span></div><div class="field"><span class="field-name">数量</span><span class="field-value">${escape(document.getElementById('pQty').value)} 个</span></div><div class="field"><span class="field-name">筒重</span><span class="field-value">${tong.toFixed(2)} kg</span></div><div class="field"><span class="field-name">包装</span><span class="field-value">${escape(document.getElementById('pHandler').value)}</span></div><div class="field"><span class="field-name">批号</span><span class="field-value">${escape(batch)}</span></div></div></div><div class="date-row"><span class="field-name">日期</span><span class="field-value">${new Date().toISOString().slice(0,10)}</span></div><div class="mid-line"></div><div class="footer">不同机号、批号<br>分开使用</div><div class="qr-area"><img class="qr-img" src="${qrUrl}"></div></div><script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},500);},300);};<\/script></body></html>`;
-        let iframe=document.createElement('iframe');iframe.style.position='absolute';iframe.style.width='0';iframe.style.height='0';document.body.appendChild(iframe);let doc=iframe.contentWindow.document;doc.open();doc.write(tagHtml);doc.close();iframe.contentWindow.focus();iframe.contentWindow.print();setTimeout(()=>document.body.removeChild(iframe),2000);
-        document.getElementById('pSpec').value='';document.getElementById('pColor').value='';document.getElementById('pMachine').value='';document.getElementById('pQty').value='';document.getElementById('pGross').value='';document.getElementById('pTong').value='';document.getElementById('pBox').value='';document.getElementById('pNet').value='';document.getElementById('pHandler').value='';document.getElementById('pBatch').value='';
-    };
-    document.getElementById('pGross').addEventListener('input',()=>{let g=+document.getElementById('pGross').value||0,t=+document.getElementById('pTong').value||0,b=+document.getElementById('pBox').value||0;document.getElementById('pNet').value=(g-t-b<0?0:g-t-b).toFixed(2);});
-    document.getElementById('pTong').addEventListener('input',()=>{let g=+document.getElementById('pGross').value||0,t=+document.getElementById('pTong').value||0,b=+document.getElementById('pBox').value||0;document.getElementById('pNet').value=(g-t-b<0?0:g-t-b).toFixed(2);});
-    document.getElementById('pBox').addEventListener('input',()=>{let g=+document.getElementById('pGross').value||0,t=+document.getElementById('pTong').value||0,b=+document.getElementById('pBox').value||0;document.getElementById('pNet').value=(g-t-b<0?0:g-t-b).toFixed(2);});
-}
-
-window.delIn=async(id)=>{if(confirm('删除？')){await supabase.from('in_records').delete().eq('id',id);await loadAll();}};
-window.delOut=async(id)=>{if(confirm('删除？')){await supabase.from('out_records').delete().eq('id',id);await loadAll();}};
-window.delOrder=async(id)=>{if(confirm('删除？')){await supabase.from('order_progress').delete().eq('id',id);await loadAll();}};
-window.delWaste=async(id)=>{if(confirm('删除？')){await supabase.from('waste_records').delete().eq('id',id);await loadAll();}};
-window.confirmWaste=async(id)=>{let w=wastes.find(w=>w.id===id);if(w&&confirm(`确认废置 ${w.waste_qty}kg？`)){await supabase.from('in_records').insert({id:Date.now().toString()+'_waste',customer:'废置',model:w.model,weight:-w.waste_qty,date:new Date().toISOString().slice(0,10),is_waste:true,waste_reason:w.reason});await supabase.from('waste_records').update({confirmed:true}).eq('id',id);await loadAll();alert('废置已确认');}};
-window.assignOrder=async(inId,model)=>{let pending=orders.filter(o=>o.product_spec===model&&o.status==='待生产');if(!pending.length){alert('无匹配订单');return;}let list=pending.map((o,i)=>`${i+1}. ${o.order_no} ${o.customer||''}`).join('\n');let idx=prompt(`选择订单序号:\n${list}`)-1;if(idx>=0&&idx<pending.length){let matched=pending[idx];await supabase.from('order_progress').update({status:'已入库'}).eq('id',matched.id);await supabase.from('in_records').update({customer:matched.customer||'已分配'}).eq('id',inId);await loadAll();alert(`已关联 ${matched.order_no}`);}};
-function goTo(tab){
-    document.getElementById('dashPage').style.display=tab==='dash'?'block':'none';
-    document.getElementById('craftPage').style.display=tab==='craft'?'block':'none';
-    document.getElementById('inPage').style.display=tab==='in'?'block':'none';
-    document.getElementById('outPage').style.display=tab==='out'?'block':'none';
-    document.getElementById('statsPage').style.display=tab==='stats'?'block':'none';
-    document.getElementById('printPage').style.display=tab==='print'?'block':'none';
-    document.getElementById('orderPage').style.display=tab==='order'?'block':'none';
-    document.getElementById('wastePage').style.display=tab==='waste'?'block':'none';
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+    renderAll();
 }
-function escape(str){if(!str)return '';return String(str).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
-loadAll();
+window.switchTab = switchTab;
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+});
+loadData();
 </script>
 </body>
 </html>
