@@ -7,20 +7,20 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:#e9f0f5;font-family:'Segoe UI',sans-serif;padding:16px}
-        .app-container{max-width:1400px;margin:0 auto;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
-        .header{background:#fff;padding:14px 20px;border-bottom:1px solid #e2e9f0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+        .app-container{max-width:1400px;margin:0 auto;background:white;border-radius:28px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
+        .header{background:white;padding:14px 20px;border-bottom:1px solid #e2e9f0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
         .logo-area h1{font-size:1.3rem;color:#1f6e8c}
         .search-box{display:flex;background:#f1f5f9;border-radius:60px;padding:4px 4px 4px 16px;border:1px solid #cbdde9}
         .search-box input{border:none;background:0 0;width:180px;padding:8px 0;outline:none}
-        .search-box button{background:#2c7da0;border:none;color:#fff;padding:6px 18px;border-radius:40px;cursor:pointer}
-        .btn-primary{background:#1f6e8c;color:#fff;border:none;padding:8px 20px;border-radius:40px;cursor:pointer}
-        .btn-in{background:#2e7d32;color:#fff;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
-        .btn-out{background:#c44536;color:#fff;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
-        .btn-waste{background:#ff9800;color:#fff;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
+        .search-box button{background:#2c7da0;border:none;color:white;padding:6px 18px;border-radius:40px;cursor:pointer}
+        .btn-primary{background:#1f6e8c;color:white;border:none;padding:8px 20px;border-radius:40px;cursor:pointer}
+        .btn-in{background:#2e7d32;color:white;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
+        .btn-out{background:#c44536;color:white;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
+        .btn-waste{background:#ff9800;color:white;border:none;padding:6px 16px;border-radius:30px;cursor:pointer}
         .btn-sm{padding:4px 10px}
         .tab-bar{display:flex;border-bottom:2px solid #e2edf5;background:#fafdff;overflow-x:auto}
         .tab{padding:12px 20px;cursor:pointer;font-weight:600;color:#5e7e97;border-bottom:3px solid transparent;white-space:nowrap;font-size:.85rem}
-        .tab.active{color:#1f6e8c;border-bottom-color:#1f6e8c;background:#fff}
+        .tab.active{color:#1f6e8c;border-bottom-color:#1f6e8c;background:white}
         .main-content{padding:20px}
         .stats-row{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}
         .stat-card{background:#f0f6fa;border-radius:18px;padding:12px 18px;flex:1;min-width:120px;cursor:pointer;transition:.2s}
@@ -42,7 +42,7 @@
         .craft-layout{display:flex;flex-wrap:wrap}
         .craft-list{width:260px;background:#fafdff;border-right:1px solid #e2edf5;padding:10px;max-height:520px;overflow-y:auto}
         .craft-detail{flex:1;padding-left:20px}
-        .craft-item{padding:10px 12px;margin:4px 0;border-radius:12px;cursor:pointer;background:#fff;border:1px solid transparent;display:flex;justify-content:space-between}
+        .craft-item{padding:10px 12px;margin:4px 0;border-radius:12px;cursor:pointer;background:white;border:1px solid transparent;display:flex;justify-content:space-between}
         .craft-item.active{background:#e1f0f8;border-left:4px solid #2c7da0}
         @media (max-width:780px){.craft-layout{flex-direction:column}.craft-list{width:100%;border-right:none;max-height:300px}.craft-detail{padding-left:0}}
     </style>
@@ -64,7 +64,19 @@
         <div class="tab" data-tab="waste">🗑️ 废置</div>
     </div>
     <div class="main-content">
-        <div id="dashboardPanel"><div class="stats-row"><div class="stat-card" onclick="switchTab('in')"><h3>📥 今日入库</h3><div class="number" id="todayInWeight">0</div><div class="small-note">点击查看</div></div><div class="stat-card" onclick="switchTab('out')"><h3>📤 今日出库</h3><div class="number" id="todayOutWeight">0</div><div class="small-note">点击查看</div></div><div class="stat-card" onclick="switchTab('in')"><h3>📋 待分配</h3><div class="number" id="pendingAssignCount">0</div><div class="small-note">点击处理</div></div><div class="stat-card" onclick="switchTab('order')"><h3>⏳ 待生产</h3><div class="number" id="pendingOrderCount">0</div><div class="small-note">点击查看</div></div></div><div class="stats-row"><div class="stat-card"><h3>📦 总库存</h3><div class="number" id="totalStock">0</div><div class="small-note">kg</div></div><div class="stat-card"><h3>📋 工艺数</h3><div class="number" id="craftCount">0</div></div></div><div class="add-form"><div class="report-title">📌 待处理</div><div id="pendingTasks">加载中...</div></div></div>
+        <div id="dashboardPanel">
+            <div class="stats-row">
+                <div class="stat-card" onclick="switchTab('in')"><h3>📥 今日入库</h3><div class="number" id="todayInWeight">0</div><div class="small-note">点击查看</div></div>
+                <div class="stat-card" onclick="switchTab('out')"><h3>📤 今日出库</h3><div class="number" id="todayOutWeight">0</div><div class="small-note">点击查看</div></div>
+                <div class="stat-card" onclick="switchTab('in')"><h3>📋 待分配</h3><div class="number" id="pendingAssignCount">0</div><div class="small-note">点击处理</div></div>
+                <div class="stat-card" onclick="switchTab('order')"><h3>⏳ 待生产</h3><div class="number" id="pendingOrderCount">0</div><div class="small-note">点击查看</div></div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card"><h3>📦 总库存</h3><div class="number" id="totalStock">0</div><div class="small-note">kg</div></div>
+                <div class="stat-card"><h3>📋 工艺数</h3><div class="number" id="craftCount">0</div></div>
+            </div>
+            <div class="add-form"><div class="report-title">📌 待处理</div><div id="pendingTasks">加载中...</div></div>
+        </div>
         <div id="craftPanel" style="display:none;"><div class="craft-layout"><div class="craft-list"><div style="display:flex;justify-content:space-between"><span>📋 工艺列表</span><button id="addCraftBtn" class="btn-primary btn-sm">+新增</button></div><div id="craftList"></div></div><div class="craft-detail" id="craftDetail"><div class="empty-state">选择或新增工艺</div></div></div></div>
         <div id="inPanel" style="display:none;"><div class="add-form"><h4>➕ 添加入仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="inCustomer" placeholder="留空待分配"></div><div class="form-field"><label>型号</label><input type="text" id="inModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight"></div><div class="form-field"><label>日期</label><input type="date" id="inDate"></div><div class="form-field"><button id="addInBtn" class="btn-in">✅ 添加入仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>📦 入仓总重</h3><div class="number" id="inTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="inTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div></div>
         <div id="outPanel" style="display:none;"><div class="add-form"><h4>📤 添加出仓</h4><div class="form-row"><div class="form-field"><label>客户(选填)</label><input type="text" id="outCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="outModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight"></div><div class="form-field"><label>日期</label><input type="date" id="outDate"></div><div class="form-field"><button id="addOutBtn" class="btn-out">✅ 添加出仓</button></div></div></div><div class="stats-row"><div class="stat-card"><h3>🚚 出仓总重</h3><div class="number" id="outTotalWeight">0</div></div><div class="stat-card"><h3>📋 记录数</h3><div class="number" id="outTotalCount">0</div></div></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div></div>
@@ -76,39 +88,183 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2c25jampzc3F3b3VzdnBkdndlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0Mjk1MzksImV4cCI6MjA5NTAwNTUzOX0.5k0jbvR4uX8jl1sNrZDkCdl_GCZljIpCCz5VdCMgBYs';
+const SUPABASE_URL = 'https://xngvmdoewlmxnsthbqxw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuZ3ZtZG9ld2xteG5zdGhicXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NjM3MzMsImV4cCI6MjA5NTMzOTczM30.Djx4HvAyqHtjVSoIq_puI5Km0uSq_pHkzGQ-Rfz-p9s';
 
-let currentTab='dashboard',currentCraftId=null,craftRecords=[],warehouseIn=[],warehouseOut=[],orderRecords=[],wasteRecords=[],supabaseClient=null;
+let supabase, currentTab='dashboard', currentCraftId=null, craftRecords=[], warehouseIn=[], warehouseOut=[], orderRecords=[], wasteRecords=[];
 
-async function init(){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);await loadAll();renderAll();setupEvents();setInterval(async()=>{await loadAll();renderAll();},30000);}
-async function loadAll(){try{let{data:c}=await supabaseClient.from('craft_records').select('*');craftRecords=c||[];let{data:i}=await supabaseClient.from('in_records').select('*');warehouseIn=i||[];let{data:o}=await supabaseClient.from('out_records').select('*');warehouseOut=o||[];let{data:ord}=await supabaseClient.from('order_progress').select('*');orderRecords=ord||[];let{data:w}=await supabaseClient.from('waste_records').select('*');wasteRecords=w||[];console.log('数据加载成功');}catch(e){console.error(e);setTimeout(loadAll,3000);}}
+async function init(){
+    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    await loadAll();
+    renderAll();
+    setupEvents();
+    setInterval(async()=>{await loadAll();renderAll();},30000);
+}
+async function loadAll(){
+    try{
+        let{data:c}=await supabase.from('craft_records').select('*'); craftRecords=c||[];
+        let{data:i}=await supabase.from('in_records').select('*'); warehouseIn=i||[];
+        let{data:o}=await supabase.from('out_records').select('*'); warehouseOut=o||[];
+        let{data:ord}=await supabase.from('order_progress').select('*'); orderRecords=ord||[];
+        let{data:w}=await supabase.from('waste_records').select('*'); wasteRecords=w||[];
+    }catch(e){console.error(e);setTimeout(loadAll,3000);}
+}
 function renderAll(){renderDashboard();renderCraftList();renderInOut();renderOrderList();renderWasteList();document.getElementById('craftCount').innerText=craftRecords.length;}
-function renderDashboard(){let today=new Date().toISOString().slice(0,10);let todayIn=warehouseIn.filter(i=>i.date===today&&!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);let todayOut=warehouseOut.filter(o=>o.date===today).reduce((s,o)=>s+(+o.weight||0),0);let pendingAssign=warehouseIn.filter(i=>(i.customer==='待分配'||!i.customer)&&!i.is_waste).length;let pendingOrders=orderRecords.filter(o=>o.status==='待生产').length;let totalStock=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0)-warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);document.getElementById('todayInWeight').innerText=todayIn.toFixed(2);document.getElementById('todayOutWeight').innerText=todayOut.toFixed(2);document.getElementById('pendingAssignCount').innerText=pendingAssign;document.getElementById('pendingOrderCount').innerText=pendingOrders;document.getElementById('totalStock').innerText=totalStock.toFixed(2);let pendingWaste=wasteRecords.filter(w=>!w.confirmed).length;let tasks='';if(pendingAssign>0)tasks+=`📋 ${pendingAssign} 条待分配客户<br>`;if(pendingOrders>0)tasks+=`📋 ${pendingOrders} 个订单待生产<br>`;if(pendingWaste>0)tasks+=`🗑️ ${pendingWaste} 个废置待确认`;if(!tasks)tasks='暂无待处理 ✓';document.getElementById('pendingTasks').innerHTML='<div class="report-item">'+tasks+'</div>';}
-function renderCraftList(){let container=document.getElementById('craftList');if(!craftRecords.length){container.innerHTML='<div class="empty-state">暂无工艺</div>';return;}container.innerHTML=craftRecords.map(c=>`<div class="craft-item ${currentCraftId==c.id?'active':''}" data-id="${c.id}"><div>📄 ${escapeHtml(c.title)}<br><small>${escapeHtml(c.customer)}</small></div><div><button class="action-btn edit-craft" data-id="${c.id}">✏️</button><button class="action-btn del-craft" data-id="${c.id}">🗑️</button></div></div>`).join('');document.querySelectorAll('.edit-craft').forEach(btn=>btn.onclick=(e)=>{e.stopPropagation();openEditModal(btn.dataset.id);});document.querySelectorAll('.del-craft').forEach(btn=>btn.onclick=async(e)=>{e.stopPropagation();if(confirm('删除？')){await supabaseClient.from('craft_records').delete().eq('id',btn.dataset.id);await loadAll();renderAll();}});document.querySelectorAll('.craft-item').forEach(el=>el.onclick=(e)=>{if(!e.target.classList.contains('action-btn'))selectCraft(el.dataset.id);});}
+function renderDashboard(){
+    let today=new Date().toISOString().slice(0,10);
+    let todayIn=warehouseIn.filter(i=>i.date===today&&!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
+    let todayOut=warehouseOut.filter(o=>o.date===today).reduce((s,o)=>s+(+o.weight||0),0);
+    let pendingAssign=warehouseIn.filter(i=>(i.customer==='待分配'||!i.customer)&&!i.is_waste).length;
+    let pendingOrders=orderRecords.filter(o=>o.status==='待生产').length;
+    let totalStock=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0)-warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
+    document.getElementById('todayInWeight').innerText=todayIn.toFixed(2);
+    document.getElementById('todayOutWeight').innerText=todayOut.toFixed(2);
+    document.getElementById('pendingAssignCount').innerText=pendingAssign;
+    document.getElementById('pendingOrderCount').innerText=pendingOrders;
+    document.getElementById('totalStock').innerText=totalStock.toFixed(2);
+    let pendingWaste=wasteRecords.filter(w=>!w.confirmed).length;
+    let tasks='';
+    if(pendingAssign>0)tasks+=`📋 ${pendingAssign} 条待分配客户<br>`;
+    if(pendingOrders>0)tasks+=`📋 ${pendingOrders} 个订单待生产<br>`;
+    if(pendingWaste>0)tasks+=`🗑️ ${pendingWaste} 个废置待确认`;
+    if(!tasks)tasks='暂无待处理 ✓';
+    document.getElementById('pendingTasks').innerHTML='<div class="report-item">'+tasks+'</div>';
+}
+function renderCraftList(){
+    let c=document.getElementById('craftList');
+    if(!craftRecords.length){c.innerHTML='<div class="empty-state">暂无工艺</div>';return;}
+    c.innerHTML=craftRecords.map(c=>`<div class="craft-item ${currentCraftId==c.id?'active':''}" data-id="${c.id}"><div>📄 ${escapeHtml(c.title)}<br><small>${escapeHtml(c.customer)}</small></div><div><button class="action-btn edit-craft" data-id="${c.id}">✏️</button><button class="action-btn del-craft" data-id="${c.id}">🗑️</button></div></div>`).join('');
+    document.querySelectorAll('.edit-craft').forEach(btn=>btn.onclick=e=>{e.stopPropagation();openEditModal(btn.dataset.id);});
+    document.querySelectorAll('.del-craft').forEach(btn=>btn.onclick=async e=>{e.stopPropagation();if(confirm('删除？')){await supabase.from('craft_records').delete().eq('id',btn.dataset.id);await loadAll();renderAll();}});
+    document.querySelectorAll('.craft-item').forEach(el=>el.onclick=e=>{if(!e.target.classList.contains('action-btn'))selectCraft(el.dataset.id);});
+}
 function selectCraft(id){currentCraftId=id;let craft=craftRecords.find(c=>c.id==id);if(craft)renderCraftDetail(craft);renderCraftList();}
 function renderCraftDetail(craft){if(!craft)return;document.getElementById('craftDetail').innerHTML=`<div style="border-left:6px solid #2c7da0;padding-left:15px"><div style="font-size:1.5rem">${escapeHtml(craft.title)}</div><div>${escapeHtml(craft.customer)} ${craft.date||''}</div></div><div style="margin-top:15px"><strong>原料：</strong> ${(craft.materials||[]).join(', ')}</div>`;}
-function openEditModal(id){let craft=craftRecords.find(c=>c.id==id);if(!craft)return;let newTitle=prompt("新标题",craft.title);if(newTitle){craft.title=newTitle;supabaseClient.from('craft_records').update({title:newTitle}).eq('id',id);loadAll();renderAll();}}
-document.getElementById('addCraftBtn').onclick=async()=>{let title=prompt("工艺标题");if(title){await supabaseClient.from('craft_records').insert({id:Date.now().toString(),title,customer:"",date:new Date().toISOString().slice(0,10),materials:[]});await loadAll();renderAll();}};
-function renderInOut(){document.getElementById('inTableBody').innerHTML=warehouseIn.map(i=>`<tr><td>${escapeHtml(i.customer||'待分配')}</td><td>${escapeHtml(i.model)}</td><td>${i.weight} kg</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无入仓记录</td></tr>';document.getElementById('outTableBody').innerHTML=warehouseOut.map(o=>`<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${o.weight} kg</td><td>${o.date}</td><td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无出仓记录</td></tr>';let inW=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);let outW=warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);document.getElementById('inTotalWeight').innerText=inW.toFixed(2);document.getElementById('inTotalCount').innerText=warehouseIn.filter(i=>!i.is_waste).length;document.getElementById('outTotalWeight').innerText=outW.toFixed(2);document.getElementById('outTotalCount').innerText=warehouseOut.length;}
-window.delIn=async(id)=>{if(confirm('删除？')){await supabaseClient.from('in_records').delete().eq('id',id);await loadAll();renderAll();}};
-window.delOut=async(id)=>{if(confirm('删除？')){await supabaseClient.from('out_records').delete().eq('id',id);await loadAll();renderAll();}};
-document.getElementById('addInBtn').onclick=async()=>{let c=document.getElementById('inCustomer').value.trim();let m=document.getElementById('inModel').value.trim();let w=parseFloat(document.getElementById('inWeight').value);let d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10);if(!m||isNaN(w)){alert("请填型号和重量");return;}if(!c)c='待分配';await supabaseClient.from('in_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});await loadAll();renderAll();document.getElementById('inCustomer').value='';document.getElementById('inModel').value='';document.getElementById('inWeight').value='';};
-document.getElementById('addOutBtn').onclick=async()=>{let c=document.getElementById('outCustomer').value.trim()||'-';let m=document.getElementById('outModel').value.trim();let w=parseFloat(document.getElementById('outWeight').value);let d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10);if(!m||isNaN(w)){alert("请填型号和重量");return;}await supabaseClient.from('out_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});await loadAll();renderAll();document.getElementById('outCustomer').value='';document.getElementById('outModel').value='';document.getElementById('outWeight').value='';};
-document.getElementById('addOrderBtn').onclick=async()=>{let c=document.getElementById('orderCustomer').value.trim()||null;let s=document.getElementById('orderSpec').value.trim();let q=parseFloat(document.getElementById('orderQty').value);let r=document.getElementById('orderRemark').value;if(!s||isNaN(q)){alert("请填规格和数量");return;}let today=new Date();let no='D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0');await supabaseClient.from('order_progress').insert({id:Date.now().toString(),order_no:no,customer:c,product_spec:s,quantity:q,remark:r,status:'待生产',created_date:today.toISOString().slice(0,10)});await loadAll();renderAll();document.getElementById('orderCustomer').value='';document.getElementById('orderSpec').value='';document.getElementById('orderQty').value='';document.getElementById('orderRemark').value='';};
-document.getElementById('addWasteBtn').onclick=async()=>{let m=document.getElementById('wasteModel').value.trim();let q=parseFloat(document.getElementById('wasteQty').value);let r=document.getElementById('wasteReason').value.trim();if(!m||isNaN(q)||!r){alert("完整填写");return;}await supabaseClient.from('waste_records').insert({id:Date.now().toString(),model:m,waste_qty:q,reason:r,operator:'管理员',date:new Date().toISOString().slice(0,10),confirmed:false});await loadAll();renderAll();document.getElementById('wasteModel').value='';document.getElementById('wasteQty').value='';document.getElementById('wasteReason').value='';};
-async function renderOrderList(){let html=orderRecords.map(o=>`<tr><td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td><td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty-input" style="width:70px"></td><td><select data-id="${o.id}" class="order-status-select"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td><td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark-input" style="width:80px"></td><td>${o.created_date}</td><td><button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="8">暂无订单</td></tr>';document.getElementById('orderTableBody').innerHTML=html;document.querySelectorAll('.order-qty-input').forEach(inp=>inp.onchange=async(e)=>{await supabaseClient.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();});document.querySelectorAll('.order-status-select').forEach(sel=>sel.onchange=async(e)=>{await supabaseClient.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();renderDashboard();});document.querySelectorAll('.order-remark-input').forEach(inp=>inp.onchange=async(e)=>{await supabaseClient.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();});document.getElementById('orderTotalCount').innerText=orderRecords.length;document.getElementById('orderPendingCount').innerText=orderRecords.filter(o=>o.status==='待生产').length;document.getElementById('orderProducingCount').innerText=orderRecords.filter(o=>o.status==='生产中').length;document.getElementById('orderCompletedCount').innerText=orderRecords.filter(o=>o.status==='已入库').length;}
-window.deleteOrder=async(id)=>{if(confirm('删除订单？')){await supabaseClient.from('order_progress').delete().eq('id',id);await loadAll();renderAll();}};
-async function renderWasteList(){let html=wasteRecords.map(w=>`<tr><td>${escapeHtml(w.model)}</td><td>${w.waste_qty}kg</td><td>${escapeHtml(w.reason)}</td><td>${escapeHtml(w.operator)}</td><td>${w.confirmed?'已确认':'待确认'}</td><td>${w.date}</td><td>${!w.confirmed?`<button class="action-btn" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无废置</td></tr>';document.getElementById('wasteTableBody').innerHTML=html;}
-window.confirmWaste=async(id)=>{let waste=wasteRecords.find(w=>w.id===id);if(waste&&confirm(`确认废置 ${waste.waste_qty}kg？`)){await supabaseClient.from('in_records').insert({id:Date.now().toString()+'_waste',customer:'废置',model:waste.model,weight:-waste.waste_qty,date:new Date().toISOString().slice(0,10),is_waste:true,waste_reason:waste.reason});await supabaseClient.from('waste_records').update({confirmed:true}).eq('id',id);await loadAll();renderAll();alert('废置已确认，库存已扣减');}};
-window.deleteWaste=async(id)=>{if(confirm('删除？')){await supabaseClient.from('waste_records').delete().eq('id',id);await loadAll();renderAll();}};
-document.getElementById('refreshStatsBtn').onclick=()=>{let y=+document.getElementById('statsYear').value,m=+document.getElementById('statsMonth').value;let inF=warehouseIn.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m)&&!r.is_waste;});let outF=warehouseOut.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m);});document.getElementById('reportContainer').innerHTML=`<div class="add-form"><div>入仓: ${inF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>出仓: ${outF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>净余: ${(inF.reduce((s,i)=>s+(+i.weight||0),0)-outF.reduce((s,i)=>s+(+i.weight||0),0)).toFixed(2)} kg</div></div>`;};
-function updateNetWeight(){let g=+document.getElementById('printGross').value||0,t=+document.getElementById('printTong').value||0,b=+document.getElementById('printBox').value||0;document.getElementById('printNet').value=(g-t-b<0?0:g-t-b).toFixed(2);}
-function openTagPrintWindow(){let spec=document.getElementById('printSpec').value||'',color=document.getElementById('printColor').value||'',machine=document.getElementById('printMachine').value||'',qty=document.getElementById('printQty').value||'0',gross=parseFloat(document.getElementById('printGross').value)||0,tong=parseFloat(document.getElementById('printTong').value)||0,box=parseFloat(document.getElementById('printBox').value)||0,handler=document.getElementById('printHandler').value||'',batch=document.getElementById('printBatch').value||'',date=new Date().toISOString().slice(0,10),net=gross-tong-box;if(net<0)net=0;let qrData=JSON.stringify({spec,color,machine,qty,gross,tong,box,net,handler,batch,date}),qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`,tagHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>成品标签</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{background:white;margin:0;padding:0;font-family:'SimSun','宋体',monospace;}.label{width:100mm;height:100mm;background:white;border:1px solid #000;padding:3mm;margin:0 auto;position:relative;}.company{text-align:center;font-size:18pt;font-weight:bold;}.address{text-align:center;font-size:11pt;line-height:1.2;}.top-line{border-top:0.5px solid #000;margin:2mm 0;}.mid-line{border-top:0.5px solid #000;margin:4mm 0 2mm 0;}.two-col{display:flex;justify-content:space-between;margin:2mm 0 0 0;}.left-col,.right-col{width:45%;}.field{margin-bottom:2mm;display:flex;align-items:baseline;}.field-name{width:12mm;font-size:13pt;font-weight:bold;flex-shrink:0;}.field-value{font-size:13pt;padding-left:2mm;font-weight:bold;}.red .field-name{color:#c00;}.red .field-value{color:#c00;font-weight:bold;}.date-row{display:flex;align-items:baseline;margin-top:2mm;width:100%;}.date-row .field-name{width:12mm;font-size:13pt;font-weight:bold;}.date-row .field-value{flex:1;font-size:13pt;padding-left:2mm;font-weight:bold;}.qr-area{position:absolute;bottom:3mm;right:17mm;width:25mm;height:25mm;text-align:center;}.qr-img{width:100%;height:100%;}.footer{position:absolute;bottom:11mm;left:7mm;font-size:16pt;font-weight:bold;color:#c00;line-height:1.3;}@page{size:100mm 100mm;margin:0mm;}@media print{body{margin:0;padding:0;}.label{border:none;}}</style></head><body><div class="label"><div class="company">中山市淮鸿橡筋织带有限公司</div><div class="address">地址：中山市三角镇接民村金达路三号B栋五楼</div><div class="address">电话：13535238522</div><div class="top-line"></div><div class="two-col"><div class="left-col"><div class="field"><span class="field-name">规格</span><span class="field-value">${escapeHtml(spec)}</span></div><div class="field"><span class="field-name">机号</span><span class="field-value">${escapeHtml(machine)}</span></div><div class="field"><span class="field-name">毛重</span><span class="field-value">${gross.toFixed(2)} kg</span></div><div class="field"><span class="field-name">箱重</span><span class="field-value">${box.toFixed(2)} kg</span></div><div class="field red"><span class="field-name">净重</span><span class="field-value">${net.toFixed(2)} kg</span></div></div><div class="right-col"><div class="field"><span class="field-name">色号</span><span class="field-value">${escapeHtml(color)}</span></div><div class="field"><span class="field-name">数量</span><span class="field-value">${escapeHtml(qty)} 个</span></div><div class="field"><span class="field-name">筒重</span><span class="field-value">${tong.toFixed(2)} kg</span></div><div class="field"><span class="field-name">包装</span><span class="field-value">${escapeHtml(handler)}</span></div><div class="field"><span class="field-name">批号</span><span class="field-value">${escapeHtml(batch)}</span></div></div></div><div class="date-row"><span class="field-name">日期</span><span class="field-value">${date}</span></div><div class="mid-line"></div><div class="footer">不同机号、批号<br>分开使用</div><div class="qr-area"><img class="qr-img" src="${qrUrl}" alt="二维码"></div></div><script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},500);},300);};<\/script></body></html>`;let iframe=document.createElement('iframe');iframe.style.position='absolute';iframe.style.width='0';iframe.style.height='0';document.body.appendChild(iframe);let doc=iframe.contentWindow.document;doc.open();doc.write(tagHtml);doc.close();iframe.contentWindow.focus();iframe.contentWindow.print();setTimeout(()=>document.body.removeChild(iframe),2000);}
-document.getElementById('printLabelBtn').onclick=async()=>{let spec=document.getElementById('printSpec').value,batch=document.getElementById('printBatch').value,gross=parseFloat(document.getElementById('printGross').value)||0,tong=parseFloat(document.getElementById('printTong').value)||0,box=parseFloat(document.getElementById('printBox').value)||0,net=gross-tong-box;if(net<0)net=0;let date=new Date().toISOString().slice(0,10);if(!spec){alert("请填规格");return;}if(net>0){let batchCode=batch||"无批号";await supabaseClient.from('in_records').insert({id:Date.now().toString(),customer:`成品-${batchCode}`,model:spec,weight:net,date:date});await loadAll();renderAll();updateTodayCount();alert(`已入仓，净重：${net.toFixed(2)} kg`);}else{alert(`净重${net.toFixed(2)}kg未入仓`);return;}openTagPrintWindow();document.getElementById('printSpec').value='';document.getElementById('printColor').value='';document.getElementById('printMachine').value='';document.getElementById('printQty').value='';document.getElementById('printGross').value='';document.getElementById('printTong').value='';document.getElementById('printBox').value='';document.getElementById('printNet').value='';document.getElementById('printHandler').value='';document.getElementById('printBatch').value='';};
+function openEditModal(id){let craft=craftRecords.find(c=>c.id==id);if(!craft)return;let newTitle=prompt("新标题",craft.title);if(newTitle){craft.title=newTitle;supabase.from('craft_records').update({title:newTitle}).eq('id',id);loadAll();renderAll();}}
+document.getElementById('addCraftBtn').onclick=async()=>{let title=prompt("工艺标题");if(title){await supabase.from('craft_records').insert({id:Date.now().toString(),title,customer:"",date:new Date().toISOString().slice(0,10),materials:[]});await loadAll();renderAll();}};
+function renderInOut(){
+    document.getElementById('inTableBody').innerHTML=warehouseIn.map(i=>`<tr><td>${escapeHtml(i.customer||'待分配')}</td><td>${escapeHtml(i.model)}</td><td>${i.weight} kg</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无入仓记录</td></tr>';
+    document.getElementById('outTableBody').innerHTML=warehouseOut.map(o=>`<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${o.weight} kg</td><td>${o.date}</td><td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="5">暂无出仓记录</td></tr>';
+    let inW=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
+    let outW=warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
+    document.getElementById('inTotalWeight').innerText=inW.toFixed(2);
+    document.getElementById('inTotalCount').innerText=warehouseIn.filter(i=>!i.is_waste).length;
+    document.getElementById('outTotalWeight').innerText=outW.toFixed(2);
+    document.getElementById('outTotalCount').innerText=warehouseOut.length;
+}
+window.delIn=async(id)=>{if(confirm('删除？')){await supabase.from('in_records').delete().eq('id',id);await loadAll();renderAll();}};
+window.delOut=async(id)=>{if(confirm('删除？')){await supabase.from('out_records').delete().eq('id',id);await loadAll();renderAll();}};
+document.getElementById('addInBtn').onclick=async()=>{
+    let c=document.getElementById('inCustomer').value.trim();
+    let m=document.getElementById('inModel').value.trim();
+    let w=parseFloat(document.getElementById('inWeight').value);
+    let d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10);
+    if(!m||isNaN(w)){alert("请填型号和重量");return;}
+    if(!c)c='待分配';
+    await supabase.from('in_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});
+    await loadAll();renderAll();
+    document.getElementById('inCustomer').value='';document.getElementById('inModel').value='';document.getElementById('inWeight').value='';
+};
+document.getElementById('addOutBtn').onclick=async()=>{
+    let c=document.getElementById('outCustomer').value.trim()||'-';
+    let m=document.getElementById('outModel').value.trim();
+    let w=parseFloat(document.getElementById('outWeight').value);
+    let d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10);
+    if(!m||isNaN(w)){alert("请填型号和重量");return;}
+    await supabase.from('out_records').insert({id:Date.now().toString(),customer:c,model:m,weight:w,date:d});
+    await loadAll();renderAll();
+    document.getElementById('outCustomer').value='';document.getElementById('outModel').value='';document.getElementById('outWeight').value='';
+};
+document.getElementById('addOrderBtn').onclick=async()=>{
+    let c=document.getElementById('orderCustomer').value.trim()||null;
+    let s=document.getElementById('orderSpec').value.trim();
+    let q=parseFloat(document.getElementById('orderQty').value);
+    let r=document.getElementById('orderRemark').value;
+    if(!s||isNaN(q)){alert("请填规格和数量");return;}
+    let today=new Date();
+    let no='D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0');
+    await supabase.from('order_progress').insert({id:Date.now().toString(),order_no:no,customer:c,product_spec:s,quantity:q,remark:r,status:'待生产',created_date:today.toISOString().slice(0,10)});
+    await loadAll();renderAll();
+    document.getElementById('orderCustomer').value='';document.getElementById('orderSpec').value='';document.getElementById('orderQty').value='';document.getElementById('orderRemark').value='';
+};
+document.getElementById('addWasteBtn').onclick=async()=>{
+    let m=document.getElementById('wasteModel').value.trim();
+    let q=parseFloat(document.getElementById('wasteQty').value);
+    let r=document.getElementById('wasteReason').value.trim();
+    if(!m||isNaN(q)||!r){alert("完整填写");return;}
+    await supabase.from('waste_records').insert({id:Date.now().toString(),model:m,waste_qty:q,reason:r,operator:'管理员',date:new Date().toISOString().slice(0,10),confirmed:false});
+    await loadAll();renderAll();
+    document.getElementById('wasteModel').value='';document.getElementById('wasteQty').value='';document.getElementById('wasteReason').value='';
+};
+async function renderOrderList(){
+    let html=orderRecords.map(o=>`<tr><td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td><td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty-input" style="width:70px"></td><td><select data-id="${o.id}" class="order-status-select"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td><td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark-input" style="width:80px"></td><td>${o.created_date}</td><td><button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="8">暂无订单</td></tr>';
+    document.getElementById('orderTableBody').innerHTML=html;
+    document.querySelectorAll('.order-qty-input').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();});
+    document.querySelectorAll('.order-status-select').forEach(sel=>sel.onchange=async e=>{await supabase.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();renderDashboard();});
+    document.querySelectorAll('.order-remark-input').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id);await loadAll();renderOrderList();});
+    document.getElementById('orderTotalCount').innerText=orderRecords.length;
+    document.getElementById('orderPendingCount').innerText=orderRecords.filter(o=>o.status==='待生产').length;
+    document.getElementById('orderProducingCount').innerText=orderRecords.filter(o=>o.status==='生产中').length;
+    document.getElementById('orderCompletedCount').innerText=orderRecords.filter(o=>o.status==='已入库').length;
+}
+window.deleteOrder=async(id)=>{if(confirm('删除订单？')){await supabase.from('order_progress').delete().eq('id',id);await loadAll();renderAll();}};
+async function renderWasteList(){
+    let html=wasteRecords.map(w=>`<tr><td>${escapeHtml(w.model)}</td><td>${w.waste_qty}kg</td><td>${escapeHtml(w.reason)}</td><td>${escapeHtml(w.operator)}</td><td>${w.confirmed?'已确认':'待确认'}</td><td>${w.date}</td><td>${!w.confirmed?`<button class="action-btn" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无废置</td></tr>';
+    document.getElementById('wasteTableBody').innerHTML=html;
+}
+window.confirmWaste=async(id)=>{
+    let waste=wasteRecords.find(w=>w.id===id);
+    if(waste&&confirm(`确认废置 ${waste.waste_qty}kg？`)){
+        await supabase.from('in_records').insert({id:Date.now().toString()+'_waste',customer:'废置',model:waste.model,weight:-waste.waste_qty,date:new Date().toISOString().slice(0,10),is_waste:true,waste_reason:waste.reason});
+        await supabase.from('waste_records').update({confirmed:true}).eq('id',id);
+        await loadAll();renderAll();
+        alert('废置已确认');
+    }
+};
+window.deleteWaste=async(id)=>{if(confirm('删除？')){await supabase.from('waste_records').delete().eq('id',id);await loadAll();renderAll();}};
+document.getElementById('refreshStatsBtn').onclick=()=>{
+    let y=+document.getElementById('statsYear').value,m=+document.getElementById('statsMonth').value;
+    let inF=warehouseIn.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m)&&!r.is_waste;});
+    let outF=warehouseOut.filter(r=>{let d=new Date(r.date);return d.getFullYear()===y&&(m===0||d.getMonth()+1===m);});
+    document.getElementById('reportContainer').innerHTML=`<div class="add-form"><div>入仓: ${inF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>出仓: ${outF.reduce((s,i)=>s+(+i.weight||0),0).toFixed(2)} kg</div><div>净余: ${(inF.reduce((s,i)=>s+(+i.weight||0),0)-outF.reduce((s,i)=>s+(+i.weight||0),0)).toFixed(2)} kg</div></div>`;
+};
+function updateNetWeight(){
+    let g=+document.getElementById('printGross').value||0,t=+document.getElementById('printTong').value||0,b=+document.getElementById('printBox').value||0;
+    document.getElementById('printNet').value=(g-t-b<0?0:g-t-b).toFixed(2);
+}
+function openTagPrintWindow(){
+    let spec=document.getElementById('printSpec').value||'',color=document.getElementById('printColor').value||'',machine=document.getElementById('printMachine').value||'',qty=document.getElementById('printQty').value||'0',gross=parseFloat(document.getElementById('printGross').value)||0,tong=parseFloat(document.getElementById('printTong').value)||0,box=parseFloat(document.getElementById('printBox').value)||0,handler=document.getElementById('printHandler').value||'',batch=document.getElementById('printBatch').value||'',date=new Date().toISOString().slice(0,10),net=gross-tong-box;if(net<0)net=0;
+    let qrData=JSON.stringify({spec,color,machine,qty,gross,tong,box,net,handler,batch,date}),qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    let tagHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>成品标签</title><style>*{margin:0;padding:0;box-sizing:border-box;}body{background:white;margin:0;padding:0;font-family:'SimSun','宋体',monospace;}.label{width:100mm;height:100mm;background:white;border:1px solid #000;padding:3mm;margin:0 auto;position:relative;}.company{text-align:center;font-size:18pt;font-weight:bold;}.address{text-align:center;font-size:11pt;line-height:1.2;}.top-line{border-top:0.5px solid #000;margin:2mm 0;}.mid-line{border-top:0.5px solid #000;margin:4mm 0 2mm 0;}.two-col{display:flex;justify-content:space-between;margin:2mm 0 0 0;}.left-col,.right-col{width:45%;}.field{margin-bottom:2mm;display:flex;align-items:baseline;}.field-name{width:12mm;font-size:13pt;font-weight:bold;flex-shrink:0;}.field-value{font-size:13pt;padding-left:2mm;font-weight:bold;}.red .field-name{color:#c00;}.red .field-value{color:#c00;font-weight:bold;}.date-row{display:flex;align-items:baseline;margin-top:2mm;width:100%;}.date-row .field-name{width:12mm;font-size:13pt;font-weight:bold;}.date-row .field-value{flex:1;font-size:13pt;padding-left:2mm;font-weight:bold;}.qr-area{position:absolute;bottom:3mm;right:17mm;width:25mm;height:25mm;text-align:center;}.qr-img{width:100%;height:100%;}.footer{position:absolute;bottom:11mm;left:7mm;font-size:16pt;font-weight:bold;color:#c00;line-height:1.3;}@page{size:100mm 100mm;margin:0mm;}@media print{body{margin:0;padding:0;}.label{border:none;}}</style></head><body><div class="label"><div class="company">中山市淮鸿橡筋织带有限公司</div><div class="address">地址：中山市三角镇接民村金达路三号B栋五楼</div><div class="address">电话：13535238522</div><div class="top-line"></div><div class="two-col"><div class="left-col"><div class="field"><span class="field-name">规格</span><span class="field-value">${escapeHtml(spec)}</span></div><div class="field"><span class="field-name">机号</span><span class="field-value">${escapeHtml(machine)}</span></div><div class="field"><span class="field-name">毛重</span><span class="field-value">${gross.toFixed(2)} kg</span></div><div class="field"><span class="field-name">箱重</span><span class="field-value">${box.toFixed(2)} kg</span></div><div class="field red"><span class="field-name">净重</span><span class="field-value">${net.toFixed(2)} kg</span></div></div><div class="right-col"><div class="field"><span class="field-name">色号</span><span class="field-value">${escapeHtml(color)}</span></div><div class="field"><span class="field-name">数量</span><span class="field-value">${escapeHtml(qty)} 个</span></div><div class="field"><span class="field-name">筒重</span><span class="field-value">${tong.toFixed(2)} kg</span></div><div class="field"><span class="field-name">包装</span><span class="field-value">${escapeHtml(handler)}</span></div><div class="field"><span class="field-name">批号</span><span class="field-value">${escapeHtml(batch)}</span></div></div></div><div class="date-row"><span class="field-name">日期</span><span class="field-value">${date}</span></div><div class="mid-line"></div><div class="footer">不同机号、批号<br>分开使用</div><div class="qr-area"><img class="qr-img" src="${qrUrl}" alt="二维码"></div></div><script>window.onload=function(){setTimeout(function(){window.print();setTimeout(function(){window.close();},500);},300);};<\/script></body></html>`;
+    let iframe=document.createElement('iframe');iframe.style.position='absolute';iframe.style.width='0';iframe.style.height='0';document.body.appendChild(iframe);let doc=iframe.contentWindow.document;doc.open();doc.write(tagHtml);doc.close();iframe.contentWindow.focus();iframe.contentWindow.print();setTimeout(()=>document.body.removeChild(iframe),2000);
+}
+document.getElementById('printLabelBtn').onclick=async()=>{
+    let spec=document.getElementById('printSpec').value,batch=document.getElementById('printBatch').value,gross=parseFloat(document.getElementById('printGross').value)||0,tong=parseFloat(document.getElementById('printTong').value)||0,box=parseFloat(document.getElementById('printBox').value)||0,net=gross-tong-box;if(net<0)net=0;let date=new Date().toISOString().slice(0,10);
+    if(!spec){alert("请填规格");return;}
+    if(net>0){let batchCode=batch||"无批号";await supabase.from('in_records').insert({id:Date.now().toString(),customer:`成品-${batchCode}`,model:spec,weight:net,date:date});await loadAll();renderAll();updateTodayCount();alert(`已入仓，净重：${net.toFixed(2)} kg`);}else{alert(`净重${net.toFixed(2)}kg未入仓`);return;}
+    openTagPrintWindow();
+    document.getElementById('printSpec').value='';document.getElementById('printColor').value='';document.getElementById('printMachine').value='';document.getElementById('printQty').value='';document.getElementById('printGross').value='';document.getElementById('printTong').value='';document.getElementById('printBox').value='';document.getElementById('printNet').value='';document.getElementById('printHandler').value='';document.getElementById('printBatch').value='';
+};
 function updateTodayCount(){let today=new Date().toISOString().slice(0,10);document.getElementById('todayPrintCount').innerText=warehouseIn.filter(i=>i.date===today).length;}
-function switchTab(tab){currentTab=tab;document.getElementById('dashboardPanel').style.display=tab==='dashboard'?'block':'none';document.getElementById('craftPanel').style.display=tab==='craft'?'block':'none';document.getElementById('inPanel').style.display=tab==='in'?'block':'none';document.getElementById('outPanel').style.display=tab==='out'?'block':'none';document.getElementById('statsPanel').style.display=tab==='stats'?'block':'none';document.getElementById('printPanel').style.display=tab==='print'?'block':'none';document.getElementById('orderPanel').style.display=tab==='order'?'block':'none';document.getElementById('wastePanel').style.display=tab==='waste'?'block':'none';document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');}
-function setupEvents(){document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>switchTab(tab.dataset.tab)));document.getElementById('printGross').addEventListener('input',updateNetWeight);document.getElementById('printTong').addEventListener('input',updateNetWeight);document.getElementById('printBox').addEventListener('input',updateNetWeight);}
+function switchTab(tab){
+    currentTab=tab;
+    document.getElementById('dashboardPanel').style.display=tab==='dashboard'?'block':'none';
+    document.getElementById('craftPanel').style.display=tab==='craft'?'block':'none';
+    document.getElementById('inPanel').style.display=tab==='in'?'block':'none';
+    document.getElementById('outPanel').style.display=tab==='out'?'block':'none';
+    document.getElementById('statsPanel').style.display=tab==='stats'?'block':'none';
+    document.getElementById('printPanel').style.display=tab==='print'?'block':'none';
+    document.getElementById('orderPanel').style.display=tab==='order'?'block':'none';
+    document.getElementById('wastePanel').style.display=tab==='waste'?'block':'none';
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+}
+function setupEvents(){
+    document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>switchTab(tab.dataset.tab)));
+    document.getElementById('printGross').addEventListener('input',updateNetWeight);
+    document.getElementById('printTong').addEventListener('input',updateNetWeight);
+    document.getElementById('printBox').addEventListener('input',updateNetWeight);
+}
 function escapeHtml(str){if(!str)return '';return String(str).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
 init();
 </script>
