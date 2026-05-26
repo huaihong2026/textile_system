@@ -153,7 +153,7 @@
                 <div class="stat-card"><h3>📦 入仓总重量</h3><div class="number" id="inTotalWeight">0</div></div>
                 <div class="stat-card"><h3>📋 入仓记录数</h3><div class="number" id="inTotalCount">0</div></div>
             </div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>状态</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>日期</th><th>状态</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody><table></div>
         </div>
 
         <!-- 出仓记录 -->
@@ -175,7 +175,7 @@
                 <div class="stat-card"><h3>💰 出仓总金额</h3><div class="number" id="outTotalAmount">0</div></div>
                 <div class="stat-card"><h3>📋 出仓记录数</h3><div class="number" id="outTotalCount">0</div></div>
             </div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></td></thead><tbody id="outTableBody"></tbody></table></div>
         </div>
 
         <!-- 年度报表 -->
@@ -241,7 +241,7 @@
                     <div class="form-field"><button id="addWasteBtn" class="btn-waste">📝 申请废置</button></div>
                 </div>
             </div>
-            <div><table class="data-table"><thead><tr><th>批号/型号</th><th>废置数量(kg)</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>批号/型号</th><th>废置数量(kg)</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></tr></div>
         </div>
     </div>
 </div>
@@ -249,9 +249,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     (function() {
-        // Supabase 配置
-        const SUPABASE_URL = 'https://lvsncjjssqwousvpdvwe.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_li2m9wvcD43RZyhHTNG3wg_2RebjoeD';
+        // ========== 新项目 Supabase 配置 ==========
+        const SUPABASE_URL = 'https://xngvmdoewlmxnsthbqxw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuZ3ZtZG9ld2xteG5zdGhicXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NjM3MzMsImV4cCI6MjA5NTMzOTczM30.Djx4HvAyqHtjVSoIq_puI5Km0uSq_pHkzGQ-Rfz-p9s';
         
         let supabase;
         let currentTab = 'dashboard';
@@ -290,6 +290,7 @@
                 orderRecords = ord || [];
                 let { data: w } = await supabase.from('waste_records').select('*');
                 wasteRecords = w || [];
+                console.log('数据加载成功，工艺数:', craftRecords.length);
             } catch(e) {
                 console.error('加载失败:', e);
             }
@@ -399,14 +400,14 @@
                 <td>${i.is_waste ? '已废置' : (i.customer === '待分配' || !i.customer ? '<span style="background:#fff3e0; padding:2px 8px; border-radius:20px; color:#f57c00;">待分配</span>' : '<span style="background:#e8f5e9; padding:2px 8px; border-radius:20px; color:#388e3c;">已入库</span>')}</td>
                 <td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button>
                     ${(i.customer === '待分配' || !i.customer) && !i.is_waste ? `<button class="action-btn" onclick="assignIn('${i.id}', '${escapeHtml(i.model)}')">📌 分配</button>` : ''}</td>
-            </table>`).join('') || '<tr><td colspan="6" class="empty-state">暂无入仓记录</td></tr>';
+            </tr>`).join('') || '<tr><td colspan="6" class="empty-state">暂无入仓记录</td></tr>';
             document.getElementById('inTableBody').innerHTML = inHtml;
             
             let outHtml = warehouseOut.map(o => `<tr>
                 <td>${escapeHtml(o.customer || '-')}</td>
                 <td>${escapeHtml(o.model)}</td>
                 <td>${o.weight}</td>
-                <td>${o.price || 0}4
+                <td>${o.price || 0}</td>
                 <td><td class="price-total">${((o.weight||0)*(o.price||0)).toFixed(2)}</td>
                 <td>${o.date}</td>
                 <td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td>
@@ -526,7 +527,7 @@
             if (!spec || isNaN(qty)) { alert("请填写规格和数量"); return; }
             let today = new Date();
             let orderNo = 'D' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
-            await supabase.from('order_progress').insert({ id: Date.now().toString(), order_no: orderNo, customer, product_spec: spec, quantity: qty, remark, created_date: today.toISOString().slice(0,10) });
+            await supabase.from('order_progress').insert({ id: Date.now().toString(), order_no: orderNo, customer, product_spec: spec, quantity: qty, remark, status: '待生产', created_date: today.toISOString().slice(0,10) });
             await loadData();
             renderOrderList();
             renderDashboard();
@@ -540,7 +541,7 @@
                 <td>${w.waste_qty} kg</td>
                 <td>${escapeHtml(w.reason)}</td>
                 <td>${escapeHtml(w.operator || '系统')}</td>
-                <td><span class="status-badge ${w.confirmed ? 'status-已完成' : 'status-待生产'}">${w.confirmed ? '已确认' : '待确认'}</span></td>
+                <td><span class="${w.confirmed ? 'status-completed' : 'status-pending'}">${w.confirmed ? '已确认' : '待确认'}</span></td>
                 <td>${w.date}</td>
                 <td>${!w.confirmed ? `<button class="action-btn" onclick="confirmWaste('${w.id}')">✅ 确认</button>` : ''}
                     <button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td>
