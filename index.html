@@ -39,7 +39,6 @@
         .form-field label { font-size: 0.65rem; font-weight: 600; color: #5e7e97; }
         .form-field input, .form-field select { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 130px; font-size: 0.8rem; }
         .form-field input[readonly] { background: #e8f5e9; font-weight: bold; color: #2e7d32; }
-        .form-field textarea { border: 1px solid #cbdbe6; border-radius: 12px; padding: 6px 10px; width: 100%; font-size: 0.8rem; font-family: inherit; resize: vertical; }
         .filter-bar { background: #f7fafd; border-radius: 16px; padding: 12px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .craft-layout { display: flex; flex-wrap: wrap; }
         .craft-list { width: 300px; background: #fafdff; border-right: 1px solid #e2edf5; padding: 10px; max-height: 600px; overflow-y: auto; }
@@ -59,10 +58,16 @@
         .total-row { margin-top: 10px; padding-top: 8px; font-weight: 700; border-top: 2px solid #cbdde9; }
         .price-total { background: #e8f5e9; font-weight: 700; color: #2e7d32; }
         .search-input { border: 1px solid #cbdde9; border-radius: 20px; padding: 6px 12px; width: 200px; font-size: 0.8rem; }
-        .craft-content { background: #f7fafd; padding: 16px; border-radius: 16px; white-space: pre-wrap; font-family: monospace; font-size: 0.8rem; line-height: 1.5; margin-top: 12px; }
-        /* 模态窗口 */
+        .param-group { margin-bottom: 20px; border: 1px solid #e2edf5; border-radius: 16px; padding: 12px; background: #fafdff; }
+        .param-group h4 { font-size: 0.9rem; color: #1f6e8c; margin-bottom: 10px; }
+        .param-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+        .param-row label { font-size: 0.7rem; font-weight: bold; color: #5e7e97; width: 20px; }
+        .param-row input { width: 60px; padding: 4px 6px; border: 1px solid #cbdde9; border-radius: 8px; font-size: 0.75rem; }
+        .param-row .extra-input { width: 120px; }
+        .materials-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+        .material-tag { background: #eef3fc; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .modal-container { background: white; width: 90%; max-width: 600px; max-height: 85vh; border-radius: 24px; overflow-y: auto; padding: 24px; }
+        .modal-container { background: white; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 24px; padding: 24px; }
         .modal-container h3 { margin-bottom: 16px; color: #1f6e8c; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
         @media (max-width: 780px) {
@@ -71,6 +76,7 @@
             .craft-detail { padding-left: 0; }
             .form-row { flex-direction: column; align-items: stretch; }
             .form-field input { width: 100%; }
+            .param-row { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -246,7 +252,6 @@
         let orderRecords = [];
         let wasteRecords = [];
 
-        // 辅助函数
         function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m; }); }
         
         function calculateInTotal() {
@@ -260,7 +265,6 @@
             document.getElementById('outTotal').value = (w * p).toFixed(2);
         }
         
-        // 加载数据
         async function loadData() {
             try {
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -278,7 +282,107 @@
             } catch(e) { console.error('加载失败:', e); }
         }
 
-        // ========== 工艺参数模块（简化版） ==========
+        // ========== 工艺参数模块 ==========
+        function showCraftModal(title, customer, date, craftData, onSave) {
+            let today = new Date().toISOString().slice(0,10);
+            let materials = craftData?.materials || [];
+            
+            let modalHtml = `
+                <div class="modal-overlay" id="craftModal">
+                    <div class="modal-container">
+                        <h3>✏️ 编辑工艺参数</h3>
+                        <div class="form-field" style="margin-bottom:12px;"><label>工艺标题 *</label><input type="text" id="editTitle" value="${escapeHtml(title || '')}" style="width:100%;"></div>
+                        <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                            <div class="form-field" style="flex:1;"><label>客户</label><input type="text" id="editCustomer" value="${escapeHtml(customer || '')}" style="width:100%;"></div>
+                            <div class="form-field" style="flex:1;"><label>日期</label><input type="date" id="editDate" value="${date || today}" style="width:100%;"></div>
+                        </div>
+                        
+                        <div class="param-group"><h4>🌀 卷曲(单)</h4>
+                            <div class="param-row">
+                                <label>A</label><input type="text" id="curlSingle0" value="${craftData?.curlSingle?.values?.[0] || ''}">
+                                <label>B</label><input type="text" id="curlSingle1" value="${craftData?.curlSingle?.values?.[1] || ''}">
+                                <label>C</label><input type="text" id="curlSingle2" value="${craftData?.curlSingle?.values?.[2] || ''}">
+                                <label>D</label><input type="text" id="curlSingle3" value="${craftData?.curlSingle?.values?.[3] || ''}">
+                                <label>附加</label><input type="text" id="curlSingleExtra" class="extra-input" value="${escapeHtml(craftData?.curlSingle?.extra || '')}" style="width:120px;">
+                            </div>
+                        </div>
+                        <div class="param-group"><h4>🌀 卷曲(双)</h4>
+                            <div class="param-row">
+                                <label>A</label><input type="text" id="curlDouble0" value="${craftData?.curlDouble?.values?.[0] || ''}">
+                                <label>B</label><input type="text" id="curlDouble1" value="${craftData?.curlDouble?.values?.[1] || ''}">
+                                <label>C</label><input type="text" id="curlDouble2" value="${craftData?.curlDouble?.values?.[2] || ''}">
+                                <label>D</label><input type="text" id="curlDouble3" value="${craftData?.curlDouble?.values?.[3] || ''}">
+                                <label>附加</label><input type="text" id="curlDoubleExtra" class="extra-input" value="${escapeHtml(craftData?.curlDouble?.extra || '')}" style="width:120px;">
+                            </div>
+                        </div>
+                        <div class="param-group"><h4>⚙️ 牵伸</h4>
+                            <div class="param-row">
+                                <label>A</label><input type="text" id="draft0" value="${craftData?.draft?.values?.[0] || ''}">
+                                <label>B</label><input type="text" id="draft1" value="${craftData?.draft?.values?.[1] || ''}">
+                                <label>C</label><input type="text" id="draft2" value="${craftData?.draft?.values?.[2] || ''}">
+                                <label>D</label><input type="text" id="draft3" value="${craftData?.draft?.values?.[3] || ''}">
+                                <label>附加</label><input type="text" id="draftExtra" class="extra-input" value="${escapeHtml(craftData?.draft?.extra || '')}" style="width:120px;">
+                            </div>
+                        </div>
+                        <div class="param-group"><h4>📥 喂入</h4>
+                            <div class="param-row">
+                                <label>A</label><input type="text" id="feed0" value="${craftData?.feed?.values?.[0] || ''}">
+                                <label>B</label><input type="text" id="feed1" value="${craftData?.feed?.values?.[1] || ''}">
+                                <label>C</label><input type="text" id="feed2" value="${craftData?.feed?.values?.[2] || ''}">
+                                <label>D</label><input type="text" id="feed3" value="${craftData?.feed?.values?.[3] || ''}">
+                                <label>附加</label><input type="text" id="feedExtra" class="extra-input" value="${escapeHtml(craftData?.feed?.extra || '')}" style="width:120px;">
+                            </div>
+                        </div>
+                        <div class="param-group"><h4>🧬 原料组成</h4>
+                            <div id="materialsContainer" style="margin-bottom:8px;"></div>
+                            <div class="add-material" style="display:flex; gap:8px;"><input type="text" id="newMaterial" placeholder="例: 涤纶65%" style="flex:1;"><button type="button" id="addMaterialBtn" class="btn-sm">+ 添加</button></div>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="saveCraftBtn" class="btn-primary">保存</button>
+                            <button id="cancelModalBtn" class="btn-out">取消</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            function renderMaterials() {
+                let container = document.getElementById('materialsContainer');
+                if (!container) return;
+                container.innerHTML = `<div class="materials-list">${materials.map((m, idx) => `<span class="material-tag">${escapeHtml(m)} <button data-idx="${idx}" class="remove-material" style="background:none; border:none; cursor:pointer; color:#c44536;">✕</button></span>`).join('')}</div>`;
+                document.querySelectorAll('.remove-material').forEach(btn => {
+                    btn.onclick = () => {
+                        let idx = parseInt(btn.dataset.idx);
+                        materials.splice(idx, 1);
+                        renderMaterials();
+                    };
+                });
+            }
+            renderMaterials();
+            
+            document.getElementById('addMaterialBtn').onclick = () => {
+                let newMat = document.getElementById('newMaterial').value.trim();
+                if (newMat) { materials.push(newMat); document.getElementById('newMaterial').value = ''; renderMaterials(); }
+            };
+            document.getElementById('saveCraftBtn').onclick = () => {
+                let newTitle = document.getElementById('editTitle').value;
+                if (!newTitle) { alert('请填写工艺标题'); return; }
+                let updateData = {
+                    title: newTitle,
+                    customer: document.getElementById('editCustomer').value,
+                    date: document.getElementById('editDate').value,
+                    curlSingle: { values: [document.getElementById('curlSingle0').value, document.getElementById('curlSingle1').value, document.getElementById('curlSingle2').value, document.getElementById('curlSingle3').value], extra: document.getElementById('curlSingleExtra').value },
+                    curlDouble: { values: [document.getElementById('curlDouble0').value, document.getElementById('curlDouble1').value, document.getElementById('curlDouble2').value, document.getElementById('curlDouble3').value], extra: document.getElementById('curlDoubleExtra').value },
+                    draft: { values: [document.getElementById('draft0').value, document.getElementById('draft1').value, document.getElementById('draft2').value, document.getElementById('draft3').value], extra: document.getElementById('draftExtra').value },
+                    feed: { values: [document.getElementById('feed0').value, document.getElementById('feed1').value, document.getElementById('feed2').value, document.getElementById('feed3').value], extra: document.getElementById('feedExtra').value },
+                    materials: materials
+                };
+                onSave(updateData);
+                document.getElementById('craftModal')?.remove();
+            };
+            document.getElementById('cancelModalBtn').onclick = () => document.getElementById('craftModal')?.remove();
+        }
+
         function renderCraftList() {
             let searchVal = document.getElementById('craftSearch')?.value.toLowerCase() || '';
             let filtered = craftRecords.filter(c => 
@@ -337,7 +441,42 @@
                     <div style="font-size:1.5rem; font-weight:700;">${escapeHtml(craft.title)}</div>
                     <div style="font-size:0.8rem; color:#5e7e97;">👤 ${escapeHtml(craft.customer || '未填写')} &nbsp; 📅 ${craft.date || '未填写'}</div>
                 </div>
-                <div class="craft-content">${escapeHtml(craft.content || '暂无内容')}</div>
+                <table class="excel-table">
+                    <thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead>
+                    <tbody>
+                        <tr><td class="row-label">🌀 卷曲(单)</td>
+                            <td>${escapeHtml(craft.curlSingle?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.curlSingle?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.curlSingle?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.curlSingle?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.curlSingle?.extra)}</td>
+                        </tr>
+                        <tr><td class="row-label">🌀 卷曲(双)</td>
+                            <td>${escapeHtml(craft.curlDouble?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.curlDouble?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.curlDouble?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.curlDouble?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.curlDouble?.extra)}</td>
+                        </tr>
+                        <tr><td class="row-label">⚙️ 牵伸</td>
+                            <td>${escapeHtml(craft.draft?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.draft?.extra)}</td>
+                        <tr>
+                        <tr><td class="row-label">📥 喂入</td>
+                            <td>${escapeHtml(craft.feed?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.feed?.extra)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="background:#f7fafc; padding:12px; border-radius:16px; margin-top:15px;">
+                    <strong>🧬 原料组成：</strong> ${(craft.materials || []).map(m => `<span class="material-tag">${escapeHtml(m)}</span>`).join('') || '未设置'}
+                </div>
             `;
             document.getElementById('craftDetail').innerHTML = html;
         }
@@ -345,56 +484,27 @@
         function openCraftEditModal(id) {
             let craft = craftRecords.find(c => c.id == id);
             if (!craft) return;
-            let modalHtml = `
-                <div class="modal-overlay" id="craftModal">
-                    <div class="modal-container">
-                        <h3>✏️ 编辑工艺参数</h3>
-                        <div class="form-field" style="margin-bottom:12px;"><label>工艺标题 *</label><input type="text" id="editTitle" value="${escapeHtml(craft.title)}" style="width:100%;"></div>
-                        <div class="form-field" style="margin-bottom:12px;"><label>客户</label><input type="text" id="editCustomer" value="${escapeHtml(craft.customer || '')}" style="width:100%;"></div>
-                        <div class="form-field" style="margin-bottom:12px;"><label>日期</label><input type="date" id="editDate" value="${craft.date || ''}" style="width:100%;"></div>
-                        <div class="form-field" style="margin-bottom:12px;"><label>工艺内容</label><textarea id="editContent" rows="8" style="width:100%;">${escapeHtml(craft.content || '')}</textarea></div>
-                        <div class="modal-buttons">
-                            <button id="saveCraftBtn" class="btn-primary">保存</button>
-                            <button id="cancelModalBtn" class="btn-out">取消</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            document.getElementById('saveCraftBtn').onclick = async () => {
-                let updateData = {
-                    title: document.getElementById('editTitle').value,
-                    customer: document.getElementById('editCustomer').value,
-                    date: document.getElementById('editDate').value,
-                    content: document.getElementById('editContent').value
-                };
-                if (!updateData.title) { alert('请填写工艺标题'); return; }
-                await supabase.from('craft_records').update(updateData).eq('id', id);
+            showCraftModal(craft.title, craft.customer, craft.date, craft, async (data) => {
+                await supabase.from('craft_records').update(data).eq('id', id);
                 await loadData();
                 renderCraftList();
                 selectCraft(id);
-                document.getElementById('craftModal')?.remove();
-            };
-            document.getElementById('cancelModalBtn').onclick = () => document.getElementById('craftModal')?.remove();
+                renderDashboard();
+            });
         }
         
-        document.getElementById('addCraftBtn').onclick = async () => {
-            let title = prompt("请输入工艺标题（必填）");
-            if (!title) return;
+        document.getElementById('addCraftBtn').onclick = () => {
             let today = new Date().toISOString().slice(0,10);
-            let newCraft = {
-                id: Date.now().toString(),
-                title: title,
-                customer: "",
-                date: today,
-                content: ""
-            };
-            await supabase.from('craft_records').insert(newCraft);
-            await loadData();
-            renderCraftList();
-            selectCraft(newCraft.id);
-            renderDashboard();
+            showCraftModal('', '', today, {}, async (data) => {
+                let newCraft = { id: Date.now().toString(), ...data };
+                await supabase.from('craft_records').insert(newCraft);
+                await loadData();
+                renderCraftList();
+                selectCraft(newCraft.id);
+                renderDashboard();
+            });
         };
+        
         if(document.getElementById('craftSearch')) {
             document.getElementById('craftSearch').addEventListener('input', () => renderCraftList());
         }
@@ -405,7 +515,8 @@
             let filtered = warehouseIn.filter(i => !i.is_waste && (i.customer?.toLowerCase().includes(searchVal) || i.model?.toLowerCase().includes(searchVal)));
             let html = filtered.map(i => `<tr>
                 <td>${escapeHtml(i.customer || '-')}</td>
-                <td>${escapeHtml(i.model)}</td><td>${i.weight}</td>
+                <td>${escapeHtml(i.model)}</td>
+                <td>${i.weight}</td>
                 <td>${i.price !== undefined && i.price !== null ? i.price : '-'}</td>
                 <td>${i.total !== undefined && i.total !== null ? i.total : '-'}</td>
                 <td>${i.date}</td>
@@ -547,7 +658,7 @@
                 <td>${w.date}</td>
                 <td>${!w.confirmed ? `<button class="action-btn" onclick="confirmWaste('${w.id}')">✅ 确认</button>` : ''}
                     <button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td>
-            <tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无废置记录</td></tr>';
+            </tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无废置记录</td></tr>';
             document.getElementById('wasteTableBody').innerHTML = html;
         }
         window.confirmWaste = async (id) => {
@@ -609,7 +720,6 @@
             document.getElementById('reportContainer').innerHTML = `<div class="report-box"><div class="report-title">${year}年${month===0?"全年":month+"月"}报表</div><div class="report-item">入仓总量: <span class="report-number">${inTotal.toFixed(2)} kg</span></div><div class="report-item">出仓总量: <span class="report-number">${outTotal.toFixed(2)} kg</span></div><div class="report-item">销售金额: <span class="report-number">${outAmount.toFixed(2)} 元</span></div><div class="total-row">净余: ${(inTotal-outTotal).toFixed(2)} kg</div></div>`;
         };
 
-        // ========== 导出Excel ==========
         function exportToExcel(data, filename) {
             if (!data.length) { alert('没有数据可导出'); return; }
             let headers = Object.keys(data[0]);
@@ -626,7 +736,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // ========== 切换标签 ==========
         function switchTab(tab) {
             currentTab = tab;
             document.getElementById('dashboardPanel').style.display = tab==='dashboard'?'block':'none';
