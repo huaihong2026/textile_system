@@ -160,7 +160,7 @@
                 <div><button id="exportInBtn" class="btn-export">📎 导出Excel</button></div>
             </div>
             <div><input type="text" id="inSearch" class="search-input" placeholder="搜索客户/型号" style="margin-bottom:10px; width:100%;"></div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody>}</div>
         </div>
 
         <!-- 出仓记录 -->
@@ -186,7 +186,7 @@
                 <div><button id="exportOutBtn" class="btn-export">📎 导出Excel</button></div>
             </div>
             <div><input type="text" id="outSearch" class="search-input" placeholder="搜索客户/型号" style="margin-bottom:10px; width:100%;"></div>
-            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量(kg)</th><th>单价(元/kg)</th><th>总价(元)</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody>}</div>
         </div>
 
         <!-- 年度报表 -->
@@ -218,7 +218,7 @@
                 <div class="stat-card"><h3>✅ 已完成</h3><div class="number" id="orderCompletedCount">0</div></div>
             </div>
             <div><input type="text" id="orderSearch" class="search-input" placeholder="搜索订单号/客户/规格" style="margin-bottom:10px; width:100%;"></div>
-            <div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量(kg)</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量(kg)</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody>}</div>
         </div>
 
         <!-- 废置记录 -->
@@ -232,7 +232,7 @@
                     <div class="form-field"><button id="addWasteBtn" class="btn-waste">📝 申请废置</button></div>
                 </div>
             </div>
-            <div><table class="data-table"><thead><tr><th>批号/型号</th><th>废置数量(kg)</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></table></div>
+            <div><table class="data-table"><thead><tr><th>批号/型号</th><th>废置数量(kg)</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody>}</div>
         </div>
     </div>
 </div>
@@ -240,6 +240,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     (function() {
+        // Supabase 配置
         const SUPABASE_URL = 'https://xngvmdoewlmxnsthbqxw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuZ3ZtZG9ld2xteG5zdGhicXh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3NjM3MzMsImV4cCI6MjA5NTMzOTczM30.Djx4HvAyqHtjVSoIq_puI5Km0uSq_pHkzGQ-Rfz-p9s';
         
@@ -282,7 +283,7 @@
             } catch(e) { console.error('加载失败:', e); }
         }
 
-        // ========== 工艺参数模块 ==========
+        // ========== 工艺参数模块（字段名全小写：curlsingle, curldouble） ==========
         function showCraftModal(title, customer, date, craftData, onSave) {
             let today = new Date().toISOString().slice(0,10);
             let materials = craftData?.materials || [];
@@ -299,37 +300,37 @@
                         
                         <div class="param-group"><h4>🌀 卷曲(单)</h4>
                             <div class="param-row">
-                                <label>A</label><input type="text" id="curlSingle0" value="${craftData?.curlSingle?.values?.[0] || ''}">
-                                <label>B</label><input type="text" id="curlSingle1" value="${craftData?.curlSingle?.values?.[1] || ''}">
-                                <label>C</label><input type="text" id="curlSingle2" value="${craftData?.curlSingle?.values?.[2] || ''}">
-                                <label>D</label><input type="text" id="curlSingle3" value="${craftData?.curlSingle?.values?.[3] || ''}">
-                                <label>附加</label><input type="text" id="curlSingleExtra" class="extra-input" value="${escapeHtml(craftData?.curlSingle?.extra || '')}" style="width:120px;">
+                                <label>A</label><input type="text" id="curlsingle0" value="${escapeHtml(craftData?.curlsingle?.values?.[0] || '')}">
+                                <label>B</label><input type="text" id="curlsingle1" value="${escapeHtml(craftData?.curlsingle?.values?.[1] || '')}">
+                                <label>C</label><input type="text" id="curlsingle2" value="${escapeHtml(craftData?.curlsingle?.values?.[2] || '')}">
+                                <label>D</label><input type="text" id="curlsingle3" value="${escapeHtml(craftData?.curlsingle?.values?.[3] || '')}">
+                                <label>附加</label><input type="text" id="curlsingleExtra" class="extra-input" value="${escapeHtml(craftData?.curlsingle?.extra || '')}" style="width:120px;">
                             </div>
                         </div>
                         <div class="param-group"><h4>🌀 卷曲(双)</h4>
                             <div class="param-row">
-                                <label>A</label><input type="text" id="curlDouble0" value="${craftData?.curlDouble?.values?.[0] || ''}">
-                                <label>B</label><input type="text" id="curlDouble1" value="${craftData?.curlDouble?.values?.[1] || ''}">
-                                <label>C</label><input type="text" id="curlDouble2" value="${craftData?.curlDouble?.values?.[2] || ''}">
-                                <label>D</label><input type="text" id="curlDouble3" value="${craftData?.curlDouble?.values?.[3] || ''}">
-                                <label>附加</label><input type="text" id="curlDoubleExtra" class="extra-input" value="${escapeHtml(craftData?.curlDouble?.extra || '')}" style="width:120px;">
+                                <label>A</label><input type="text" id="curldouble0" value="${escapeHtml(craftData?.curldouble?.values?.[0] || '')}">
+                                <label>B</label><input type="text" id="curldouble1" value="${escapeHtml(craftData?.curldouble?.values?.[1] || '')}">
+                                <label>C</label><input type="text" id="curldouble2" value="${escapeHtml(craftData?.curldouble?.values?.[2] || '')}">
+                                <label>D</label><input type="text" id="curldouble3" value="${escapeHtml(craftData?.curldouble?.values?.[3] || '')}">
+                                <label>附加</label><input type="text" id="curldoubleExtra" class="extra-input" value="${escapeHtml(craftData?.curldouble?.extra || '')}" style="width:120px;">
                             </div>
                         </div>
                         <div class="param-group"><h4>⚙️ 牵伸</h4>
                             <div class="param-row">
-                                <label>A</label><input type="text" id="draft0" value="${craftData?.draft?.values?.[0] || ''}">
-                                <label>B</label><input type="text" id="draft1" value="${craftData?.draft?.values?.[1] || ''}">
-                                <label>C</label><input type="text" id="draft2" value="${craftData?.draft?.values?.[2] || ''}">
-                                <label>D</label><input type="text" id="draft3" value="${craftData?.draft?.values?.[3] || ''}">
+                                <label>A</label><input type="text" id="draft0" value="${escapeHtml(craftData?.draft?.values?.[0] || '')}">
+                                <label>B</label><input type="text" id="draft1" value="${escapeHtml(craftData?.draft?.values?.[1] || '')}">
+                                <label>C</label><input type="text" id="draft2" value="${escapeHtml(craftData?.draft?.values?.[2] || '')}">
+                                <label>D</label><input type="text" id="draft3" value="${escapeHtml(craftData?.draft?.values?.[3] || '')}">
                                 <label>附加</label><input type="text" id="draftExtra" class="extra-input" value="${escapeHtml(craftData?.draft?.extra || '')}" style="width:120px;">
                             </div>
                         </div>
                         <div class="param-group"><h4>📥 喂入</h4>
                             <div class="param-row">
-                                <label>A</label><input type="text" id="feed0" value="${craftData?.feed?.values?.[0] || ''}">
-                                <label>B</label><input type="text" id="feed1" value="${craftData?.feed?.values?.[1] || ''}">
-                                <label>C</label><input type="text" id="feed2" value="${craftData?.feed?.values?.[2] || ''}">
-                                <label>D</label><input type="text" id="feed3" value="${craftData?.feed?.values?.[3] || ''}">
+                                <label>A</label><input type="text" id="feed0" value="${escapeHtml(craftData?.feed?.values?.[0] || '')}">
+                                <label>B</label><input type="text" id="feed1" value="${escapeHtml(craftData?.feed?.values?.[1] || '')}">
+                                <label>C</label><input type="text" id="feed2" value="${escapeHtml(craftData?.feed?.values?.[2] || '')}">
+                                <label>D</label><input type="text" id="feed3" value="${escapeHtml(craftData?.feed?.values?.[3] || '')}">
                                 <label>附加</label><input type="text" id="feedExtra" class="extra-input" value="${escapeHtml(craftData?.feed?.extra || '')}" style="width:120px;">
                             </div>
                         </div>
@@ -364,15 +365,15 @@
                 let newMat = document.getElementById('newMaterial').value.trim();
                 if (newMat) { materials.push(newMat); document.getElementById('newMaterial').value = ''; renderMaterials(); }
             };
-            document.getElementById('saveCraftBtn').onclick = () => {
+            document.getElementById('saveCraftBtn').onclick = async () => {
                 let newTitle = document.getElementById('editTitle').value;
                 if (!newTitle) { alert('请填写工艺标题'); return; }
                 let updateData = {
                     title: newTitle,
                     customer: document.getElementById('editCustomer').value,
                     date: document.getElementById('editDate').value,
-                    curlSingle: { values: [document.getElementById('curlSingle0').value, document.getElementById('curlSingle1').value, document.getElementById('curlSingle2').value, document.getElementById('curlSingle3').value], extra: document.getElementById('curlSingleExtra').value },
-                    curlDouble: { values: [document.getElementById('curlDouble0').value, document.getElementById('curlDouble1').value, document.getElementById('curlDouble2').value, document.getElementById('curlDouble3').value], extra: document.getElementById('curlDoubleExtra').value },
+                    curlsingle: { values: [document.getElementById('curlsingle0').value, document.getElementById('curlsingle1').value, document.getElementById('curlsingle2').value, document.getElementById('curlsingle3').value], extra: document.getElementById('curlsingleExtra').value },
+                    curldouble: { values: [document.getElementById('curldouble0').value, document.getElementById('curldouble1').value, document.getElementById('curldouble2').value, document.getElementById('curldouble3').value], extra: document.getElementById('curldoubleExtra').value },
                     draft: { values: [document.getElementById('draft0').value, document.getElementById('draft1').value, document.getElementById('draft2').value, document.getElementById('draft3').value], extra: document.getElementById('draftExtra').value },
                     feed: { values: [document.getElementById('feed0').value, document.getElementById('feed1').value, document.getElementById('feed2').value, document.getElementById('feed3').value], extra: document.getElementById('feedExtra').value },
                     materials: materials
@@ -445,18 +446,18 @@
                     <thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead>
                     <tbody>
                         <tr><td class="row-label">🌀 卷曲(单)</td>
-                            <td>${escapeHtml(craft.curlSingle?.values?.[0] || '')}</td>
-                            <td>${escapeHtml(craft.curlSingle?.values?.[1] || '')}</td>
-                            <td>${escapeHtml(craft.curlSingle?.values?.[2] || '')}</td>
-                            <td>${escapeHtml(craft.curlSingle?.values?.[3] || '')}</td>
-                            <td>${escapeHtml(craft.curlSingle?.extra)}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.extra)}</td>
                         </tr>
                         <tr><td class="row-label">🌀 卷曲(双)</td>
-                            <td>${escapeHtml(craft.curlDouble?.values?.[0] || '')}</td>
-                            <td>${escapeHtml(craft.curlDouble?.values?.[1] || '')}</td>
-                            <td>${escapeHtml(craft.curlDouble?.values?.[2] || '')}</td>
-                            <td>${escapeHtml(craft.curlDouble?.values?.[3] || '')}</td>
-                            <td>${escapeHtml(craft.curlDouble?.extra)}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[0] || '')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[1] || '')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[2] || '')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[3] || '')}</td>
+                            <td>${escapeHtml(craft.curldouble?.extra)}</td>
                         </tr>
                         <tr><td class="row-label">⚙️ 牵伸</td>
                             <td>${escapeHtml(craft.draft?.values?.[0] || '')}</td>
@@ -464,7 +465,7 @@
                             <td>${escapeHtml(craft.draft?.values?.[2] || '')}</td>
                             <td>${escapeHtml(craft.draft?.values?.[3] || '')}</td>
                             <td>${escapeHtml(craft.draft?.extra)}</td>
-                        <tr>
+                        </tr>
                         <tr><td class="row-label">📥 喂入</td>
                             <td>${escapeHtml(craft.feed?.values?.[0] || '')}</td>
                             <td>${escapeHtml(craft.feed?.values?.[1] || '')}</td>
@@ -485,23 +486,33 @@
             let craft = craftRecords.find(c => c.id == id);
             if (!craft) return;
             showCraftModal(craft.title, craft.customer, craft.date, craft, async (data) => {
-                await supabase.from('craft_records').update(data).eq('id', id);
-                await loadData();
-                renderCraftList();
-                selectCraft(id);
-                renderDashboard();
+                const { error } = await supabase.from('craft_records').update(data).eq('id', id);
+                if (error) {
+                    alert('保存失败: ' + error.message);
+                    console.error(error);
+                } else {
+                    await loadData();
+                    renderCraftList();
+                    selectCraft(id);
+                    renderDashboard();
+                }
             });
         }
         
         document.getElementById('addCraftBtn').onclick = () => {
             let today = new Date().toISOString().slice(0,10);
             showCraftModal('', '', today, {}, async (data) => {
-                let newCraft = { id: Date.now().toString(), ...data };
-                await supabase.from('craft_records').insert(newCraft);
-                await loadData();
-                renderCraftList();
-                selectCraft(newCraft.id);
-                renderDashboard();
+                const newId = Date.now().toString();
+                const { error } = await supabase.from('craft_records').insert({ id: newId, ...data });
+                if (error) {
+                    alert('保存失败: ' + error.message);
+                    console.error(error);
+                } else {
+                    await loadData();
+                    renderCraftList();
+                    selectCraft(newId);
+                    renderDashboard();
+                }
             });
         };
         
@@ -540,7 +551,8 @@
             if (!c || !m || isNaN(w)) { alert("请完整填写客户、型号和重量"); return; }
             let insertData = { id: Date.now().toString(), customer: c, model: m, weight: w, date: d };
             if (!isNaN(p) && p > 0) { insertData.price = p; insertData.total = parseFloat(total); }
-            await supabase.from('in_records').insert(insertData);
+            const { error } = await supabase.from('in_records').insert(insertData);
+            if (error) { alert('保存失败: ' + error.message); return; }
             await loadData();
             renderInRecords();
             renderDashboard();
@@ -563,7 +575,7 @@
                 <td>${o.price || 0}</td><td class="price-total">${o.total || (o.weight * o.price).toFixed(2)}</td>
                 <td>${o.date}</td>
                 <td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td>
-            </tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无出仓记录</td></tr>';
+             </tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无出仓记录</td></tr>';
             document.getElementById('outTableBody').innerHTML = html;
             let outW = warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
             let outAmt = warehouseOut.reduce((s,o)=>s+(+o.total || ((+o.weight||0)*(+o.price||0))),0);
@@ -580,7 +592,8 @@
             let total = (w * p).toFixed(2);
             let d = document.getElementById('outDate').value || new Date().toISOString().slice(0,10);
             if (!c || !m || isNaN(w) || isNaN(p)) { alert("请完整填写客户、型号、重量和单价"); return; }
-            await supabase.from('out_records').insert({ id: Date.now().toString(), customer: c, model: m, weight: w, price: p, total: parseFloat(total), date: d });
+            const { error } = await supabase.from('out_records').insert({ id: Date.now().toString(), customer: c, model: m, weight: w, price: p, total: parseFloat(total), date: d });
+            if (error) { alert('保存失败: ' + error.message); return; }
             await loadData();
             renderOutRecords();
             renderDashboard();
@@ -613,7 +626,7 @@
                 <td><input type="text" value="${escapeHtml(o.remark || '')}" style="width:100px" data-id="${o.id}" class="order-remark-input"></td>
                 <td>${o.created_date}</td>
                 <td><button class="action-btn" onclick="deleteOrder('${o.id}')">🗑️</button></td>
-            </tr>`).join('') || '<tr><td colspan="8" class="empty-state">暂无订单</td></tr>';
+             </tr>`).join('') || '<tr><td colspan="8" class="empty-state">暂无订单</td></tr>';
             document.getElementById('orderTableBody').innerHTML = html;
             document.querySelectorAll('.order-qty-input').forEach(inp => inp.onchange = async (e) => {
                 await supabase.from('order_progress').update({ quantity: parseFloat(e.target.value) }).eq('id', e.target.dataset.id);
@@ -641,7 +654,8 @@
             if (!spec || isNaN(qty)) { alert("请填写规格和数量"); return; }
             let today = new Date();
             let orderNo = 'D' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + String(Math.floor(Math.random()*1000)).padStart(3,'0');
-            await supabase.from('order_progress').insert({ id: Date.now().toString(), order_no: orderNo, customer, product_spec: spec, quantity: qty, remark, status: '待生产', created_date: today.toISOString().slice(0,10) });
+            const { error } = await supabase.from('order_progress').insert({ id: Date.now().toString(), order_no: orderNo, customer, product_spec: spec, quantity: qty, remark, status: '待生产', created_date: today.toISOString().slice(0,10) });
+            if (error) { alert('保存失败: ' + error.message); return; }
             await loadData();
             renderOrderList();
             renderDashboard();
@@ -658,7 +672,7 @@
                 <td>${w.date}</td>
                 <td>${!w.confirmed ? `<button class="action-btn" onclick="confirmWaste('${w.id}')">✅ 确认</button>` : ''}
                     <button class="action-btn" onclick="deleteWaste('${w.id}')">🗑️</button></td>
-            </tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无废置记录</td></tr>';
+             </tr>`).join('') || '<tr><td colspan="7" class="empty-state">暂无废置记录</td></tr>';
             document.getElementById('wasteTableBody').innerHTML = html;
         }
         window.confirmWaste = async (id) => {
@@ -679,7 +693,8 @@
             let qty = parseFloat(document.getElementById('wasteQty').value);
             let reason = document.getElementById('wasteReason').value.trim();
             if (!model || isNaN(qty) || !reason) { alert("请完整填写"); return; }
-            await supabase.from('waste_records').insert({ id: Date.now().toString(), model, waste_qty: qty, reason, operator: '管理员', date: new Date().toISOString().slice(0,10), confirmed: false });
+            const { error } = await supabase.from('waste_records').insert({ id: Date.now().toString(), model, waste_qty: qty, reason, operator: '管理员', date: new Date().toISOString().slice(0,10), confirmed: false });
+            if (error) { alert('保存失败: ' + error.message); return; }
             await loadData();
             renderWasteList();
             document.getElementById('wasteModel').value = ''; document.getElementById('wasteQty').value = ''; document.getElementById('wasteReason').value = '';
