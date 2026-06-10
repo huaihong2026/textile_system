@@ -33,18 +33,15 @@
         .tab.active { color: #1f6e8c; border-bottom-color: #1f6e8c; background: white; }
         .main-content { padding: 20px; }
         
-        /* 仪表盘统计卡片 */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: #f0f6fa; border-radius: 18px; padding: 14px 18px; transition: 0.2s; }
         .stat-card:hover { background: #e1f0f8; transform: translateY(-2px); }
         .stat-card h3 { font-size: 0.75rem; color: #5e7e97; margin-bottom: 5px; }
         .stat-card .number { font-size: 1.8rem; font-weight: 700; color: #1f6e8c; }
-        .stat-card .unit { font-size: 0.7rem; color: #999; margin-left: 4px; }
         .stat-card .small-note { font-size: 0.65rem; color: #999; margin-top: 4px; }
         .stat-card.warning { background: #fff3e0; border-left: 4px solid #f39c12; }
         .stat-card.danger { background: #ffebee; border-left: 4px solid #f44336; }
         
-        /* 归档设置区域 - 放最下面 */
         .archive-section { background: #f7fafd; border-radius: 16px; padding: 15px; margin-top: 20px; border: 1px solid #dce9f2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 15px; }
         .archive-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .archive-controls label { font-size: 0.8rem; font-weight: 600; color: #5e7e97; }
@@ -97,9 +94,10 @@
         .search-input-small { border: 1px solid #cbdde9; border-radius: 20px; padding: 8px 14px; width: 220px; font-size: 0.85rem; }
         .alert-setting { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
         
-        /* 密码弹窗 */
         .password-modal .modal-container { max-width: 400px; text-align: center; }
         .password-modal input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #cbdde9; border-radius: 12px; font-size: 1rem; }
+        
+        .customer-summary-table { margin-top: 15px; }
         
         @media (max-width: 780px) {
             .craft-layout { flex-direction: column; }
@@ -151,7 +149,6 @@
     <div class="main-content">
         <div id="dashboardPanel"></div>
         
-        <!-- 工艺参数 -->
         <div id="craftPanel" style="display:none;">
             <div style="margin-bottom:12px; display:flex; gap:8px;">
                 <input type="text" id="craftSearch" placeholder="搜索工艺标题/客户" style="flex:1; border-radius:20px; border:1px solid #cbdde9; padding:8px 14px; font-size:0.85rem;">
@@ -163,7 +160,6 @@
             </div>
         </div>
         
-        <!-- 入仓记录 -->
         <div id="inPanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px;">➕ 手动添加入仓</h4>
                 <div class="form-row">
@@ -190,7 +186,6 @@
             </div>
         </div>
         
-        <!-- 出仓记录 -->
         <div id="outPanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px;">📤 手动添加出仓</h4>
                 <div class="form-row">
@@ -217,7 +212,6 @@
             </div>
         </div>
         
-        <!-- 库存板块 -->
         <div id="stockPanel" style="display:none;">
             <div class="stats-row">
                 <div class="stat-card"><h3>📦 当前总库存 (kg)</h3><div class="number" id="stockTotalWeight">0.00</div></div>
@@ -245,7 +239,6 @@
             </div>
         </div>
         
-        <!-- 年度报表 -->
         <div id="statsPanel" style="display:none;">
             <div class="filter-bar">
                 <div class="form-field"><label>年份</label><input type="number" id="statsYear" value="2026" step="1" style="width:100px;"></div>
@@ -256,7 +249,6 @@
             <div id="reportContainer"></div>
         </div>
         
-        <!-- 订单进度 -->
         <div id="orderPanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px;">➕ 新增订单</h4>
                 <div class="form-row">
@@ -273,13 +265,12 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th></table></thead>
+                    <thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th></tr></thead>
                     <tbody id="orderTableBody"></tbody>
                 </table>
             </div>
         </div>
         
-        <!-- 废置 -->
         <div id="wastePanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px;">📝 废置/损耗手动录入</h4>
                 <div class="form-row">
@@ -292,8 +283,8 @@
                     <div class="form-field"><label>毛重(kg)</label><input type="number" id="wmGross" step="0.01" value="0"></div>
                     <div class="form-field"><label>筒重(kg)</label><input type="number" id="wmTube" step="0.01" value="0"></div>
                     <div class="form-field"><label>箱重(kg)</label><input type="number" id="wmBox" step="0.01" value="0"></div>
-                    <div class="form-field"><label>净重(kg)</label><input type="text" id="wmNet" readonly style="background:#e8f5e9; font-weight:bold;"></div>
                     <div class="form-field"><label>数量</label><input type="number" id="wmQty" step="0.01"></div>
+                    <div class="form-field"><label>净重(kg)</label><input type="text" id="wmNet" readonly style="background:#e8f5e9; font-weight:bold;"></div>
                     <div class="form-field"><label>日期</label><input type="date" id="wmDate"></div>
                     <div class="form-field"><label>备注</label><input type="text" id="wmRemark"></div>
                     <div class="form-field"><button id="addWasteManualBtn" class="btn-waste">保存记录</button></div>
@@ -305,7 +296,7 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th>型号</th><th>客户</th><th>批号</th><th>色号</th><th>毛重</th><th>筒重</th><th>箱重</th><th>净重</th><th>数量</th><th>日期</th><th>备注</th><th>操作</th></tr></thead>
+                    <thead><tr><th>型号</th><th>客户</th><th>批号</th><th>色号</th><th>毛重</th><th>筒重</th><th>箱重</th><th>数量</th><th>净重</th><th>日期</th><th>备注</th><th>操作</th></tr></thead>
                     <tbody id="wasteManualTableBody"></tbody>
                 </table>
             </div>
@@ -364,14 +355,12 @@
         else if(currentTab === 'waste') renderWasteManual();
     }
 
-    // 计算预估存储大小
     function calculateStorage() {
         let totalRecords = warehouseIn.filter(i=>!i.is_waste).length + warehouseOut.length + craftRecords.length + orderRecords.length + wasteManualRecords.length;
         let estimatedMB = (totalRecords * 0.5) / 1024;
         return { totalRecords, estimatedMB: estimatedMB.toFixed(2) };
     }
     
-    // 密码验证弹窗
     function showPasswordModal(callback) {
         let modalHtml = `
             <div class="modal-overlay password-modal" id="passwordModal">
@@ -404,7 +393,6 @@
         };
     }
     
-    // 归档旧数据
     async function archiveOldData() {
         showPasswordModal(async (success) => {
             if(!success) return;
@@ -415,66 +403,42 @@
             
             if(!confirm(`⚠️ 确认归档 ${keepYears} 年前的数据？\n\n将删除 ${cutoffStr} 之前的所有记录：\n- 入仓记录\n- 出仓记录\n- 工艺参数\n- 订单进度\n- 废置记录\n\n建议先点击"一键备份"保存数据后再操作！`)) return;
             
-            let deleted = { in:0, out:0, craft:0, order:0, waste:0 };
-            
-            let {data:oldIn, error:errIn} = await supabase.from('in_records').select('id').lt('date', cutoffStr);
-            if(!errIn && oldIn && oldIn.length) {
+            let {data:oldIn} = await supabase.from('in_records').select('id').lt('date', cutoffStr);
+            if(oldIn && oldIn.length) {
                 let ids = oldIn.map(r => r.id);
-                for(let i=0;i<ids.length;i+=100) {
-                    let batch = ids.slice(i,i+100);
-                    await supabase.from('in_records').delete().in('id', batch);
-                }
-                deleted.in = oldIn.length;
+                for(let i=0;i<ids.length;i+=100) await supabase.from('in_records').delete().in('id', ids.slice(i,i+100));
             }
             
-            let {data:oldOut, error:errOut} = await supabase.from('out_records').select('id').lt('date', cutoffStr);
-            if(!errOut && oldOut && oldOut.length) {
+            let {data:oldOut} = await supabase.from('out_records').select('id').lt('date', cutoffStr);
+            if(oldOut && oldOut.length) {
                 let ids = oldOut.map(r => r.id);
-                for(let i=0;i<ids.length;i+=100) {
-                    let batch = ids.slice(i,i+100);
-                    await supabase.from('out_records').delete().in('id', batch);
-                }
-                deleted.out = oldOut.length;
+                for(let i=0;i<ids.length;i+=100) await supabase.from('out_records').delete().in('id', ids.slice(i,i+100));
             }
             
-            let {data:oldCraft, error:errCraft} = await supabase.from('craft_records').select('id').lt('date', cutoffStr);
-            if(!errCraft && oldCraft && oldCraft.length) {
+            let {data:oldCraft} = await supabase.from('craft_records').select('id').lt('date', cutoffStr);
+            if(oldCraft && oldCraft.length) {
                 let ids = oldCraft.map(r => r.id);
-                for(let i=0;i<ids.length;i+=100) {
-                    let batch = ids.slice(i,i+100);
-                    await supabase.from('craft_records').delete().in('id', batch);
-                }
-                deleted.craft = oldCraft.length;
+                for(let i=0;i<ids.length;i+=100) await supabase.from('craft_records').delete().in('id', ids.slice(i,i+100));
             }
             
-            let {data:oldOrder, error:errOrder} = await supabase.from('order_progress').select('id').lt('created_date', cutoffStr);
-            if(!errOrder && oldOrder && oldOrder.length) {
+            let {data:oldOrder} = await supabase.from('order_progress').select('id').lt('created_date', cutoffStr);
+            if(oldOrder && oldOrder.length) {
                 let ids = oldOrder.map(r => r.id);
-                for(let i=0;i<ids.length;i+=100) {
-                    let batch = ids.slice(i,i+100);
-                    await supabase.from('order_progress').delete().in('id', batch);
-                }
-                deleted.order = oldOrder.length;
+                for(let i=0;i<ids.length;i+=100) await supabase.from('order_progress').delete().in('id', ids.slice(i,i+100));
             }
             
-            let {data:oldWaste, error:errWaste} = await supabase.from('waste_manual_records').select('id').lt('date', cutoffStr);
-            if(!errWaste && oldWaste && oldWaste.length) {
+            let {data:oldWaste} = await supabase.from('waste_manual_records').select('id').lt('date', cutoffStr);
+            if(oldWaste && oldWaste.length) {
                 let ids = oldWaste.map(r => r.id);
-                for(let i=0;i<ids.length;i+=100) {
-                    let batch = ids.slice(i,i+100);
-                    await supabase.from('waste_manual_records').delete().in('id', batch);
-                }
-                deleted.waste = oldWaste.length;
+                for(let i=0;i<ids.length;i+=100) await supabase.from('waste_manual_records').delete().in('id', ids.slice(i,i+100));
             }
             
-            let totalDel = deleted.in + deleted.out + deleted.craft + deleted.order + deleted.waste;
-            showToast(`归档完成！共删除 ${totalDel} 条 ${keepYears} 年前的记录`);
+            showToast('归档完成！');
             await loadData();
             renderDashboard();
         });
     }
 
-    // 仪表盘
     function renderDashboard(){
         let today = new Date().toISOString().slice(0,10);
         let todayIn = warehouseIn.filter(i=>i.date===today && !i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
@@ -536,7 +500,6 @@
         });
     }
 
-    // 库存计算
     function computeStockOverview() {
         let groupMap = new Map();
         warehouseIn.filter(i=>!i.is_waste).forEach(rec => {
@@ -566,7 +529,8 @@
         let stockArr = [];
         for(let item of groupMap.values()) {
             let stock = item.totalIn - item.totalOut;
-            if(stock !== 0 || item.totalIn > 0) {
+            // 只显示非零库存（过滤掉库存为0的记录）
+            if(Math.abs(stock) > 0.01) {
                 stockArr.push({ ...item, stock });
             }
         }
@@ -589,7 +553,7 @@
         document.getElementById('stockTotalWeight').innerText = totalStockKg.toFixed(2);
         document.getElementById('stockDistinctCount').innerText = filtered.length;
         let tbody = document.getElementById('stockTableBody');
-        if(!filtered.length) { tbody.innerHTML = '<td><td colspan="6" class="empty-state">暂无库存数据</td></tr>'; }
+        if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">暂无库存数据</td></tr>'; }
         else {
             tbody.innerHTML = filtered.map(s => {
                 let stockClass = s.stock < 0 ? 'negative-stock' : '';
@@ -609,7 +573,6 @@
         else alertDiv.innerHTML = '<div class="empty-state">✅ 暂无低库存物料</div>';
     }
     
-    // 年度报表统计
     function refreshStats() {
         let year = parseInt(document.getElementById('statsYear').value) || new Date().getFullYear();
         let month = parseInt(document.getElementById('statsMonth').value);
@@ -627,22 +590,37 @@
         let outTotal = outFiltered.reduce((s,i)=>s+(+i.weight||0),0);
         let outAmount = outFiltered.reduce((s,i)=>s+(+i.total||((+i.weight||0)*(+i.price||0))),0);
         
-        let outGroup = new Map();
-        outFiltered.forEach(o => {
-            let cust = (o.customer || '').trim() || '无客户';
-            let model = o.model || '未知型号';
-            let key = cust + '_' + model;
-            if(!outGroup.has(key)) {
-                outGroup.set(key, { customer: cust, model: model, totalQty: 0, totalAmount: 0 });
+        // 出仓明细 - 按金额排序（大客户在前）
+        let outDetails = outFiltered.map(o => ({
+            customer: (o.customer || '').trim() || '无客户',
+            model: o.model || '未知型号',
+            weight: +o.weight || 0,
+            amount: +o.total || ((+o.weight||0)*(+o.price||0))
+        }));
+        outDetails.sort((a,b) => b.amount - a.amount);
+        
+        // 客户汇总统计（按金额排序）
+        let customerMap = new Map();
+        outDetails.forEach(item => {
+            if(!customerMap.has(item.customer)) {
+                customerMap.set(item.customer, { customer: item.customer, totalQty: 0, totalAmount: 0, models: new Set() });
             }
-            let item = outGroup.get(key);
-            item.totalQty += (+o.weight || 0);
-            item.totalAmount += (+o.total || ((+o.weight||0)*(+o.price||0)));
+            let c = customerMap.get(item.customer);
+            c.totalQty += item.weight;
+            c.totalAmount += item.amount;
+            c.models.add(item.model);
         });
-        let outDetails = Array.from(outGroup.values());
-        outDetails.sort((a,b) => a.customer.localeCompare(b.customer, 'zh'));
+        let customerSummary = Array.from(customerMap.values()).map(c => ({
+            customer: c.customer,
+            varietyCount: c.models.size,
+            totalQty: c.totalQty,
+            totalAmount: c.totalAmount
+        }));
+        customerSummary.sort((a,b) => b.totalAmount - a.totalAmount);
         
         let monthName = month === 0 ? '全年' : month + '月';
+        let rankIcons = ['🥇', '🥈', '🥉'];
+        
         let html = `
             <div class="report-box">
                 <div class="report-title">📈 汇总统计 (${year}年${monthName})</div>
@@ -651,15 +629,41 @@
                 <div class="report-item">销售金额: <span class="report-number">${outAmount.toFixed(2)} 元</span></div>
                 <div class="total-row">净余: ${(inTotal-outTotal).toFixed(2)} kg</div>
             </div>
+            
             <div class="report-box">
-                <div class="report-title">📋 出仓明细 (${year}年${monthName})</div>
+                <div class="report-title">📋 出仓明细 (${year}年${monthName}) - 按金额排序</div>
                 ${outDetails.length === 0 ? '<div class="empty-state">暂无出仓记录</div>' : `
                     <div class="table-wrapper">
                         <table class="data-table">
-                            <thead><tr><th>客户</th><th>型号</th><th>出仓数量(kg)</th><th>出仓金额(元)</th></tr></thead>
+                            <thead><tr><th>客户</th><th>型号</th><th>数量(kg)</th><th>金额(元)</th></tr></thead>
                             <tbody>
-                                ${outDetails.map(d => `<tr><td>${escapeHtml(d.customer)}</td><td>${escapeHtml(d.model)}</td><td>${d.totalQty.toFixed(2)}</td><td>${d.totalAmount.toFixed(2)}</td></tr>`).join('')}
+                                ${outDetails.map(d => `<tr>
+                                    <td>${escapeHtml(d.customer)}</td>
+                                    <td>${escapeHtml(d.model)}</td>
+                                    <td>${d.weight.toFixed(2)}</td>
+                                    <td>${d.amount.toFixed(2)}</td>
+                                </tr>`).join('')}
                                 <tr style="background:#eef3fc; font-weight:bold;"><td colspan="2">合计</td><td>${outTotal.toFixed(2)} kg</td><td>${outAmount.toFixed(2)} 元</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `}
+            </div>
+            
+            <div class="report-box">
+                <div class="report-title">📊 客户统计 (${year}年${monthName}) - 按金额排序</div>
+                ${customerSummary.length === 0 ? '<div class="empty-state">暂无数据</div>' : `
+                    <div class="table-wrapper">
+                        <table class="data-table customer-summary-table">
+                            <thead><tr><th>排名</th><th>客户</th><th>品种数</th><th>总数量(kg)</th><th>总金额(元)</th></tr></thead>
+                            <tbody>
+                                ${customerSummary.map((c, idx) => `<tr>
+                                    <td style="text-align:center; width:50px;">${idx < 3 ? rankIcons[idx] : (idx+1)}</td>
+                                    <td>${escapeHtml(c.customer)}</td>
+                                    <td>${c.varietyCount}</td>
+                                    <td>${c.totalQty.toFixed(2)}</td>
+                                    <td style="font-weight:bold;">${c.totalAmount.toFixed(2)}</td>
+                                </tr>`).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -667,7 +671,7 @@
             </div>
         `;
         document.getElementById('reportContainer').innerHTML = html;
-        window.currentStatsData = { year, month, monthName, inTotal, outTotal, outAmount, outDetails };
+        window.currentStatsData = { year, month, monthName, inTotal, outTotal, outAmount, outDetails, customerSummary };
     }
     
     function exportStats() {
@@ -683,13 +687,19 @@
             ['销售金额(元)', d.outAmount.toFixed(2)],
             ['净余(kg)', (d.inTotal - d.outTotal).toFixed(2)],
             [''],
-            ['【出仓明细】'],
-            ['客户', '型号', '出仓数量(kg)', '出仓金额(元)']
+            ['【出仓明细 - 按金额排序】'],
+            ['客户', '型号', '数量(kg)', '金额(元)']
         ];
         d.outDetails.forEach(item => {
-            rows.push([item.customer, item.model, item.totalQty.toFixed(2), item.totalAmount.toFixed(2)]);
+            rows.push([item.customer, item.model, item.weight.toFixed(2), item.amount.toFixed(2)]);
         });
         rows.push(['合计', '', d.outTotal.toFixed(2), d.outAmount.toFixed(2)]);
+        rows.push(['']);
+        rows.push(['【客户统计 - 按金额排序】']);
+        rows.push(['排名', '客户', '品种数', '总数量(kg)', '总金额(元)']);
+        d.customerSummary.forEach((c, idx) => {
+            rows.push([idx+1, c.customer, c.varietyCount, c.totalQty.toFixed(2), c.totalAmount.toFixed(2)]);
+        });
         let csv = rows.map(row => row.join('\t')).join('\n');
         let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
         let link = document.createElement('a');
@@ -699,7 +709,6 @@
         URL.revokeObjectURL(link.href);
     }
     
-    // 一键备份
     async function backupAllData() {
         showToast('正在准备备份数据...');
         try {
@@ -729,8 +738,8 @@
             let craftData = craftRecords.map(c => ({标题:c.title||'', 客户:c.customer||'', 日期:c.date||'', 卷曲单:JSON.stringify(c.curlsingle||{}), 卷曲双:JSON.stringify(c.curldouble||{}), 牵伸:JSON.stringify(c.draft||{}), 喂入:JSON.stringify(c.feed||{}), 原料:(c.materials||[]).join(';')}));
             zip.file("4_craft_records.csv", arrayToCSV(craftData, ['标题','客户','日期','卷曲单','卷曲双','牵伸','喂入','原料']));
             
-            let wasteData = wasteManualRecords.map(w => ({型号:w.model||'', 客户:w.customer||'', 批号:w.batch_no||'', 色号:w.color_no||'', 毛重:w.gross_weight||0, 筒重:w.tube_weight||0, 箱重:w.box_weight||0, 净重:w.net_weight||0, 数量:w.quantity||0, 日期:w.date||'', 备注:w.remark||''}));
-            zip.file("5_waste_records.csv", arrayToCSV(wasteData, ['型号','客户','批号','色号','毛重','筒重','箱重','净重','数量','日期','备注']));
+            let wasteData = wasteManualRecords.map(w => ({型号:w.model||'', 客户:w.customer||'', 批号:w.batch_no||'', 色号:w.color_no||'', 毛重:w.gross_weight||0, 筒重:w.tube_weight||0, 箱重:w.box_weight||0, 数量:w.quantity||0, 净重:w.net_weight||0, 日期:w.date||'', 备注:w.remark||''}));
+            zip.file("5_waste_records.csv", arrayToCSV(wasteData, ['型号','客户','批号','色号','毛重','筒重','箱重','数量','净重','日期','备注']));
             
             let stockDataExport = stockData.map(s => ({客户:s.customer||'', 型号:s.model||'', 当前库存:s.stock.toFixed(2), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate||''}));
             zip.file("6_stock_snapshot.csv", arrayToCSV(stockDataExport, ['客户','型号','当前库存','累计入仓','累计出仓','最后更新']));
@@ -782,31 +791,101 @@
     function selectCraft(id){ currentCraftId=id; let craft=craftRecords.find(c=>c.id==id); renderCraftDetail(craft); renderCraftList(); }
     function renderCraftDetail(craft){ if(!craft){document.getElementById('craftDetail').innerHTML='<div class="empty-state">请选择或新增工艺记录</div>'; return;} document.getElementById('craftDetail').innerHTML=`<div style="border-left:6px solid #2c7da0; padding-left:15px;"><div style="font-size:1.3rem;">${escapeHtml(craft.title)}</div><div>👤 ${escapeHtml(craft.customer||'未填写')} &nbsp; 📅 ${craft.date||'未填写'}</div></div><div class="table-wrapper"><table class="data-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead><tbody><tr><td>🌀 卷曲(单)</td><td>${escapeHtml(craft.curlsingle?.values?.[0]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[1]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[2]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[3]||'')}</td><td>${escapeHtml(craft.curlsingle?.extra)}</td></tr>
                 <tr><td>🌀 卷曲(双)</td><td>${escapeHtml(craft.curldouble?.values?.[0]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[1]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[2]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[3]||'')}</td><td>${escapeHtml(craft.curldouble?.extra)}</td></tr>
-                <tr><td>⚙️ 牵伸</td><td>${escapeHtml(craft.draft?.values?.[0]||'')}</td><td>${escapeHtml(craft.draft?.values?.[1]||'')}</td><td>${escapeHtml(craft.draft?.values?.[2]||'')}</td><td>${escapeHtml(craft.draft?.values?.[3]||'')}</td><td>${escapeHtml(craft.draft?.extra)}</td></tr>
-                <tr><td>📥 喂入</td><td>${escapeHtml(craft.feed?.values?.[0]||'')}</td><td>${escapeHtml(craft.feed?.values?.[1]||'')}</td><td>${escapeHtml(craft.feed?.values?.[2]||'')}</td><td>${escapeHtml(craft.feed?.values?.[3]||'')}</td><td>${escapeHtml(craft.feed?.extra)}</td></tr>
-            </tbody></table></div><div style="margin-top:12px;"><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>`; }
+                <tr><td>⚙️ 牵伸</td><td colspan="5">${escapeHtml(craft.draft?.values?.join(' | ') || '')} ${escapeHtml(craft.draft?.extra ? ' | ' + craft.draft.extra : '')}</td></tr>
+                <tr><td>📥 喂入</td><td colspan="5">${escapeHtml(craft.feed?.values?.join(' | ') || '')} ${escapeHtml(craft.feed?.extra ? ' | ' + craft.feed.extra : '')}</td></tr>
+            </tbody></table></div>
+            <div><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>`;
+    }
     document.getElementById('addCraftBtn')&&(document.getElementById('addCraftBtn').onclick=()=>showCraftModal(null,false));
     document.getElementById('craftSearch')&&(document.getElementById('craftSearch').addEventListener('input',()=>renderCraftList()));
 
     // 入仓
-    function renderIn(){ let val=document.getElementById('inSearch')?.value.toLowerCase()||''; let f=warehouseIn.filter(i=>!i.is_waste&&(i.customer||'').toLowerCase().includes(val)||(i.model||'').toLowerCase().includes(val)||(i.batch_no||'').toLowerCase().includes(val)||(i.color_no||'').toLowerCase().includes(val)); document.getElementById('inTableBody').innerHTML=f.map(i=>`<tr><td>${escapeHtml(i.customer||'-')}</td><td>${escapeHtml(i.model)}</td><td>${escapeHtml(i.batch_no||'-')}</td><td>${escapeHtml(i.color_no||'-')}</td><td>${i.weight}</td><td>${i.price??'-'}</td><td>${i.total??'-'}</td><td>${i.date}</td><td><button class="btn-delete" onclick="delIn('${i.id}')">删除</button></td></tr>`).join('')||'<tr><td colspan="9" class="empty-state">暂无入仓记录</td></tr>'; }
+    function renderIn(){ let val=document.getElementById('inSearch')?.value.toLowerCase()||''; let f=warehouseIn.filter(i=>!i.is_waste&&(i.customer||'').toLowerCase().includes(val)||(i.model||'').toLowerCase().includes(val)||(i.batch_no||'').toLowerCase().includes(val)||(i.color_no||'').toLowerCase().includes(val)); document.getElementById('inTableBody').innerHTML=f.map(i=>`<tr>
+        <td>${escapeHtml(i.customer||'-')}</td>
+        <td>${escapeHtml(i.model)}</td><td>${escapeHtml(i.batch_no||'-')}</td><td>${escapeHtml(i.color_no||'-')}</td><td>${i.weight}</td><td>${i.price??'-'}</td><td>${i.total??'-'}</td><td>${i.date}</td>
+        <td><button class="btn-delete" onclick="delIn('${i.id}')">删除</button></td>
+    </tr>`).join('')||'<tr><td colspan="9" class="empty-state">暂无入仓记录</td></tr>'; }
     window.delIn=async(id)=>{ if(confirm('确认删除？')){ let {error} = await supabase.from('in_records').delete().eq('id',id); if(!error){ showToast('删除成功'); await loadData(); } else { showToast('删除失败'); } } };
-    document.getElementById('addInBtn')&&(document.getElementById('addInBtn').onclick=async()=>{ let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, b=document.getElementById('inBatch').value, col=document.getElementById('inColor').value, w=parseFloat(document.getElementById('inWeight').value), p=parseFloat(document.getElementById('inPrice').value), total=(w*p).toFixed(2), d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10); if(!m||isNaN(w)){alert('请填写型号和重量'); return;} let data={id:Date.now().toString(), customer:c||null, model:m, batch_no:b||null, color_no:col||null, weight:w, date:d}; if(!isNaN(p)&&p>0){data.price=p; data.total=parseFloat(total);} await supabase.from('in_records').insert(data); await loadData(); showToast('入仓成功'); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inBatch').value=''; document.getElementById('inColor').value=''; document.getElementById('inWeight').value=''; document.getElementById('inPrice').value=''; document.getElementById('inTotal').value=''; });
+    document.getElementById('addInBtn')&&(document.getElementById('addInBtn').onclick=async()=>{ let c=document.getElementById('inCustomer').value, m=document.getElementById('inModel').value, b=document.getElementById('inBatch').value, col=document.getElementById('inColor').value, w=parseFloat(document.getElementById('inWeight').value), p=parseFloat(document.getElementById('inPrice').value), total=(w*p).toFixed(2), d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10); if(!m||isNaN(w)){alert('请填写型号和重量'); return;} let data={id:Date.now().toString(), customer:c||null, model:m, batch_no:b||null, color_no:col||null, weight:w, date:d}; if(!isNaN(p)&&p>0){data.price=p; data.total=parseFloat(total);} let {error} = await supabase.from('in_records').insert(data); if(error){ showToast('添加失败：'+error.message); } else { await loadData(); showToast('入仓成功'); document.getElementById('inCustomer').value=''; document.getElementById('inModel').value=''; document.getElementById('inBatch').value=''; document.getElementById('inColor').value=''; document.getElementById('inWeight').value=''; document.getElementById('inPrice').value=''; document.getElementById('inTotal').value=''; } });
     document.getElementById('exportInBtn')&&(document.getElementById('exportInBtn').onclick=()=>{ let data=warehouseIn.filter(i=>!i.is_waste).map(i=>({客户:i.customer,型号:i.model,批号:i.batch_no,色号:i.color_no,重量:i.weight,单价:i.price||'',总价:i.total||'',日期:i.date})); exportExcel(data,'入仓记录'); });
     document.getElementById('inSearch')&&(document.getElementById('inSearch').addEventListener('input',()=>renderIn()));
 
     // 出仓
-    function renderOut(){ let val=document.getElementById('outSearch')?.value.toLowerCase()||''; let f=warehouseOut.filter(o=>(o.customer||'').toLowerCase().includes(val)||(o.model||'').toLowerCase().includes(val)||(o.batch_no||'').toLowerCase().includes(val)||(o.color_no||'').toLowerCase().includes(val)); document.getElementById('outTableBody').innerHTML=f.map(o=>`<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${escapeHtml(o.batch_no||'-')}</td><td>${escapeHtml(o.color_no||'-')}</td><td>${o.weight}</td><td>${o.price||0}</td><td class="price-total">${o.total||(o.weight*o.price).toFixed(2)}</td><td>${o.date}</td><td><button class="btn-delete" onclick="delOut('${o.id}')">删除</button></td></tr>`).join('')||'<tr><td colspan="9" class="empty-state">暂无出仓记录</td></tr>'; }
+    function renderOut(){ let val=document.getElementById('outSearch')?.value.toLowerCase()||''; let f=warehouseOut.filter(o=>(o.customer||'').toLowerCase().includes(val)||(o.model||'').toLowerCase().includes(val)||(o.batch_no||'').toLowerCase().includes(val)||(o.color_no||'').toLowerCase().includes(val)); document.getElementById('outTableBody').innerHTML=f.map(o=>`<tr>
+        <td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${escapeHtml(o.batch_no||'-')}</td><td>${escapeHtml(o.color_no||'-')}</td><td>${o.weight}</td><td>${o.price||0}</td>
+        <td class="price-total">${o.total||(o.weight*o.price).toFixed(2)}</td><td>${o.date}</td>
+        <td><button class="btn-delete" onclick="delOut('${o.id}')">删除</button></td>
+    </tr>`).join('')||'<tr><td colspan="9" class="empty-state">暂无出仓记录</td></tr>'; }
     window.delOut=async(id)=>{ if(confirm('确认删除该出仓记录？')){ let {error} = await supabase.from('out_records').delete().eq('id',id); if(!error){ showToast('删除成功'); await loadData(); } else { showToast('删除失败：'+error.message); } } };
-    document.getElementById('addOutBtn')&&(document.getElementById('addOutBtn').onclick=async()=>{ let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, b=document.getElementById('outBatch').value, col=document.getElementById('outColor').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), total=(w*p).toFixed(2), d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10); if(!m||isNaN(w)||isNaN(p)){alert('请填写型号、重量和单价'); return;} await supabase.from('out_records').insert({id:Date.now().toString(), customer:c||null, model:m, batch_no:b||null, color_no:col||null, weight:w, price:p, total:parseFloat(total), date:d}); await loadData(); showToast('出仓成功'); document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outBatch').value=''; document.getElementById('outColor').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value=''; });
+    document.getElementById('addOutBtn')&&(document.getElementById('addOutBtn').onclick=async()=>{ let c=document.getElementById('outCustomer').value, m=document.getElementById('outModel').value, b=document.getElementById('outBatch').value, col=document.getElementById('outColor').value, w=parseFloat(document.getElementById('outWeight').value), p=parseFloat(document.getElementById('outPrice').value), total=(w*p).toFixed(2), d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10); if(!m||isNaN(w)||isNaN(p)){alert('请填写型号、重量和单价'); return;} let {error} = await supabase.from('out_records').insert({id:Date.now().toString(), customer:c||null, model:m, batch_no:b||null, color_no:col||null, weight:w, price:p, total:parseFloat(total), date:d}); if(error){ showToast('添加失败：'+error.message); } else { await loadData(); showToast('出仓成功'); document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outBatch').value=''; document.getElementById('outColor').value=''; document.getElementById('outWeight').value=''; document.getElementById('outPrice').value=''; document.getElementById('outTotal').value=''; } });
     document.getElementById('exportOutBtn')&&(document.getElementById('exportOutBtn').onclick=()=>{ let data=warehouseOut.map(o=>({客户:o.customer,型号:o.model,批号:o.batch_no,色号:o.color_no,重量:o.weight,单价:o.price,总价:o.total||(o.weight*o.price).toFixed(2),日期:o.date})); exportExcel(data,'出仓记录'); });
     document.getElementById('outSearch')&&(document.getElementById('outSearch').addEventListener('input',()=>renderOut()));
 
     // 订单
-    function renderOrder(){ let val=document.getElementById('orderSearch')?.value.toLowerCase()||''; let f=orderRecords.filter(o=>(o.order_no||'').toLowerCase().includes(val)||(o.customer||'').toLowerCase().includes(val)||(o.product_spec||'').toLowerCase().includes(val)); document.getElementById('orderTableBody').innerHTML=f.map(o=>`<tr><td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td><td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:80px"></td><td><select data-id="${o.id}" class="order-status"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td><td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px"></td><td>${o.created_date}</td><td><button class="btn-delete" onclick="delOrder('${o.id}')">删除</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty-state">暂无订单</td></tr>'; attachOrderEvents();}
-    function attachOrderEvents(){ document.querySelectorAll('.order-qty').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id); await loadData(); showToast('已更新');}); document.querySelectorAll('.order-status').forEach(sel=>sel.onchange=async e=>{await supabase.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id); await loadData(); showToast('状态已更新');}); document.querySelectorAll('.order-remark').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id); await loadData();});}
+    async function getNextOrderNo() {
+        let today = new Date();
+        let dateStr = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
+        let {data, error} = await supabase.from('order_progress').select('order_no').like('order_no', `${dateStr}%`);
+        let maxSeq = 0;
+        if(data && data.length) {
+            data.forEach(item => {
+                let seq = parseInt(item.order_no.slice(-3));
+                if(!isNaN(seq) && seq > maxSeq) maxSeq = seq;
+            });
+        }
+        let newSeq = maxSeq + 1;
+        return dateStr + String(newSeq).padStart(3,'0');
+    }
+    
+    function renderOrder(){ 
+        let val = document.getElementById('orderSearch')?.value.toLowerCase() || ''; 
+        let f = orderRecords.filter(o => (o.order_no||'').toLowerCase().includes(val) || (o.customer||'').toLowerCase().includes(val) || (o.product_spec||'').toLowerCase().includes(val)); 
+        let tbody = document.getElementById('orderTableBody');
+        if(!tbody) return;
+        tbody.innerHTML = f.map(o => `<tr>
+            <td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td>
+            <td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:80px"></td>
+            <td><select data-id="${o.id}" class="order-status"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已完成'?'selected':''}>已完成</option></select></td>
+            <td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px"></td>
+            <td>${o.created_date}</td><td><button class="btn-delete" onclick="delOrder('${o.id}')">删除</button></td>
+        </tr>`).join('');
+        if(!f.length) tbody.innerHTML = '<tr><td colspan="8" class="empty-state">暂无订单</td></tr>';
+        attachOrderEvents();
+    }
+    function attachOrderEvents(){ 
+        document.querySelectorAll('.order-qty').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id); await loadData(); showToast('已更新');}); 
+        document.querySelectorAll('.order-status').forEach(sel=>sel.onchange=async e=>{await supabase.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id); await loadData(); showToast('状态已更新');}); 
+        document.querySelectorAll('.order-remark').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id); await loadData();});
+    }
     window.delOrder=async(id)=>{ if(confirm('删除订单？')){ await supabase.from('order_progress').delete().eq('id',id); await loadData(); showToast('订单已删除'); } };
-    document.getElementById('addOrderBtn')&&(document.getElementById('addOrderBtn').onclick=async()=>{ let customer=document.getElementById('orderCustomer').value, spec=document.getElementById('orderSpec').value, qty=parseFloat(document.getElementById('orderQty').value), remark=document.getElementById('orderRemark').value; if(!spec||isNaN(qty)){alert('请填写规格和数量'); return;} let today=new Date(); let orderNo='D'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+String(Math.floor(Math.random()*1000)).padStart(3,'0'); await supabase.from('order_progress').insert({id:Date.now().toString(), order_no:orderNo, customer:customer||null, product_spec:spec, quantity:qty, remark, status:'待生产', created_date:today.toISOString().slice(0,10)}); await loadData(); showToast('订单已创建'); document.getElementById('orderCustomer').value=''; document.getElementById('orderSpec').value=''; document.getElementById('orderQty').value=''; document.getElementById('orderRemark').value=''; });
+    document.getElementById('addOrderBtn')&&(document.getElementById('addOrderBtn').onclick=async()=>{ 
+        let customer=document.getElementById('orderCustomer').value, 
+        spec=document.getElementById('orderSpec').value, 
+        qty=parseFloat(document.getElementById('orderQty').value), 
+        remark=document.getElementById('orderRemark').value; 
+        if(!spec||isNaN(qty)){alert('请填写规格和数量'); return;} 
+        let orderNo = await getNextOrderNo();
+        let {error} = await supabase.from('order_progress').insert({
+            id:Date.now().toString(), 
+            order_no:orderNo, 
+            customer:customer||null, 
+            product_spec:spec, 
+            quantity:qty, 
+            remark:remark||null, 
+            status:'待生产', 
+            created_date:new Date().toISOString().slice(0,10)
+        }); 
+        if(error) {
+            showToast('添加失败：' + error.message);
+        } else {
+            await loadData(); 
+            showToast('订单已创建，订单号：'+orderNo);
+        }
+        document.getElementById('orderCustomer').value=''; 
+        document.getElementById('orderSpec').value=''; 
+        document.getElementById('orderQty').value=''; 
+        document.getElementById('orderRemark').value=''; 
+    });
     document.getElementById('orderSearch')&&(document.getElementById('orderSearch').addEventListener('input',()=>renderOrder()));
 
     // 废置手动录入
@@ -814,10 +893,53 @@
     document.getElementById('wmGross')?.addEventListener('input',calculateNet);
     document.getElementById('wmTube')?.addEventListener('input',calculateNet);
     document.getElementById('wmBox')?.addEventListener('input',calculateNet);
-    function renderWasteManual(){ let val=document.getElementById('wasteManualSearch')?.value.toLowerCase()||''; let f=wasteManualRecords.filter(w=>(w.model||'').toLowerCase().includes(val)||(w.customer||'').toLowerCase().includes(val)||(w.batch_no||'').toLowerCase().includes(val)||(w.color_no||'').toLowerCase().includes(val)); document.getElementById('wasteManualTableBody').innerHTML=f.map(w=>`<tr><td>${escapeHtml(w.model||'-')}</td><td>${escapeHtml(w.customer||'-')}</td><td>${escapeHtml(w.batch_no||'-')}</td><td>${escapeHtml(w.color_no||'-')}</td><td>${w.gross_weight||0}</td><td>${w.tube_weight||0}</td><td>${w.box_weight||0}</td><td>${w.net_weight||0}</td><td>${w.quantity||0}</td><td>${w.date||'-'}</td><td>${escapeHtml(w.remark||'-')}</td><td><button class="btn-delete" onclick="delWasteManual('${w.id}')">删除</button></td></tr>`).join('')||'<tr><td colspan="12" class="empty-state">暂无废置记录</td></tr>'; }
+    function renderWasteManual(){ let val=document.getElementById('wasteManualSearch')?.value.toLowerCase()||''; let f=wasteManualRecords.filter(w=>(w.model||'').toLowerCase().includes(val)||(w.customer||'').toLowerCase().includes(val)||(w.batch_no||'').toLowerCase().includes(val)||(w.color_no||'').toLowerCase().includes(val)); document.getElementById('wasteManualTableBody').innerHTML=f.map(w=>`<tr>
+        <td>${escapeHtml(w.model||'-')}</td><td>${escapeHtml(w.customer||'-')}</td><td>${escapeHtml(w.batch_no||'-')}</td><td>${escapeHtml(w.color_no||'-')}</td>
+        <td>${w.gross_weight||0}</td><td>${w.tube_weight||0}</td><td>${w.box_weight||0}</td><td>${w.quantity||0}</td><td>${w.net_weight||0}</td>
+        <td>${w.date||'-'}</td><td>${escapeHtml(w.remark||'-')}</td>
+        <td><button class="btn-delete" onclick="delWasteManual('${w.id}')">删除</button></td>
+    </tr>`).join('')||'<tr><td colspan="12" class="empty-state">暂无废置记录</td></tr>'; }
     window.delWasteManual=async(id)=>{ if(confirm('删除此废置记录？')){ await supabase.from('waste_manual_records').delete().eq('id',id); await loadData(); showToast('已删除'); } };
-    document.getElementById('addWasteManualBtn')&&(document.getElementById('addWasteManualBtn').onclick=async()=>{ let model=document.getElementById('wmModel').value.trim(); if(!model){alert('请填写型号'); return;} let gross=parseFloat(document.getElementById('wmGross').value)||0; let tube=parseFloat(document.getElementById('wmTube').value)||0; let box=parseFloat(document.getElementById('wmBox').value)||0; let net=gross-tube-box; let data={ id:Date.now().toString(), model, customer:document.getElementById('wmCustomer').value||null, batch_no:document.getElementById('wmBatch').value||null, color_no:document.getElementById('wmColor').value||null, gross_weight:gross, tube_weight:tube, box_weight:box, net_weight:net, quantity:parseFloat(document.getElementById('wmQty').value)||null, date:document.getElementById('wmDate').value||new Date().toISOString().slice(0,10), remark:document.getElementById('wmRemark').value||null }; await supabase.from('waste_manual_records').insert(data); await loadData(); showToast('废置记录已保存'); document.getElementById('wmModel').value=''; document.getElementById('wmCustomer').value=''; document.getElementById('wmBatch').value=''; document.getElementById('wmColor').value=''; document.getElementById('wmGross').value='0'; document.getElementById('wmTube').value='0'; document.getElementById('wmBox').value='0'; document.getElementById('wmQty').value=''; document.getElementById('wmRemark').value=''; calculateNet(); });
-    document.getElementById('exportWasteManualBtn')&&(document.getElementById('exportWasteManualBtn').onclick=()=>{ let data=wasteManualRecords.map(w=>({型号:w.model,客户:w.customer,批号:w.batch_no,色号:w.color_no,毛重:w.gross_weight,筒重:w.tube_weight,箱重:w.box_weight,净重:w.net_weight,数量:w.quantity,日期:w.date,备注:w.remark})); exportExcel(data,'废置记录'); });
+    document.getElementById('addWasteManualBtn')&&(document.getElementById('addWasteManualBtn').onclick=async()=>{ 
+        let model=document.getElementById('wmModel').value.trim(); 
+        if(!model){alert('请填写型号'); return;} 
+        let gross=parseFloat(document.getElementById('wmGross').value)||0; 
+        let tube=parseFloat(document.getElementById('wmTube').value)||0; 
+        let box=parseFloat(document.getElementById('wmBox').value)||0; 
+        let net=gross-tube-box; 
+        let data={ 
+            id:Date.now().toString(), 
+            model, 
+            customer:document.getElementById('wmCustomer').value||null, 
+            batch_no:document.getElementById('wmBatch').value||null, 
+            color_no:document.getElementById('wmColor').value||null, 
+            gross_weight:gross, 
+            tube_weight:tube, 
+            box_weight:box, 
+            quantity:parseFloat(document.getElementById('wmQty').value)||null, 
+            net_weight:net, 
+            date:document.getElementById('wmDate').value||new Date().toISOString().slice(0,10), 
+            remark:document.getElementById('wmRemark').value||null 
+        }; 
+        let {error} = await supabase.from('waste_manual_records').insert(data); 
+        if(error){ 
+            showToast('添加失败：' + error.message); 
+        } else { 
+            await loadData(); 
+            showToast('废置记录已保存'); 
+            document.getElementById('wmModel').value=''; 
+            document.getElementById('wmCustomer').value=''; 
+            document.getElementById('wmBatch').value=''; 
+            document.getElementById('wmColor').value=''; 
+            document.getElementById('wmGross').value='0'; 
+            document.getElementById('wmTube').value='0'; 
+            document.getElementById('wmBox').value='0'; 
+            document.getElementById('wmQty').value=''; 
+            document.getElementById('wmRemark').value=''; 
+            calculateNet(); 
+        } 
+    });
+    document.getElementById('exportWasteManualBtn')&&(document.getElementById('exportWasteManualBtn').onclick=()=>{ let data=wasteManualRecords.map(w=>({型号:w.model,客户:w.customer,批号:w.batch_no,色号:w.color_no,毛重:w.gross_weight,筒重:w.tube_weight,箱重:w.box_weight,数量:w.quantity,净重:w.net_weight,日期:w.date,备注:w.remark})); exportExcel(data,'废置记录'); });
     document.getElementById('wasteManualSearch')?.addEventListener('input',()=>renderWasteManual());
 
     function exportExcel(data,filename){ if(!data.length){alert('无数据'); return;} let headers=Object.keys(data[0]); let rows=data.map(row=>headers.map(h=>row[h]!==undefined?row[h]:'').join('\t')); let csv=headers.join('\t')+'\n'+rows.join('\n'); let blob=new Blob(["\uFEFF"+csv],{type:'text/csv;charset=utf-8;'}); let link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=`${filename}.csv`; link.click(); URL.revokeObjectURL(link.href); }
