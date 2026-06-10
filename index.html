@@ -70,6 +70,11 @@
         .modal-container { background: white; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; border-radius: 24px; padding: 24px; }
         .modal-container h3 { margin-bottom: 16px; color: #1f6e8c; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+        .stock-summary { background: #f0f6fa; border-radius: 16px; padding: 12px; margin-bottom: 20px; }
+        .stock-summary h4 { color: #1f6e8c; margin-bottom: 10px; }
+        .stock-table { width: 100%; border-collapse: collapse; }
+        .stock-table th, .stock-table td { padding: 8px; text-align: left; border-bottom: 1px solid #dce5ed; font-size: 0.75rem; }
+        .stock-table th { background: #e1f0f8; }
         @media (max-width: 780px) {
             .craft-layout { flex-direction: column; }
             .craft-list { width: 100%; border-right: none; max-height: 300px; }
@@ -104,11 +109,11 @@
     <div class="main-content">
         <div id="dashboardPanel"></div>
         <div id="craftPanel" style="display:none;"><div class="craft-layout"><div class="craft-list"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span>📋 工艺单列表</span><button id="addCraftBtn" class="btn-primary btn-sm">+ 新增</button></div><div id="craftList"></div></div><div class="craft-detail" id="craftDetail"><div class="empty-state">请选择或新增工艺记录</div></div></div></div>
-        <div id="inPanel" style="display:none;"><div class="add-form"><h4>➕ 手动添加入仓</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="inCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="inModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight" step="0.01"></div><div class="form-field"><label>单价</label><input type="number" id="inPrice" step="0.01" placeholder="选填"></div><div class="form-field"><label>总价</label><input type="text" id="inTotal" readonly></div><div class="form-field"><label>日期</label><input type="date" id="inDate"></div><div class="form-field"><button id="addInBtn" class="btn-in">添加入仓</button></div></div></div><div><input type="text" id="inSearch" placeholder="搜索客户/型号"><button id="exportInBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody></table></div></div>
-        <div id="outPanel" style="display:none;"><div class="add-form"><h4>📤 手动添加出仓</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="outCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="outModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight" step="0.01"></div><div class="form-field"><label>单价</label><input type="number" id="outPrice" step="0.01"></div><div class="form-field"><label>总价</label><input type="text" id="outTotal" readonly></div><div class="form-field"><label>日期</label><input type="date" id="outDate"></div><div class="form-field"><button id="addOutBtn" class="btn-out">添加出仓</button></div></div></div><div><input type="text" id="outSearch" placeholder="搜索客户/型号"><button id="exportOutBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody></table></div></div>
+        <div id="inPanel" style="display:none;"><div id="stockContainer" class="stock-summary" style="display:none;"></div><div class="add-form"><h4>➕ 手动添加入仓</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="inCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="inModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="inWeight" step="0.01"></div><div class="form-field"><label>单价</label><input type="number" id="inPrice" step="0.01" placeholder="选填"></div><div class="form-field"><label>总价</label><input type="text" id="inTotal" readonly></div><div class="form-field"><label>日期</label><input type="date" id="inDate"></div><div class="form-field"><button id="addInBtn" class="btn-in">添加入仓</button></div></div></div><div><input type="text" id="inSearch" placeholder="搜索客户/型号"><button id="exportInBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead><tbody id="inTableBody"></tbody>}</div></div>
+        <div id="outPanel" style="display:none;"><div class="add-form"><h4>📤 手动添加出仓</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="outCustomer"></div><div class="form-field"><label>型号</label><input type="text" id="outModel"></div><div class="form-field"><label>重量(kg)</label><input type="number" id="outWeight" step="0.01"></div><div class="form-field"><label>单价</label><input type="number" id="outPrice" step="0.01"></div><div class="form-field"><label>总价</label><input type="text" id="outTotal" readonly></div><div class="form-field"><label>日期</label><input type="date" id="outDate"></div><div class="form-field"><button id="addOutBtn" class="btn-out">添加出仓</button></div></div></div><div><input type="text" id="outSearch" placeholder="搜索客户/型号"><button id="exportOutBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>客户</th><th>型号</th><th>重量</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead><tbody id="outTableBody"></tbody>}</div></div>
         <div id="statsPanel" style="display:none;"><div class="filter-bar"><div class="form-field"><label>年份</label><input type="number" id="statsYear" value="2024"></div><div class="form-field"><label>月份</label><select id="statsMonth"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div><button id="refreshStatsBtn" class="btn-primary">统计</button></div><div id="reportContainer"></div></div>
-        <div id="orderPanel" style="display:none;"><div class="add-form"><h4>➕ 新增订单</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="orderCustomer"></div><div class="form-field"><label>产品规格</label><input type="text" id="orderSpec"></div><div class="form-field"><label>数量</label><input type="number" id="orderQty"></div><div class="form-field"><label>备注</label><input type="text" id="orderRemark"></div><div class="form-field"><button id="addOrderBtn" class="btn-primary">新增订单</button></div></div></div><div><input type="text" id="orderSearch" placeholder="搜索订单号/客户/规格"><button id="exportOrderBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th></tr></thead><tbody id="orderTableBody"></tbody></table></div></div>
-        <div id="wastePanel" style="display:none;"><div class="add-form"><h4>🗑️ 申请废置</h4><div class="form-row"><div class="form-field"><label>型号</label><input type="text" id="wasteModel"></div><div class="form-field"><label>数量(kg)</label><input type="number" id="wasteQty" step="0.01"></div><div class="form-field"><label>原因</label><input type="text" id="wasteReason"></div><div class="form-field"><button id="addWasteBtn" class="btn-waste">申请废置</button></div></div></div><div><table class="data-table"><thead><tr><th>型号</th><th>数量</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody></table></div></div>
+        <div id="orderPanel" style="display:none;"><div class="add-form"><h4>➕ 新增订单</h4><div class="form-row"><div class="form-field"><label>客户</label><input type="text" id="orderCustomer"></div><div class="form-field"><label>产品规格</label><input type="text" id="orderSpec"></div><div class="form-field"><label>数量</label><input type="number" id="orderQty"></div><div class="form-field"><label>备注</label><input type="text" id="orderRemark"></div><div class="form-field"><button id="addOrderBtn" class="btn-primary">新增订单</button></div></div></div><div><input type="text" id="orderSearch" placeholder="搜索订单号/客户/规格"><button id="exportOrderBtn" class="btn-export">导出Excel</button></div><div><table class="data-table"><thead><tr><th>订单号</th><th>客户</th><th>规格</th><th>数量</th><th>状态</th><th>备注</th><th>创建日期</th><th>操作</th><tr></thead><tbody id="orderTableBody"></tbody>}</div></div>
+        <div id="wastePanel" style="display:none;"><div class="add-form"><h4>🗑️ 申请废置</h4><div class="form-row"><div class="form-field"><label>型号</label><input type="text" id="wasteModel"></div><div class="form-field"><label>数量(kg)</label><input type="number" id="wasteQty" step="0.01"></div><div class="form-field"><label>原因</label><input type="text" id="wasteReason"></div><div class="form-field"><button id="addWasteBtn" class="btn-waste">申请废置</button></div></div></div><div><table class="data-table"><thead><tr><th>型号</th><th>数量</th><th>原因</th><th>申请人</th><th>状态</th><th>申请日期</th><th>操作</th></tr></thead><tbody id="wasteTableBody"></tbody>}</div></div>
     </div>
 </div>
 
@@ -137,13 +142,14 @@
         orderRecords = ord || [];
         let {data:w} = await supabase.from('waste_records').select('*');
         wasteRecords = w || [];
+        console.log('数据加载成功: 工艺=', craftRecords.length, '入仓=', warehouseIn.length, '出仓=', warehouseOut.length, '订单=', orderRecords.length, '废置=', wasteRecords.length);
         refreshCurrent();
     }
 
     function refreshCurrent(){
         if(currentTab === 'dashboard') renderDashboard();
         else if(currentTab === 'craft') { renderCraftList(); if(currentCraftId) selectCraft(currentCraftId); }
-        else if(currentTab === 'in') renderIn();
+        else if(currentTab === 'in') { renderStock(); renderIn(); }
         else if(currentTab === 'out') renderOut();
         else if(currentTab === 'stats') document.getElementById('refreshStatsBtn')?.click();
         else if(currentTab === 'order') renderOrder();
@@ -173,6 +179,27 @@
             </div>
             <div class="report-box"><div class="report-title">📌 待处理事项</div><div id="pendingTasks">${pendingOrders>0?`📋 有 ${pendingOrders} 个订单待生产<br>`:''}${pendingWaste>0?`🗑️ 有 ${pendingWaste} 个废置申请待确认`:''}${pendingOrders===0&&pendingWaste===0?'暂无待处理事项 ✓':''}</div></div>
         `;
+    }
+
+    // ========== 库存汇总 ==========
+    function renderStock(){
+        let stockMap = new Map();
+        warehouseIn.forEach(i => { if(!i.is_waste && i.model){ stockMap.set(i.model, (stockMap.get(i.model) || 0) + (Number(i.weight) || 0)); } });
+        warehouseOut.forEach(o => { if(o.model){ stockMap.set(o.model, (stockMap.get(o.model) || 0) - (Number(o.weight) || 0)); } });
+        
+        let html = '';
+        if(stockMap.size === 0){
+            html = '<div class="empty-state">暂无库存数据</div>';
+        } else {
+            html = `<h4>📊 当前库存汇总</h4><table class="stock-table"><thead><tr><th>型号</th><th>当前库存(kg)</th></tr></thead><tbody>`;
+            for(let [model, stock] of stockMap){
+                let color = stock < 0 ? '#c44536' : '#2e7d32';
+                html += `<tr><td><strong>${escapeHtml(model)}</strong></td><td style="color:${color}; font-weight:bold;">${stock.toFixed(2)}</td></tr>`;
+            }
+            html += `</tbody></td></div>`;
+        }
+        let container = document.getElementById('stockContainer');
+        if(container){ container.innerHTML = html; container.style.display = 'block'; }
     }
 
     // ========== 工艺参数 ==========
@@ -231,12 +258,38 @@
         document.getElementById('craftDetail').innerHTML=`
             <div style="border-left:6px solid #2c7da0; padding-left:15px;"><div style="font-size:1.5rem;">${escapeHtml(craft.title)}</div><div>👤 ${escapeHtml(craft.customer||'未填写')} &nbsp; 📅 ${craft.date||'未填写'}</div></div>
             <table class="excel-table"><thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead>
-            <tbody><tr><td>🌀 卷曲(单)</td><td>${escapeHtml(craft.curlsingle?.values?.[0]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[1]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[2]||'')}</td><td>${escapeHtml(craft.curlsingle?.values?.[3]||'')}</td><td>${escapeHtml(craft.curlsingle?.extra)}</td></tr>
-            <tr><td>🌀 卷曲(双)</td><td>${escapeHtml(craft.curldouble?.values?.[0]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[1]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[2]||'')}</td><td>${escapeHtml(craft.curldouble?.values?.[3]||'')}</td><td>${escapeHtml(craft.curldouble?.extra)}</td></tr>
-            <tr><td>⚙️ 牵伸</td><td>${escapeHtml(craft.draft?.values?.[0]||'')}</td><td>${escapeHtml(craft.draft?.values?.[1]||'')}</td><td>${escapeHtml(craft.draft?.values?.[2]||'')}</td><td>${escapeHtml(craft.draft?.values?.[3]||'')}</td><td>${escapeHtml(craft.draft?.extra)}</td></tr>
-            <tr><td>📥 喂入</td><td>${escapeHtml(craft.feed?.values?.[0]||'')}</td><td>${escapeHtml(craft.feed?.values?.[1]||'')}</td><td>${escapeHtml(craft.feed?.values?.[2]||'')}</td><td>${escapeHtml(craft.feed?.values?.[3]||'')}</td><td>${escapeHtml(craft.feed?.extra)}</td></tr>
-            </tbody></table>
-            <div><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>`;
+            <tbody>
+                <tr><td class="row-label">🌀 卷曲(单)</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[0]||'')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[1]||'')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[2]||'')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.values?.[3]||'')}</td>
+                            <td>${escapeHtml(craft.curlsingle?.extra)}</td>
+                        </tr>
+                        <tr><td class="row-label">🌀 卷曲(双)</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[0]||'')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[1]||'')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[2]||'')}</td>
+                            <td>${escapeHtml(craft.curldouble?.values?.[3]||'')}</td>
+                            <td>${escapeHtml(craft.curldouble?.extra)}</td>
+                        </tr>
+                        <tr><td class="row-label">⚙️ 牵伸</td>
+                            <td>${escapeHtml(craft.draft?.values?.[0]||'')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[1]||'')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[2]||'')}</td>
+                            <td>${escapeHtml(craft.draft?.values?.[3]||'')}</td>
+                            <td>${escapeHtml(craft.draft?.extra)}</td>
+                        </tr>
+                        <tr><td class="row-label">📥 喂入</td>
+                            <td>${escapeHtml(craft.feed?.values?.[0]||'')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[1]||'')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[2]||'')}</td>
+                            <td>${escapeHtml(craft.feed?.values?.[3]||'')}</td>
+                            <td>${escapeHtml(craft.feed?.extra)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>`;
     }
     document.getElementById('addCraftBtn')&&(document.getElementById('addCraftBtn').onclick=()=>showCraftModal(null,false));
     document.getElementById('craftSearch')&&(document.getElementById('craftSearch').addEventListener('input',()=>renderCraftList()));
@@ -245,7 +298,15 @@
     function renderIn(){
         let searchVal=document.getElementById('inSearch')?.value.toLowerCase()||'';
         let filtered=warehouseIn.filter(i=>!i.is_waste&&((i.customer||'').toLowerCase().includes(searchVal)||(i.model||'').toLowerCase().includes(searchVal)));
-        document.getElementById('inTableBody').innerHTML=filtered.map(i=>`<tr><td>${escapeHtml(i.customer||'-')}</td><td>${escapeHtml(i.model)}</td><td>${i.weight}</td><td>${i.price??'-'}</td><td>${i.total??'-'}</td><td>${i.date}</td><td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无入仓记录</td></tr>';
+        document.getElementById('inTableBody').innerHTML=filtered.map(i=>`<tr>
+                <td>${escapeHtml(i.customer||'-')}</td>
+                <td>${escapeHtml(i.model)}</td>
+                <td>${i.weight}</td>
+                <td>${i.price??'-'}</td>
+                <td>${i.total??'-'}</td>
+                <td>${i.date}</td>
+                <td><button class="action-btn" onclick="delIn('${i.id}')">🗑️</button></td>
+            </tr>`).join('')||'<tr><td colspan="7" class="empty-state">暂无入仓记录</td></tr>';
         let inW=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.weight||0),0);
         let inAmt=warehouseIn.filter(i=>!i.is_waste).reduce((s,i)=>s+(+i.total||0),0);
         document.getElementById('inTotalWeight')&&(document.getElementById('inTotalWeight').innerText=inW.toFixed(2));
@@ -257,7 +318,7 @@
         let c=document.getElementById('inCustomer').value.trim(), m=document.getElementById('inModel').value.trim(), w=parseFloat(document.getElementById('inWeight').value);
         let p=parseFloat(document.getElementById('inPrice').value), total=(w*p).toFixed(2);
         let d=document.getElementById('inDate').value||new Date().toISOString().slice(0,10);
-        if(!c||!m||isNaN(w)){alert('请完整填写'); return;}
+        if(!c||!m||isNaN(w)){alert('请完整填写客户、型号和重量'); return;}
         let data={id:Date.now().toString(), customer:c, model:m, weight:w, date:d};
         if(!isNaN(p)&&p>0){data.price=p; data.total=parseFloat(total);}
         await supabase.from('in_records').insert(data);
@@ -272,7 +333,15 @@
     function renderOut(){
         let searchVal=document.getElementById('outSearch')?.value.toLowerCase()||'';
         let filtered=warehouseOut.filter(o=>((o.customer||'').toLowerCase().includes(searchVal)||(o.model||'').toLowerCase().includes(searchVal)));
-        document.getElementById('outTableBody').innerHTML=filtered.map(o=>`<tr><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.model)}</td><td>${o.weight}</td><td>${o.price||0}</td><td class="price-total">${o.total||(o.weight*o.price).toFixed(2)}</td><td>${o.date}</td><td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无出仓记录</td></tr>';
+        document.getElementById('outTableBody').innerHTML=filtered.map(o=>`<tr>
+                <td>${escapeHtml(o.customer||'-')}</td>
+                <td>${escapeHtml(o.model)}</td>
+                <td>${o.weight}</td>
+                <td>${o.price||0}</td>
+                <td><td class="price-total">${o.total||(o.weight*o.price).toFixed(2)}</td>
+                <td>${o.date}</td>
+                <td><button class="action-btn" onclick="delOut('${o.id}')">🗑️</button></td>
+            </tr>`).join('')||'<tr><td colspan="7" class="empty-state">暂无出仓记录</td></tr>';
         let outW=warehouseOut.reduce((s,o)=>s+(+o.weight||0),0);
         let outAmt=warehouseOut.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))),0);
         document.getElementById('outTotalWeight')&&(document.getElementById('outTotalWeight').innerText=outW.toFixed(2));
@@ -284,7 +353,7 @@
         let c=document.getElementById('outCustomer').value.trim(), m=document.getElementById('outModel').value.trim(), w=parseFloat(document.getElementById('outWeight').value);
         let p=parseFloat(document.getElementById('outPrice').value), total=(w*p).toFixed(2);
         let d=document.getElementById('outDate').value||new Date().toISOString().slice(0,10);
-        if(!c||!m||isNaN(w)||isNaN(p)){alert('请完整填写'); return;}
+        if(!c||!m||isNaN(w)||isNaN(p)){alert('请完整填写客户、型号、重量和单价'); return;}
         await supabase.from('out_records').insert({id:Date.now().toString(), customer:c, model:m, weight:w, price:p, total:parseFloat(total), date:d});
         await loadData();
         document.getElementById('outCustomer').value=''; document.getElementById('outModel').value=''; document.getElementById('outWeight').value='';
@@ -297,7 +366,16 @@
     function renderOrder(){
         let searchVal=document.getElementById('orderSearch')?.value.toLowerCase()||'';
         let filtered=orderRecords.filter(o=>(o.order_no||'').toLowerCase().includes(searchVal)||(o.customer||'').toLowerCase().includes(searchVal)||(o.product_spec||'').toLowerCase().includes(searchVal));
-        document.getElementById('orderTableBody').innerHTML=filtered.map(o=>`<tr><td>${escapeHtml(o.order_no)}</td><td>${escapeHtml(o.customer||'-')}</td><td>${escapeHtml(o.product_spec)}</td><td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:80px"></td><td><select data-id="${o.id}" class="order-status"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td><td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px"></td><td>${o.created_date}</td><td><button class="action-btn" onclick="delOrder('${o.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="8">暂无订单</td></tr>';
+        document.getElementById('orderTableBody').innerHTML=filtered.map(o=>`<tr>
+                <td>${escapeHtml(o.order_no)}</td>
+                <td>${escapeHtml(o.customer||'-')}</td>
+                <td>${escapeHtml(o.product_spec)}</td>
+                <td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:80px"></td>
+                <td><select data-id="${o.id}" class="order-status"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已入库'?'selected':''}>已入库</option></select></td>
+                <td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px"></td>
+                <td>${o.created_date}</td>
+                <td><button class="action-btn" onclick="delOrder('${o.id}')">🗑️</button></td>
+            </tr>`).join('')||'<tr><td colspan="8" class="empty-state">暂无订单</td></tr>';
         document.querySelectorAll('.order-qty').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({quantity:parseFloat(e.target.value)}).eq('id',e.target.dataset.id); await loadData();});
         document.querySelectorAll('.order-status').forEach(sel=>sel.onchange=async e=>{await supabase.from('order_progress').update({status:e.target.value}).eq('id',e.target.dataset.id); await loadData();});
         document.querySelectorAll('.order-remark').forEach(inp=>inp.onchange=async e=>{await supabase.from('order_progress').update({remark:e.target.value}).eq('id',e.target.dataset.id); await loadData();});
@@ -320,7 +398,15 @@
 
     // ========== 废置记录 ==========
     function renderWaste(){
-        document.getElementById('wasteTableBody').innerHTML=wasteRecords.map(w=>`<tr><td>${escapeHtml(w.model)}</td><td>${w.waste_qty} kg</td><td>${escapeHtml(w.reason)}</td><td>${escapeHtml(w.operator||'系统')}</td><td>${w.confirmed?'已确认':'待确认'}</td><td>${w.date}</td><td>${!w.confirmed?`<button class="action-btn" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="action-btn" onclick="delWaste('${w.id}')">🗑️</button></td></tr>`).join('')||'<tr><td colspan="7">暂无废置记录</td></tr>';
+        document.getElementById('wasteTableBody').innerHTML=wasteRecords.map(w=>`<tr>
+                <td>${escapeHtml(w.model)}</td>
+                <td>${w.waste_qty} kg</td>
+                <td>${escapeHtml(w.reason)}</td>
+                <td>${escapeHtml(w.operator||'系统')}</td>
+                <td>${w.confirmed?'已确认':'待确认'}</td>
+                <td>${w.date}</td>
+                <td>${!w.confirmed?`<button class="action-btn" onclick="confirmWaste('${w.id}')">✅确认</button>`:''}<button class="action-btn" onclick="delWaste('${w.id}')">🗑️</button></td>
+            </tr>`).join('')||'</table><td colspan="7" class="empty-state">暂无废置记录</td></tr>';
     }
     window.confirmWaste=async(id)=>{
         let waste=wasteRecords.find(w=>w.id===id);
