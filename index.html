@@ -6,79 +6,82 @@
     <title>纺织管理系统 - 管理端</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #e9f0f5; font-family: 'Segoe UI', sans-serif; padding: 16px; }
+        body { background: #e9f0f5; font-family: 'Segoe UI', sans-serif; padding: 16px; font-weight: 600; }
         .app-container { max-width: 1600px; margin: 0 auto; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
         .header { background: white; padding: 14px 20px; border-bottom: 1px solid #e2e9f0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
-        .logo-area h1 { font-size: 1.3rem; color: #1f6e8c; }
-        .logo-area p { font-size: 0.7rem; color: #5e7e97; }
+        .logo-area h1 { font-size: 1.3rem; color: #1f6e8c; font-weight: 700; }
+        .logo-area p { font-size: 0.7rem; color: #5e7e97; font-weight: 400; }
         .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-backup { background: #6c5ce7; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+        .btn-backup { background: #6c5ce7; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; font-weight: 600; }
         .btn-backup:hover { background: #5b4bc4; }
-        .btn-archive { background: #f39c12; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+        .btn-archive { background: #f39c12; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; font-weight: 600; }
         .btn-archive:hover { background: #e67e22; }
-        .btn-refresh { background: #2c7da0; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
+        .btn-refresh { background: #2c7da0; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; font-weight: 600; }
         .btn-refresh:hover { background: #1f6e8c; }
         .search-box { display: flex; background: #f1f5f9; border-radius: 60px; padding: 4px 4px 4px 16px; border: 1px solid #cbdde9; gap: 4px; }
-        .search-box input { border: none; background: transparent; width: 200px; padding: 8px 0; outline: none; font-size: 0.9rem; }
-        .search-box select { border: none; background: #eef2f6; border-radius: 30px; padding: 0 8px; font-size: 0.8rem; outline: none; }
-        .search-box button { background: #2c7da0; border: none; color: white; padding: 6px 18px; border-radius: 40px; cursor: pointer; }
-        .btn-primary { background: #1f6e8c; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; }
+        .search-box input { border: none; background: transparent; width: 200px; padding: 8px 0; outline: none; font-size: 0.9rem; font-weight: 600; }
+        .search-box select { border: none; background: #eef2f6; border-radius: 30px; padding: 0 8px; font-size: 0.8rem; outline: none; font-weight: 600; }
+        .search-box button { background: #2c7da0; border: none; color: white; padding: 6px 18px; border-radius: 40px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #1f6e8c; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         .btn-primary:hover { background: #155a74; }
-        .btn-in { background: #2e7d32; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; }
+        .btn-in { background: #2e7d32; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         .btn-in:hover { background: #1b5e20; }
-        .btn-out { background: #c44536; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; }
+        .btn-out { background: #c44536; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         .btn-out:hover { background: #a33224; }
-        .btn-waste { background: #ff9800; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; }
+        .btn-waste { background: #ff9800; color: white; border: none; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         .btn-waste:hover { background: #e68900; }
-        .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
-        .btn-export { background: #4caf50; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+        .btn-sm { padding: 4px 10px; font-size: 0.75rem; font-weight: 600; }
+        .btn-export { background: #4caf50; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
         .btn-export:hover { background: #388e3c; }
         .btn-export-dropdown { position: relative; display: inline-block; }
         .btn-export-dropdown .dropdown-content { display: none; position: absolute; right: 0; top: 100%; background: white; min-width: 140px; box-shadow: 0 8px 16px rgba(0,0,0,0.15); border-radius: 12px; z-index: 100; overflow: hidden; }
-        .btn-export-dropdown .dropdown-content button { display: block; width: 100%; padding: 10px 16px; border: none; background: white; text-align: left; cursor: pointer; font-size: 0.85rem; }
+        .btn-export-dropdown .dropdown-content button { display: block; width: 100%; padding: 10px 16px; border: none; background: white; text-align: left; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         .btn-export-dropdown .dropdown-content button:hover { background: #f0f6fa; }
         .btn-export-dropdown:hover .dropdown-content { display: block; }
-        .btn-delete { background: #f44336; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; }
+        .btn-delete { background: #f44336; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
         .btn-delete:hover { background: #d32f2f; }
-        .btn-delete-selected { background: #d32f2f; color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; display: none; align-items: center; gap: 6px; }
+        .btn-delete-selected { background: #d32f2f; color: white; border: none; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; display: none; align-items: center; gap: 6px; font-weight: 600; }
         .btn-delete-selected:hover { background: #b71c1c; }
         .btn-delete-selected.show { display: inline-flex; }
-        .btn-restore { background: #4caf50; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; }
+        .btn-restore { background: #4caf50; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
         .btn-restore:hover { background: #388e3c; }
-        .btn-permanent-delete { background: #d32f2f; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; }
+        .btn-permanent-delete { background: #d32f2f; color: white; border: none; padding: 5px 12px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
         .btn-permanent-delete:hover { background: #b71c1c; }
-        .btn-recycle { background: #607d8b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+        .btn-recycle { background: #607d8b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
         .btn-recycle:hover { background: #455a64; }
         .btn-recycle.active { background: #f44336; }
+        .btn-print { background: #1f6e8c; color: white; border: none; padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+        .btn-print:hover { background: #155a74; }
         .tab-bar { display: flex; border-bottom: 2px solid #e2edf5; background: #fafdff; overflow-x: auto; }
-        .tab { padding: 12px 20px; cursor: pointer; font-weight: 600; color: #5e7e97; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 0.9rem; }
+        .tab { padding: 12px 20px; cursor: pointer; font-weight: 700; color: #5e7e97; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 0.9rem; }
         .tab.active { color: #1f6e8c; border-bottom-color: #1f6e8c; background: white; }
         .main-content { padding: 20px; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: #f0f6fa; border-radius: 18px; padding: 14px 18px; transition: 0.2s; cursor: pointer; }
         .stat-card:hover { background: #e1f0f8; transform: translateY(-2px); }
-        .stat-card h3 { font-size: 0.75rem; color: #5e7e97; margin-bottom: 5px; }
+        .stat-card h3 { font-size: 0.75rem; color: #5e7e97; margin-bottom: 5px; font-weight: 700; }
         .stat-card .number { font-size: 1.8rem; font-weight: 700; color: #1f6e8c; }
-        .stat-card .small-note { font-size: 0.65rem; color: #999; margin-top: 4px; }
+        .stat-card .small-note { font-size: 0.65rem; color: #999; margin-top: 4px; font-weight: 400; }
         .stat-card.warning { background: #fff3e0; border-left: 4px solid #f39c12; }
         .stat-card.danger { background: #ffebee; border-left: 4px solid #f44336; }
         
         .archive-section { background: #f7fafd; border-radius: 16px; padding: 15px; margin-top: 20px; border: 1px solid #dce9f2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 15px; }
         .archive-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .archive-controls label { font-size: 0.8rem; font-weight: 600; color: #5e7e97; }
-        .archive-controls input { width: 80px; padding: 6px 10px; border: 1px solid #cbdde9; border-radius: 12px; font-size: 0.85rem; }
+        .archive-controls label { font-size: 0.8rem; font-weight: 700; color: #5e7e97; }
+        .archive-controls input[type="date"] { padding: 6px 10px; border: 1px solid #cbdde9; border-radius: 12px; font-size: 0.85rem; font-weight: 600; width: 160px; }
         
         .stats-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 800px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
         .data-table th, .data-table td { border: 1px solid #e2edf5; padding: 12px 10px; text-align: left; vertical-align: middle; }
         .data-table th { background: #eef3fc; font-weight: 700; font-size: 0.85rem; position: sticky; top: 0; z-index: 10; }
+        .data-table td { font-weight: 600; }
         .data-table th:first-child { width: 36px; text-align: center; }
         .data-table td:first-child { text-align: center; }
-        .data-table .type-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .data-table .type-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
         .data-table .type-tag.material { background: #e3f2fd; color: #1565c0; }
         .data-table .type-tag.product { background: #e8f5e9; color: #2e7d32; }
-        .data-table .status-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .data-table .status-tag { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
         .data-table .status-tag.pending { background: #fff3e0; color: #e65100; }
         .data-table .status-tag.producing { background: #e3f2fd; color: #1565c0; }
         .data-table .status-tag.done { background: #e8f5e9; color: #2e7d32; }
@@ -88,51 +91,53 @@
         .add-form { background: #f7fafd; border-radius: 18px; padding: 18px; margin-bottom: 20px; border: 1px solid #dce9f2; }
         .form-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .form-field { display: flex; flex-direction: column; gap: 5px; }
-        .form-field label { font-size: 0.7rem; font-weight: 600; color: #5e7e97; }
-        .form-field input, .form-field select { border: 1px solid #cbdbe6; border-radius: 12px; padding: 8px 12px; width: 140px; font-size: 0.85rem; background: white; }
+        .form-field label { font-size: 0.7rem; font-weight: 700; color: #5e7e97; }
+        .form-field input, .form-field select { border: 1px solid #cbdbe6; border-radius: 12px; padding: 8px 12px; width: 140px; font-size: 0.85rem; background: white; font-weight: 600; }
+        .form-field input[type="text"] { width: 160px; }
         .filter-bar { background: #f7fafd; border-radius: 16px; padding: 12px 15px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
         .filter-bar .form-field input { width: 200px; }
         .filter-bar .form-field select { width: 160px; }
         
-        .craft-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .craft-card { background: white; border: 1px solid #e2edf5; border-radius: 16px; padding: 16px 18px; cursor: pointer; transition: 0.2s; }
+        .craft-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .craft-card { background: white; border: 1px solid #e2edf5; border-radius: 16px; padding: 16px 18px; cursor: pointer; transition: 0.2s; position: relative; }
         .craft-card:hover { border-color: #2c7da0; box-shadow: 0 4px 12px rgba(44,125,160,0.12); transform: translateY(-2px); }
         .craft-card.active { border-color: #2c7da0; background: #f0f7fc; }
-        .craft-card .title { font-weight: 600; font-size: 0.95rem; color: #1f6e8c; }
-        .craft-card .customer { font-size: 0.8rem; color: #5e7e97; margin-top: 2px; }
-        .craft-card .date { font-size: 0.7rem; color: #999; margin-top: 2px; }
+        .craft-card .craft-code { font-size: 0.7rem; color: #1f6e8c; background: #eef3fc; padding: 2px 10px; border-radius: 12px; display: inline-block; margin-bottom: 6px; font-weight: 700; }
+        .craft-card .title { font-weight: 700; font-size: 0.95rem; color: #1f6e8c; }
+        .craft-card .customer { font-size: 0.8rem; color: #5e7e97; margin-top: 2px; font-weight: 600; }
+        .craft-card .date { font-size: 0.7rem; color: #999; margin-top: 2px; font-weight: 400; }
         .craft-card .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
         .craft-card.deleted { opacity: 0.5; background: #f5f5f5; border-color: #ddd; }
         .craft-detail-panel { background: #f7fafd; border-radius: 16px; padding: 20px; border: 1px solid #dce9f2; margin-top: 10px; }
         
         .report-box { background: #f9fbfe; border-radius: 20px; padding: 18px; margin-bottom: 20px; border: 1px solid #e2edf5; }
         .report-title { font-size: 1rem; font-weight: 700; color: #1f6e8c; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #cbdde9; }
-        .report-item { padding: 8px 0; font-size: 0.85rem; border-bottom: 1px dotted #e2edf5; }
-        .report-number { float: right; font-weight: 600; }
+        .report-item { padding: 8px 0; font-size: 0.85rem; border-bottom: 1px dotted #e2edf5; font-weight: 600; }
+        .report-number { float: right; font-weight: 700; }
         .total-row { margin-top: 10px; padding-top: 8px; font-weight: 700; border-top: 2px solid #cbdde9; }
         .negative-stock { background: #ffebee; color: #c62828; font-weight: 700; }
         .price-total { background: #e8f5e9; font-weight: 700; color: #2e7d32; }
-        .filter-count { font-size: 0.8rem; color: #5e7e97; background: #eef3fc; padding: 4px 14px; border-radius: 20px; white-space: nowrap; }
+        .filter-count { font-size: 0.8rem; color: #5e7e97; background: #eef3fc; padding: 4px 14px; border-radius: 20px; white-space: nowrap; font-weight: 600; }
         
         .param-group { margin-bottom: 20px; border: 1px solid #e2edf5; border-radius: 16px; padding: 12px; background: #fafdff; }
-        .param-group h4 { font-size: 0.9rem; color: #1f6e8c; margin-bottom: 10px; }
+        .param-group h4 { font-size: 0.9rem; color: #1f6e8c; margin-bottom: 10px; font-weight: 700; }
         .param-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
-        .param-row label { font-size: 0.75rem; font-weight: bold; color: #5e7e97; width: 22px; }
-        .param-row input { width: 65px; padding: 5px 8px; border: 1px solid #cbdde9; border-radius: 8px; font-size: 0.8rem; }
+        .param-row label { font-size: 0.75rem; font-weight: 700; color: #5e7e97; width: 22px; }
+        .param-row input { width: 65px; padding: 5px 8px; border: 1px solid #cbdde9; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
         .materials-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-        .material-tag { background: #eef3fc; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px; }
+        .material-tag { background: #eef3fc; padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .modal-container { background: white; width: 90%; max-width: 850px; max-height: 85vh; overflow-y: auto; border-radius: 24px; padding: 24px; }
-        .modal-container .close-btn { float: right; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #999; }
+        .modal-container .close-btn { float: right; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #999; font-weight: 700; }
         .modal-container .close-btn:hover { color: #333; }
-        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; z-index: 2000; animation: fadeOut 2s ease; }
+        .toast-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; z-index: 2000; animation: fadeOut 2s ease; font-weight: 600; }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         
-        .search-input-small { border: 1px solid #cbdde9; border-radius: 20px; padding: 8px 14px; width: 220px; font-size: 0.85rem; }
+        .search-input-small { border: 1px solid #cbdde9; border-radius: 20px; padding: 8px 14px; width: 220px; font-size: 0.85rem; font-weight: 600; }
         .alert-setting { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
         
         .password-modal .modal-container { max-width: 400px; text-align: center; }
-        .password-modal input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #cbdde9; border-radius: 12px; font-size: 1rem; }
+        .password-modal input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #cbdde9; border-radius: 12px; font-size: 1rem; font-weight: 600; }
         
         .customer-summary-table { margin-top: 15px; }
         
@@ -144,16 +149,22 @@
         .filter-section .form-row { align-items: flex-end; }
         
         .craft-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
-        .craft-toolbar input { flex: 1; border-radius: 20px; border: 1px solid #cbdde9; padding: 8px 14px; font-size: 0.85rem; min-width: 150px; }
+        .craft-toolbar input { flex: 1; border-radius: 20px; border: 1px solid #cbdde9; padding: 8px 14px; font-size: 0.85rem; min-width: 150px; font-weight: 600; }
         
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .table-toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .table-toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         
-        .deleted-badge { display: inline-block; background: #f44336; color: white; font-size: 0.6rem; padding: 1px 8px; border-radius: 10px; margin-left: 6px; }
+        .deleted-badge { display: inline-block; background: #f44336; color: white; font-size: 0.6rem; padding: 1px 8px; border-radius: 10px; margin-left: 6px; font-weight: 700; }
         
         .total-row-table { background: #eef3fc; font-weight: 700; }
-        .total-row-table td { border-top: 2px solid #2c7da0; padding: 10px 10px; }
+        .total-row-table td { border-top: 2px solid #2c7da0; padding: 10px 10px; font-weight: 700; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .craft-print-card { page-break-after: always; padding: 20px; border: 1px solid #ddd; margin: 0; font-weight: 600; }
+            .craft-print-card:last-child { page-break-after: avoid; }
+        }
         
         @media (max-width: 780px) {
             .craft-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
@@ -174,8 +185,8 @@
 <div class="app-container">
     <div class="header">
         <div class="logo-area">
-            <h1>🏭 纺织管理系统 <span style="font-size:0.7rem; background:#e8f5e9; padding:2px 8px; border-radius:20px;">管理端</span></h1>
-            <p>工艺参数 · 出入仓 · 价格管理 · 年度报表 · 订单进度 · 库存看板</p>
+            <h1>🏭 纺织管理系统 <span style="font-size:0.7rem; background:#e8f5e9; padding:2px 8px; border-radius:20px; font-weight:600;">管理端</span></h1>
+            <p style="font-weight:400;">工艺参数 · 出入仓 · 价格管理 · 年度报表 · 订单进度 · 库存看板</p>
         </div>
         <div class="header-actions">
             <button id="refreshDashboardBtn" class="btn-refresh">🔄 刷新</button>
@@ -210,15 +221,16 @@
         
         <div id="craftPanel" style="display:none;">
             <div class="craft-toolbar">
-                <input type="text" id="craftSearch" placeholder="搜索工艺标题/客户">
+                <input type="text" id="craftSearch" placeholder="搜索工艺标题/客户/编号">
                 <button id="addCraftBtn" class="btn-primary btn-sm">+ 新增工艺</button>
                 <button id="showDeletedCraftBtn" class="btn-recycle">🗑️ 回收站</button>
+                <button id="printCraftBtn" class="btn-print">🖨️ 打印选中</button>
             </div>
             <div id="craftGrid" class="craft-grid"></div>
         </div>
         
         <div id="inPanel" style="display:none;">
-            <div class="add-form"><h4 style="margin-bottom:12px;">➕ 手动添加入仓</h4>
+            <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">➕ 手动添加入仓</h4>
                 <div class="form-row">
                     <div class="form-field"><label>类型 *</label>
                         <select id="inType"><option value="产品">📦 产品</option><option value="材料">🧵 材料</option></select>
@@ -248,7 +260,7 @@
         </div>
         
         <div id="outPanel" style="display:none;">
-            <div class="add-form"><h4 style="margin-bottom:12px;">📤 手动添加出仓</h4>
+            <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">📤 手动添加出仓</h4>
                 <div class="form-row">
                     <div class="form-field"><label>类型 *</label>
                         <select id="outType"><option value="产品">📦 产品</option><option value="材料">🧵 材料</option></select>
@@ -261,6 +273,7 @@
                     <div class="form-field"><label>单价</label><input type="number" id="outPrice" step="0.01" placeholder="选填"></div>
                     <div class="form-field"><label>总价</label><input type="text" id="outTotal" readonly></div>
                     <div class="form-field"><label>日期</label><input type="date" id="outDate"></div>
+                    <div class="form-field"><label>备注</label><input type="text" id="outRemark" placeholder="工艺编号/订单号等" style="width:180px;"></div>
                     <div class="form-field"><button id="addOutBtn" class="btn-out">添加出仓</button></div>
                 </div>
             </div>
@@ -279,7 +292,7 @@
                         <input type="date" id="outFilterDateTo">
                     </div>
                     <div class="form-field"><button id="applyOutFilterBtn" class="btn-primary btn-sm">筛选</button></div>
-                    <div class="form-field"><button id="clearOutFilterBtn" class="btn-sm" style="background:#999;color:white;border:none;padding:6px 12px;border-radius:20px;">清除</button></div>
+                    <div class="form-field"><button id="clearOutFilterBtn" class="btn-sm" style="background:#999;color:white;border:none;padding:6px 12px;border-radius:20px;font-weight:600;">清除</button></div>
                     <div class="form-field"><span id="outFilterCount" class="filter-count">共 0 条</span></div>
                 </div>
             </div>
@@ -289,7 +302,7 @@
                     <span id="outFilterCount2" class="filter-count" style="display:none;">已筛选 0 条</span>
                 </div>
                 <div class="table-toolbar-right">
-                    <input type="text" id="outSearch" placeholder="搜索客户/型号/批号/色号" class="search-input-small" style="width:180px;">
+                    <input type="text" id="outSearch" placeholder="搜索客户/型号/批号/色号/备注" class="search-input-small" style="width:180px;">
                     <div class="btn-export-dropdown">
                         <button class="btn-export">📎 导出Excel ▾</button>
                         <div class="dropdown-content">
@@ -301,7 +314,7 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th><input type="checkbox" id="outSelectAll"></th><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead>
+                    <thead><tr><th><input type="checkbox" id="outSelectAll"></th><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>单价</th><th>总价</th><th>日期</th><th>备注</th><th>操作</th></tr></thead>
                     <tbody id="outTableBody"></tbody>
                     <tfoot id="outTableFoot"></tfoot>
                 </table>
@@ -336,9 +349,9 @@
             <div class="report-box">
                 <div class="report-title">📌 库存预警</div>
                 <div class="alert-setting">
-                    <label>预警阈值 (kg):</label>
-                    <input type="number" id="alertThreshold" step="1" value="50" style="width:80px;">
-                    <button id="applyThresholdBtn" class="btn-sm" style="background:#1f6e8c; color:white; padding:5px 12px;">应用</button>
+                    <label style="font-weight:700;">预警阈值 (kg):</label>
+                    <input type="number" id="alertThreshold" step="1" value="50" style="width:80px; font-weight:600;">
+                    <button id="applyThresholdBtn" class="btn-sm" style="background:#1f6e8c; color:white; padding:5px 12px; font-weight:600;">应用</button>
                 </div>
                 <div id="stockAlertList" style="margin-top:12px;"></div>
             </div>
@@ -346,19 +359,22 @@
         
         <div id="statsPanel" style="display:none;">
             <div class="filter-bar">
-                <div class="form-field"><label>年份</label><input type="number" id="statsYear" value="2026" step="1" style="width:100px;"></div>
-                <div class="form-field"><label>月份</label><select id="statsMonth"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div>
+                <div class="form-field"><label>年份</label><input type="number" id="statsYear" value="2026" step="1" style="width:100px; font-weight:600;"></div>
+                <div class="form-field"><label>月份</label><select id="statsMonth" style="font-weight:600;"><option value="0">全年</option><option value="1">1月</option><option value="2">2月</option><option value="3">3月</option><option value="4">4月</option><option value="5">5月</option><option value="6">6月</option><option value="7">7月</option><option value="8">8月</option><option value="9">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div>
+                <div class="form-field"><label>🔍 搜索客户</label>
+                    <input type="text" id="statsCustomerSearch" placeholder="输入客户名称..." style="width:180px; font-weight:600;">
+                </div>
                 <button id="refreshStatsBtn" class="btn-primary">统计</button>
-                <button id="exportStatsBtn" class="btn-export">📎 导出报表</button>
+                <button id="exportStatsBtn" class="btn-export">📎 导出当前客户</button>
             </div>
             
             <div class="filter-section" style="margin-top:10px;">
                 <div class="form-row">
                     <div class="form-field"><label>📋 对账导出 - 年份</label>
-                        <input type="number" id="reconcileYear" value="2026" style="width:100px;">
+                        <input type="number" id="reconcileYear" value="2026" style="width:100px; font-weight:600;">
                     </div>
                     <div class="form-field"><label>月份</label>
-                        <select id="reconcileMonth">
+                        <select id="reconcileMonth" style="font-weight:600;">
                             <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
                             <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
                             <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
@@ -366,12 +382,12 @@
                         </select>
                     </div>
                     <div class="form-field"><label>客户</label>
-                        <select id="reconcileCustomer"><option value="">全部客户</option></select>
+                        <select id="reconcileCustomer" style="font-weight:600;"><option value="">全部客户</option></select>
                     </div>
                     <div class="form-field"><label>型号</label>
-                        <input type="text" id="reconcileModel" placeholder="模糊搜索" style="width:160px;">
+                        <input type="text" id="reconcileModel" placeholder="模糊搜索" style="width:160px; font-weight:600;">
                     </div>
-                    <div class="form-field"><button id="exportReconcileBtn" class="btn-primary" style="background:#2e7d32;">📎 对账导出</button></div>
+                    <div class="form-field"><button id="exportReconcileBtn" class="btn-primary" style="background:#2e7d32; font-weight:600;">📎 对账导出</button></div>
                 </div>
             </div>
             
@@ -379,7 +395,7 @@
         </div>
         
         <div id="orderPanel" style="display:none;">
-            <div class="add-form"><h4 style="margin-bottom:12px;">➕ 新增订单</h4>
+            <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">➕ 新增订单</h4>
                 <div class="form-row">
                     <div class="form-field"><label>客户</label><input type="text" id="orderCustomer"></div>
                     <div class="form-field"><label>产品规格 *</label><input type="text" id="orderSpec"></div>
@@ -409,7 +425,7 @@
                 </div>
                 <button id="exportWasteManualBtn" class="btn-export">📎 导出Excel</button>
             </div>
-            <div class="add-form"><h4 style="margin-bottom:12px;">📝 废置/损耗手动录入</h4>
+            <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">📝 废置/损耗手动录入</h4>
                 <div class="form-row">
                     <div class="form-field"><label>型号 *</label><input type="text" id="wmModel"></div>
                     <div class="form-field"><label>客户</label><input type="text" id="wmCustomer"></div>
@@ -421,7 +437,7 @@
                     <div class="form-field"><label>筒重(kg)</label><input type="number" id="wmTube" step="0.01" value="0"></div>
                     <div class="form-field"><label>箱重(kg)</label><input type="number" id="wmBox" step="0.01" value="0"></div>
                     <div class="form-field"><label>数量</label><input type="number" id="wmQty" step="0.01"></div>
-                    <div class="form-field"><label>净重(kg)</label><input type="text" id="wmNet" readonly style="background:#e8f5e9; font-weight:bold;"></div>
+                    <div class="form-field"><label>净重(kg)</label><input type="text" id="wmNet" readonly style="background:#e8f5e9; font-weight:700;"></div>
                     <div class="form-field"><label>日期</label><input type="date" id="wmDate"></div>
                     <div class="form-field"><label>备注</label><input type="text" id="wmRemark"></div>
                     <div class="form-field"><button id="addWasteManualBtn" class="btn-waste">保存记录</button></div>
@@ -452,6 +468,7 @@
     let keepYears = 3;
     let showDeletedWaste = false;
     let showDeletedCraft = false;
+    let selectedCraftIds = new Set();
 
     try {
         let saved = localStorage.getItem('stockAlertThreshold');
@@ -465,6 +482,26 @@
     function formatDate(d){ if(!d) return ''; let dt=new Date(d); return dt.toLocaleString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
     function formatDateShort(d){ if(!d) return ''; let dt=new Date(d); return dt.toLocaleDateString('zh-CN'); }
     function formatPrice(val){ if(val === undefined || val === null || val === '') return '—'; let n=parseFloat(val); return isNaN(n)?'—':n.toFixed(2); }
+    
+    // ========== 生成工艺编号 ==========
+    async function generateCraftCode() {
+        let year = new Date().getFullYear();
+        let {data} = await supabase.from('craft_records')
+            .select('craft_code')
+            .like('craft_code', `GY-${year}-%`)
+            .order('craft_code', { ascending: false })
+            .limit(1);
+        let maxSeq = 0;
+        if(data && data.length > 0) {
+            let parts = data[0].craft_code.split('-');
+            if(parts.length === 3) {
+                let seq = parseInt(parts[2]);
+                if(!isNaN(seq)) maxSeq = seq;
+            }
+        }
+        let newSeq = maxSeq + 1;
+        return `GY-${year}-${String(newSeq).padStart(3, '0')}`;
+    }
     
     async function loadData(){
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -502,12 +539,12 @@
         let modalHtml = `
             <div class="modal-overlay password-modal" id="passwordModal">
                 <div class="modal-container">
-                    <h3>🔐 权限验证</h3>
-                    <p>执行归档操作需要输入密码</p>
-                    <input type="password" id="archivePassword" placeholder="请输入密码" autocomplete="off">
+                    <h3 style="font-weight:700;">🔐 权限验证</h3>
+                    <p style="font-weight:600;">执行归档操作需要输入密码</p>
+                    <input type="password" id="archivePassword" placeholder="请输入密码" autocomplete="off" style="font-weight:600;">
                     <div class="modal-buttons" style="display:flex; gap:12px; justify-content:center; margin-top:20px;">
-                        <button id="pwdConfirmBtn" class="btn-primary">确认</button>
-                        <button id="pwdCancelBtn" class="btn-out">取消</button>
+                        <button id="pwdConfirmBtn" class="btn-primary" style="font-weight:600;">确认</button>
+                        <button id="pwdCancelBtn" class="btn-out" style="font-weight:600;">取消</button>
                     </div>
                 </div>
             </div>
@@ -530,12 +567,12 @@
         };
     }
     
+    // ========== 归档 ==========
     async function archiveOldData() {
         showPasswordModal(async (success) => {
             if(!success) return;
-            let cutoffDate = new Date();
-            cutoffDate.setFullYear(cutoffDate.getFullYear() - keepYears);
-            let cutoffStr = cutoffDate.toISOString().slice(0,10);
+            
+            let cutoffStr = document.getElementById('archiveCutoffDate')?.value || new Date().toISOString().slice(0,10);
             
             let {count:inCount} = await supabase.from('in_records').select('*', {count:'exact', head:true}).lt('date', cutoffStr);
             let {count:outCount} = await supabase.from('out_records').select('*', {count:'exact', head:true}).lt('date', cutoffStr);
@@ -544,11 +581,11 @@
             
             let total = (inCount||0) + (outCount||0) + (orderCount||0) + (wasteCount||0);
             if(total === 0) {
-                showToast('没有需要归档的旧数据');
+                showToast('该日期之前没有需要归档的数据');
                 return;
             }
             
-            if(!confirm(`⚠️ 确认归档 ${keepYears} 年前的数据？\n\n将删除 ${cutoffStr} 之前的所有记录：\n- 入仓记录: ${inCount||0} 条\n- 出仓记录: ${outCount||0} 条\n- 订单进度: ${orderCount||0} 条\n- 废置记录: ${wasteCount||0} 条\n\n⚠️ 工艺参数不会被删除，请放心！\n\n建议先点击"一键备份"保存数据后再操作！`)) return;
+            if(!confirm(`⚠️ 确认归档到 ${cutoffStr}？\n\n将删除 ${cutoffStr} 之前的所有记录：\n- 入仓记录: ${inCount||0} 条\n- 出仓记录: ${outCount||0} 条\n- 订单进度: ${orderCount||0} 条\n- 废置记录: ${wasteCount||0} 条\n\n⚠️ 工艺参数不会被删除，请放心！\n\n建议先点击"一键备份"保存数据后再操作！`)) return;
             
             if(inCount > 0) {
                 let {data:oldIn} = await supabase.from('in_records').select('id').lt('date', cutoffStr);
@@ -611,30 +648,17 @@
             <div class="stats-row">
                 <div class="stat-card ${isDanger ? 'danger' : (isWarning ? 'warning' : '')}"><h3>💾 预估占用空间</h3><div class="number">${storage.estimatedMB}</div><div class="small-note">MB / 500MB</div></div>
             </div>
-            ${storage.estimatedMB > 400 ? `<div class="report-box" style="background:#fff3e0; margin-bottom:20px;"><div class="report-title">⚠️ 存储空间提醒</div><div>当前已用约 ${storage.estimatedMB} MB，接近500MB上限。建议点击下方"执行归档"删除旧数据，或导出备份后清理。</div></div>` : ''}
+            ${storage.estimatedMB > 400 ? `<div class="report-box" style="background:#fff3e0; margin-bottom:20px;"><div class="report-title">⚠️ 存储空间提醒</div><div style="font-weight:600;">当前已用约 ${storage.estimatedMB} MB，接近500MB上限。建议点击下方"执行归档"删除旧数据，或导出备份后清理。</div></div>` : ''}
             <div class="archive-section">
                 <div class="archive-controls">
-                    <label>🗑️ 归档设置：保留最近</label>
-                    <input type="number" id="keepYearsInput" value="${keepYears}" step="1" min="1" max="20" style="width:70px;">
-                    <label>年</label>
-                    <button id="applyKeepYearsBtn" class="btn-sm" style="background:#1f6e8c; color:white;">保存设置</button>
+                    <label>🗑️ 归档到日期：</label>
+                    <input type="date" id="archiveCutoffDate" value="${new Date().toISOString().slice(0,10)}">
+                    <span style="font-size:0.8rem; color:#888; font-weight:400;">💡 将删除该日期之前的所有数据（工艺资料除外）</span>
                 </div>
                 <button id="archiveBtn" class="btn-archive">🔐 执行归档（需密码）</button>
             </div>
         `;
         document.getElementById('archiveBtn')?.addEventListener('click', () => archiveOldData());
-        let keepInput = document.getElementById('keepYearsInput');
-        if(keepInput) keepInput.value = keepYears;
-        document.getElementById('applyKeepYearsBtn')?.addEventListener('click', () => {
-            let val = parseInt(document.getElementById('keepYearsInput').value);
-            if(val && val >= 1 && val <= 20) {
-                keepYears = val;
-                localStorage.setItem('archiveKeepYears', keepYears);
-                showToast(`已设置保留 ${keepYears} 年数据`);
-            } else {
-                showToast('请输入1-20之间的数字');
-            }
-        });
     }
 
     // ========== 库存计算 ==========
@@ -707,7 +731,7 @@
         document.getElementById('materialTotalOut').innerText = totalMaterialOut.toFixed(2);
         
         let tbody = document.getElementById('stockTableBody');
-        if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">暂无库存数据</td></tr>'; }
+        if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">暂无库存数据</td></tr>'; }
         else {
             tbody.innerHTML = filtered.map(s => {
                 let stockClass = s.stock < 0 ? 'negative-stock' : '';
@@ -719,7 +743,7 @@
                     <td>${escapeHtml(s.model)}</td>
                     <td>${s.totalIn.toFixed(2)}</td>
                     <td>${s.totalOut.toFixed(2)}</td>
-                    <td class="${stockClass}">${s.stock.toFixed(2)} kg</td>
+                    <td class="${stockClass}" style="font-weight:700;">${s.stock.toFixed(2)} kg</td>
                     <td>${s.lastDate || '-'}</td>
                 </tr>`;
             }).join('');
@@ -727,30 +751,35 @@
         
         let lowStock = filtered.filter(s => s.stock < alertThreshold && s.stock > 0);
         let alertDiv = document.getElementById('stockAlertList');
-        if(lowStock.length) alertDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px;">${lowStock.map(s=>`<span class="material-tag" style="background:#fff3e0;">⚠️ ${escapeHtml(s.type)} ${escapeHtml(s.model)}: ${s.stock.toFixed(2)} kg</span>`).join('')}</div>`;
-        else alertDiv.innerHTML = '<div class="empty-state">✅ 暂无低库存物料</div>';
+        if(lowStock.length) alertDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px;">${lowStock.map(s=>`<span class="material-tag" style="background:#fff3e0; font-weight:700;">⚠️ ${escapeHtml(s.type)} ${escapeHtml(s.model)}: ${s.stock.toFixed(2)} kg</span>`).join('')}</div>`;
+        else alertDiv.innerHTML = '<div class="empty-state" style="font-weight:600; text-align:center; padding:20px; color:#8aaec0;">✅ 暂无低库存物料</div>';
     }
 
-    // ========== 年度报表 ==========
+    // ========== 年度报表（含客户搜索 + 美化导出） ==========
     function refreshStats() {
         let year = parseInt(document.getElementById('statsYear').value) || new Date().getFullYear();
         let month = parseInt(document.getElementById('statsMonth').value);
+        let customerSearch = document.getElementById('statsCustomerSearch').value.trim().toLowerCase();
         
         let productIn = warehouseIn.filter(r => {
             let d = new Date(r.date);
-            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && !r.is_waste && r.type === '产品';
+            let matchCustomer = !customerSearch || (r.customer||'').toLowerCase().includes(customerSearch);
+            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && !r.is_waste && r.type === '产品' && matchCustomer;
         });
         let materialIn = warehouseIn.filter(r => {
             let d = new Date(r.date);
-            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && !r.is_waste && r.type === '材料';
+            let matchCustomer = !customerSearch || (r.customer||'').toLowerCase().includes(customerSearch);
+            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && !r.is_waste && r.type === '材料' && matchCustomer;
         });
         let productOut = warehouseOut.filter(r => {
             let d = new Date(r.date);
-            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && r.type === '产品';
+            let matchCustomer = !customerSearch || (r.customer||'').toLowerCase().includes(customerSearch);
+            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && r.type === '产品' && matchCustomer;
         });
         let materialOut = warehouseOut.filter(r => {
             let d = new Date(r.date);
-            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && r.type === '材料';
+            let matchCustomer = !customerSearch || (r.customer||'').toLowerCase().includes(customerSearch);
+            return d.getFullYear() === year && (month === 0 || d.getMonth() + 1 === month) && r.type === '材料' && matchCustomer;
         });
         
         let productInTotal = productIn.reduce((s,i)=>s+(+i.weight||0),0);
@@ -792,31 +821,32 @@
         
         let monthName = month === 0 ? '全年' : month + '月';
         let rankIcons = ['🥇', '🥈', '🥉'];
+        let displayCustomer = customerSearch || '全部客户';
         
         let html = `
             <div class="report-box">
-                <div class="report-title">📈 汇总统计 (${year}年${monthName})</div>
+                <div class="report-title">📈 汇总统计 (${year}年${monthName}) ${customerSearch ? ' - '+escapeHtml(customerSearch) : ''}</div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                     <div style="background:#e8f5e9; border-radius:12px; padding:12px;">
-                        <h4 style="font-size:0.8rem; color:#2e7d32;">📦 产品</h4>
-                        <div class="report-item">入仓: <span class="report-number">${productInTotal.toFixed(2)} kg</span></div>
-                        <div class="report-item">出仓(销售): <span class="report-number">${productOutTotal.toFixed(2)} kg</span></div>
-                        <div class="report-item">销售金额: <span class="report-number">${productAmount.toFixed(2)} 元</span></div>
-                        <div class="total-row">结余: ${(productInTotal - productOutTotal).toFixed(2)} kg</div>
+                        <h4 style="font-size:0.8rem; color:#2e7d32; font-weight:700;">📦 产品</h4>
+                        <div class="report-item" style="font-weight:600;">入仓: <span class="report-number" style="font-weight:700;">${productInTotal.toFixed(2)} kg</span></div>
+                        <div class="report-item" style="font-weight:600;">出仓(销售): <span class="report-number" style="font-weight:700;">${productOutTotal.toFixed(2)} kg</span></div>
+                        <div class="report-item" style="font-weight:600;">销售金额: <span class="report-number" style="font-weight:700;">${productAmount.toFixed(2)} 元</span></div>
+                        <div class="total-row" style="font-weight:700;">结余: ${(productInTotal - productOutTotal).toFixed(2)} kg</div>
                     </div>
                     <div style="background:#e3f2fd; border-radius:12px; padding:12px;">
-                        <h4 style="font-size:0.8rem; color:#1565c0;">🧵 材料</h4>
-                        <div class="report-item">入仓: <span class="report-number">${materialInTotal.toFixed(2)} kg</span></div>
-                        <div class="report-item">入仓金额: <span class="report-number">${materialAmount.toFixed(2)} 元</span></div>
-                        <div class="report-item">出仓(消耗): <span class="report-number">${materialOutTotal.toFixed(2)} kg</span></div>
-                        <div class="total-row">结余: ${(materialInTotal - materialOutTotal).toFixed(2)} kg</div>
+                        <h4 style="font-size:0.8rem; color:#1565c0; font-weight:700;">🧵 材料</h4>
+                        <div class="report-item" style="font-weight:600;">入仓: <span class="report-number" style="font-weight:700;">${materialInTotal.toFixed(2)} kg</span></div>
+                        <div class="report-item" style="font-weight:600;">入仓金额: <span class="report-number" style="font-weight:700;">${materialAmount.toFixed(2)} 元</span></div>
+                        <div class="report-item" style="font-weight:600;">出仓(消耗): <span class="report-number" style="font-weight:700;">${materialOutTotal.toFixed(2)} kg</span></div>
+                        <div class="total-row" style="font-weight:700;">结余: ${(materialInTotal - materialOutTotal).toFixed(2)} kg</div>
                     </div>
                 </div>
             </div>
             
             <div class="report-box">
                 <div class="report-title">📋 出仓明细 (${year}年${monthName}) - 按金额排序</div>
-                ${outDetails.length === 0 ? '<div class="empty-state">暂无出仓记录</div>' : `
+                ${outDetails.length === 0 ? '<div class="empty-state" style="font-weight:600; text-align:center; padding:20px; color:#8aaec0;">暂无出仓记录</div>' : `
                     <div class="table-wrapper">
                         <table class="data-table">
                             <thead><tr><th>类型</th><th>客户</th><th>型号</th><th>数量(kg)</th><th>金额(元)</th></tr></thead>
@@ -826,13 +856,13 @@
                                     let typeClass = d.type === '材料' ? 'material' : 'product';
                                     return `<tr>
                                         <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
-                                        <td>${escapeHtml(d.customer)}</td>
-                                        <td>${escapeHtml(d.model)}</td>
-                                        <td>${d.weight.toFixed(2)}</td>
-                                        <td>${d.amount.toFixed(2)}</td>
+                                        <td style="font-weight:600;">${escapeHtml(d.customer)}</td>
+                                        <td style="font-weight:600;">${escapeHtml(d.model)}</td>
+                                        <td style="font-weight:600;">${d.weight.toFixed(2)}</td>
+                                        <td style="font-weight:700;">${d.amount.toFixed(2)}</td>
                                     </tr>`;
                                 }).join('')}
-                                <tr style="background:#eef3fc; font-weight:bold;">
+                                <tr style="background:#eef3fc; font-weight:700;">
                                     <td colspan="2">合计</td>
                                     <td>${(productOutTotal + materialOutTotal).toFixed(2)} kg</td>
                                     <td>${productAmount.toFixed(2)} 元</td>
@@ -845,17 +875,17 @@
             
             <div class="report-box">
                 <div class="report-title">📊 客户统计 (${year}年${monthName}) - 按金额排序</div>
-                ${customerSummary.length === 0 ? '<div class="empty-state">暂无数据</div>' : `
+                ${customerSummary.length === 0 ? '<div class="empty-state" style="font-weight:600; text-align:center; padding:20px; color:#8aaec0;">暂无数据</div>' : `
                     <div class="table-wrapper">
                         <table class="data-table customer-summary-table">
                             <thead><tr><th>排名</th><th>客户</th><th>品种数</th><th>总数量(kg)</th><th>总金额(元)</th></tr></thead>
                             <tbody>
                                 ${customerSummary.map((c, idx) => `<tr>
-                                    <td style="text-align:center; width:50px;">${idx < 3 ? rankIcons[idx] : (idx+1)}</td>
-                                    <td>${escapeHtml(c.customer)}</td>
-                                    <td>${c.varietyCount}</td>
-                                    <td>${c.totalQty.toFixed(2)}</td>
-                                    <td style="font-weight:bold;">${c.totalAmount.toFixed(2)}</td>
+                                    <td style="text-align:center; width:50px; font-weight:700;">${idx < 3 ? rankIcons[idx] : (idx+1)}</td>
+                                    <td style="font-weight:600;">${escapeHtml(c.customer)}</td>
+                                    <td style="font-weight:600;">${c.varietyCount}</td>
+                                    <td style="font-weight:600;">${c.totalQty.toFixed(2)}</td>
+                                    <td style="font-weight:700;">${c.totalAmount.toFixed(2)}</td>
                                 </tr>`).join('')}
                             </tbody>
                         </table>
@@ -864,7 +894,7 @@
             </div>
         `;
         document.getElementById('reportContainer').innerHTML = html;
-        window.currentStatsData = { year, month, monthName, productInTotal, productOutTotal, productAmount, materialInTotal, materialOutTotal, materialAmount, outDetails, customerSummary };
+        window.currentStatsData = { year, month, monthName, productInTotal, productOutTotal, productAmount, materialInTotal, materialOutTotal, materialAmount, outDetails, customerSummary, customerSearch };
     }
     
     function populateReconcileCustomers() {
@@ -892,7 +922,6 @@
             return true;
         });
         
-        // 按日期升序排列（方便客户对账）
         filtered.sort((a, b) => a.date < b.date ? -1 : 1);
         
         if(!filtered.length) {
@@ -904,7 +933,7 @@
         let totalAmount = filtered.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))||0),0);
         
         let rows = [
-            ['日期', '客户', '型号', '批号', '色号', '净重(kg)', '单价', '总价(元)']
+            ['日期', '客户', '型号', '批号', '色号', '净重(kg)', '单价', '总价(元)', '备注']
         ];
         filtered.forEach(o => {
             let price = (+o.price||0) || '';
@@ -917,11 +946,12 @@
                 o.color_no || '',
                 (+o.weight||0).toFixed(2),
                 price,
-                amount
+                amount,
+                o.remark || ''
             ]);
         });
-        rows.push(['', '', '', '', '', '合计', '', totalAmount.toFixed(2)]);
-        rows.push(['', '', '', '', '', totalWeight.toFixed(2), '', '']);
+        rows.push(['', '', '', '', '', '合计', '', totalAmount.toFixed(2), '']);
+        rows.push(['', '', '', '', '', totalWeight.toFixed(2), '', '', '']);
         
         let csv = rows.map(row => row.join('\t')).join('\n');
         let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
@@ -936,9 +966,12 @@
     function exportStats() {
         if(!window.currentStatsData) { alert('请先点击"统计"按钮'); return; }
         let d = window.currentStatsData;
+        let customerLabel = d.customerSearch ? '_' + d.customerSearch : '';
+        
         let rows = [
-            ['纺织管理系统报表'],
-            [`统计期间: ${d.year}年${d.monthName}`],
+            ['中山市淮鸿橡筋织带有限公司'],
+            ['年度销售报表' + (d.customerSearch ? ' - ' + d.customerSearch : '')],
+            ['报告期间：' + d.year + '年' + d.monthName + '    导出日期：' + new Date().toISOString().slice(0,10)],
             [''],
             ['【汇总统计】'],
             ['产品入仓(kg)', d.productInTotal.toFixed(2)],
@@ -967,9 +1000,10 @@
         let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
         let link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `报表_${d.year}年${d.monthName}.csv`;
+        link.download = `报表_${d.year}年${d.monthName}${customerLabel}.csv`;
         link.click();
         URL.revokeObjectURL(link.href);
+        showToast('导出成功');
     }
     
     async function backupAllData() {
@@ -992,14 +1026,14 @@
             let inData = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer||'', 型号:i.model||'', 批号:i.batch_no||'', 色号:i.color_no||'', 重量:i.weight||0, 单价:i.price||'', 总价:i.total||'', 日期:i.date||''}));
             zip.file("1_in_records.csv", arrayToCSV(inData, ['类型','客户','型号','批号','色号','重量','单价','总价','日期']));
             
-            let outData = warehouseOut.map(o => ({类型:o.type||'产品', 客户:o.customer||'', 型号:o.model||'', 批号:o.batch_no||'', 色号:o.color_no||'', 重量:o.weight||0, 单价:o.price||0, 总价:o.total||(o.weight*o.price).toFixed(2), 日期:o.date||''}));
-            zip.file("2_out_records.csv", arrayToCSV(outData, ['类型','客户','型号','批号','色号','重量','单价','总价','日期']));
+            let outData = warehouseOut.map(o => ({类型:o.type||'产品', 客户:o.customer||'', 型号:o.model||'', 批号:o.batch_no||'', 色号:o.color_no||'', 重量:o.weight||0, 单价:o.price||0, 总价:o.total||(o.weight*o.price).toFixed(2), 日期:o.date||'', 备注:o.remark||''}));
+            zip.file("2_out_records.csv", arrayToCSV(outData, ['类型','客户','型号','批号','色号','重量','单价','总价','日期','备注']));
             
             let orderData = orderRecords.map(o => ({订单号:o.order_no||'', 客户:o.customer||'', 规格:o.product_spec||'', 数量:o.quantity||0, 剩余重量:o.remaining_weight||'', 状态:o.status||'', 备注:o.remark||'', 创建日期:o.created_date||'', 更新时间:o.updated_date||''}));
             zip.file("3_order_records.csv", arrayToCSV(orderData, ['订单号','客户','规格','数量','剩余重量','状态','备注','创建日期','更新时间']));
             
-            let craftData = craftRecords.filter(c=>!c.is_deleted).map(c => ({标题:c.title||'', 客户:c.customer||'', 日期:c.date||'', 卷曲单:JSON.stringify(c.curlsingle||{}), 卷曲双:JSON.stringify(c.curldouble||{}), 牵伸:JSON.stringify(c.draft||{}), 喂入:JSON.stringify(c.feed||{}), 原料:(c.materials||[]).join(';')}));
-            zip.file("4_craft_records.csv", arrayToCSV(craftData, ['标题','客户','日期','卷曲单','卷曲双','牵伸','喂入','原料']));
+            let craftData = craftRecords.filter(c=>!c.is_deleted).map(c => ({编号:c.craft_code||'', 标题:c.title||'', 客户:c.customer||'', 日期:c.date||'', 卷曲单:JSON.stringify(c.curlsingle||{}), 卷曲双:JSON.stringify(c.curldouble||{}), 牵伸:JSON.stringify(c.draft||{}), 喂入:JSON.stringify(c.feed||{}), 样板组成:c.sample_material||'', 原料:(c.materials||[]).join(';')}));
+            zip.file("4_craft_records.csv", arrayToCSV(craftData, ['编号','标题','客户','日期','卷曲单','卷曲双','牵伸','喂入','样板组成','原料']));
             
             let wasteData = wasteManualRecords.filter(w=>!w.is_deleted).map(w => ({型号:w.model||'', 客户:w.customer||'', 批号:w.batch_no||'', 色号:w.color_no||'', 毛重:w.gross_weight||0, 筒重:w.tube_weight||0, 箱重:w.box_weight||0, 数量:w.quantity||0, 净重:w.net_weight||0, 日期:w.date||'', 备注:w.remark||''}));
             zip.file("5_waste_records.csv", arrayToCSV(wasteData, ['型号','客户','批号','色号','毛重','筒重','箱重','数量','净重','日期','备注']));
@@ -1047,35 +1081,39 @@
         }
     });
 
-    // ========== 工艺参数（卡片网格 + 弹窗详情 + 回收站分离） ==========
+    // ========== 工艺参数 ==========
     function renderCraftGrid() {
         let val = document.getElementById('craftSearch')?.value.toLowerCase() || '';
         let records = showDeletedCraft ? craftRecords.filter(c => c.is_deleted) : craftRecords.filter(c => !c.is_deleted);
-        // 按日期降序排列（最新的在上面）
         records.sort((a, b) => (a.date || '').localeCompare(b.date || '') * -1);
-        let f = records.filter(c => (c.title||'').toLowerCase().includes(val) || (c.customer||'').toLowerCase().includes(val));
+        let f = records.filter(c => 
+            (c.title||'').toLowerCase().includes(val) || 
+            (c.customer||'').toLowerCase().includes(val) ||
+            (c.craft_code||'').toLowerCase().includes(val)
+        );
         let container = document.getElementById('craftGrid');
         if(!f.length) {
-            container.innerHTML = `<div class="empty-state">${showDeletedCraft ? '回收站为空' : '暂无工艺记录'}</div>`;
+            container.innerHTML = `<div class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">${showDeletedCraft ? '回收站为空' : '暂无工艺记录'}</div>`;
             return;
         }
         container.innerHTML = f.map(c => `
             <div class="craft-card ${c.is_deleted ? 'deleted' : ''}" data-id="${c.id}">
+                <div class="craft-code">📋 ${escapeHtml(c.craft_code || '未编号')}</div>
                 <div class="title">📄 ${escapeHtml(c.title)} ${c.is_deleted ? '<span class="deleted-badge">已删除</span>' : ''}</div>
-                <div class="customer">${escapeHtml(c.customer || '无客户')}</div>
+                <div class="customer">👤 ${escapeHtml(c.customer || '无客户')}</div>
                 <div class="date">📅 ${c.date ? formatDateShort(c.date) : '日期未填'}</div>
                 <div class="actions">
                     ${c.is_deleted ? 
                         `<button class="btn-restore restore-craft" data-id="${c.id}">↩️ 恢复</button>
                          <button class="btn-permanent-delete permanent-delete-craft" data-id="${c.id}">💀 永久删除</button>` :
                         `<button class="btn-sm btn-primary edit-craft" data-id="${c.id}">✏️ 编辑</button>
-                         <button class="btn-sm btn-delete del-craft" data-id="${c.id}">🗑️ 删除</button>`
+                         <button class="btn-sm btn-delete del-craft" data-id="${c.id}">🗑️ 删除</button>
+                         <button class="btn-sm btn-print print-single-craft" data-id="${c.id}">🖨️ 打印</button>`
                     }
                 </div>
             </div>
         `).join('');
         
-        // 点击卡片弹出详情
         container.querySelectorAll('.craft-card').forEach(el => {
             el.addEventListener('click', (e) => {
                 if(e.target.closest('.actions')) return;
@@ -1085,7 +1123,6 @@
             });
         });
         
-        // 编辑按钮
         container.querySelectorAll('.edit-craft').forEach(btn => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -1094,7 +1131,6 @@
             };
         });
         
-        // 删除按钮（软删除）
         container.querySelectorAll('.del-craft').forEach(btn => {
             btn.onclick = async (e) => {
                 e.stopPropagation();
@@ -1106,7 +1142,6 @@
             };
         });
         
-        // 恢复按钮
         container.querySelectorAll('.restore-craft').forEach(btn => {
             btn.onclick = async (e) => {
                 e.stopPropagation();
@@ -1118,7 +1153,6 @@
             };
         });
         
-        // 永久删除按钮
         container.querySelectorAll('.permanent-delete-craft').forEach(btn => {
             btn.onclick = async (e) => {
                 e.stopPropagation();
@@ -1131,6 +1165,14 @@
             };
         });
         
+        container.querySelectorAll('.print-single-craft').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                let craft = craftRecords.find(c => c.id == btn.dataset.id);
+                if(craft) printCraftCard(craft);
+            };
+        });
+        
         let recycleBtn = document.getElementById('showDeletedCraftBtn');
         if(recycleBtn) {
             recycleBtn.textContent = showDeletedCraft ? '📋 返回列表' : '🗑️ 回收站';
@@ -1138,54 +1180,157 @@
         }
     }
     
-    // 工艺详情弹窗（牵伸/喂入分列显示）
+    function printCraftCard(craft) {
+        if(!craft) return;
+        let printContent = `
+            <div style="max-width:800px; margin:0 auto; padding:30px; font-family:'Segoe UI',sans-serif; font-weight:600;">
+                <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:20px;">中山市淮鸿橡筋织带工艺参数卡</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; padding:12px; background:#f5f8fa; border-radius:8px;">
+                    <div><strong>编号：</strong>${escapeHtml(craft.craft_code || '未编号')}</div>
+                    <div><strong>日期：</strong>${craft.date || '未填写'}</div>
+                    <div><strong>工艺：</strong>${escapeHtml(craft.title)}</div>
+                    <div><strong>客户：</strong>${escapeHtml(craft.customer || '无客户')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(单)</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.curlsingle?.values?.[0]||'')}  B：${escapeHtml(craft.curlsingle?.values?.[1]||'')}  C：${escapeHtml(craft.curlsingle?.values?.[2]||'')}  D：${escapeHtml(craft.curlsingle?.values?.[3]||'')}  附加：${escapeHtml(craft.curlsingle?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(双)</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.curldouble?.values?.[0]||'')}  B：${escapeHtml(craft.curldouble?.values?.[1]||'')}  C：${escapeHtml(craft.curldouble?.values?.[2]||'')}  D：${escapeHtml(craft.curldouble?.values?.[3]||'')}  附加：${escapeHtml(craft.curldouble?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">⚙️ 牵伸</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.draft?.values?.[0]||'')}  B：${escapeHtml(craft.draft?.values?.[1]||'')}  C：${escapeHtml(craft.draft?.values?.[2]||'')}  D：${escapeHtml(craft.draft?.values?.[3]||'')}  附加：${escapeHtml(craft.draft?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">📥 喂入</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.feed?.values?.[0]||'')}  B：${escapeHtml(craft.feed?.values?.[1]||'')}  C：${escapeHtml(craft.feed?.values?.[2]||'')}  D：${escapeHtml(craft.feed?.values?.[3]||'')}  附加：${escapeHtml(craft.feed?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧪 样板组成</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${escapeHtml(craft.sample_material || '未填写')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧬 原料组成</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${(craft.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
+                </div>
+                <div style="margin-top:20px; text-align:center; color:#999; font-weight:400; font-size:12px;">打印时间：${new Date().toLocaleString()}</div>
+            </div>
+        `;
+        let win = window.open('', '_blank', 'width=900,height=800');
+        if(win) {
+            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title><style>body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;}@media print{.no-print{display:none;}body{padding:0;}}</style></head><body>${printContent}<div class="no-print" style="text-align:center;margin-top:20px;"><button onclick="window.print()" style="padding:10px 30px;background:#1f6e8c;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">🖨️ 打印</button> <button onclick="window.close()" style="padding:10px 30px;background:#999;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">关闭</button></div></body></html>`);
+            win.document.close();
+        } else {
+            showToast('请允许弹出窗口');
+        }
+    }
+    
+    function printSelectedCrafts() {
+        let ids = [];
+        document.querySelectorAll('.craft-card:not(.deleted)').forEach(el => {
+            let id = el.dataset.id;
+            if(id) ids.push(id);
+        });
+        if(ids.length === 0) { showToast('没有可打印的工艺'); return; }
+        let crafts = craftRecords.filter(c => ids.includes(c.id) && !c.is_deleted);
+        if(crafts.length === 0) { showToast('没有可打印的工艺'); return; }
+        
+        let printContent = crafts.map(c => `
+            <div style="max-width:800px; margin:0 auto 30px auto; padding:30px; font-family:'Segoe UI',sans-serif; font-weight:600; border-bottom:2px dashed #ccc; page-break-after:always;">
+                <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:20px;">中山市淮鸿橡筋织带工艺参数卡</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; padding:12px; background:#f5f8fa; border-radius:8px;">
+                    <div><strong>编号：</strong>${escapeHtml(c.craft_code || '未编号')}</div>
+                    <div><strong>日期：</strong>${c.date || '未填写'}</div>
+                    <div><strong>工艺：</strong>${escapeHtml(c.title)}</div>
+                    <div><strong>客户：</strong>${escapeHtml(c.customer || '无客户')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(单)</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.curlsingle?.values?.[0]||'')}  B：${escapeHtml(c.curlsingle?.values?.[1]||'')}  C：${escapeHtml(c.curlsingle?.values?.[2]||'')}  D：${escapeHtml(c.curlsingle?.values?.[3]||'')}  附加：${escapeHtml(c.curlsingle?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(双)</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.curldouble?.values?.[0]||'')}  B：${escapeHtml(c.curldouble?.values?.[1]||'')}  C：${escapeHtml(c.curldouble?.values?.[2]||'')}  D：${escapeHtml(c.curldouble?.values?.[3]||'')}  附加：${escapeHtml(c.curldouble?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">⚙️ 牵伸</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.draft?.values?.[0]||'')}  B：${escapeHtml(c.draft?.values?.[1]||'')}  C：${escapeHtml(c.draft?.values?.[2]||'')}  D：${escapeHtml(c.draft?.values?.[3]||'')}  附加：${escapeHtml(c.draft?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">📥 喂入</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.feed?.values?.[0]||'')}  B：${escapeHtml(c.feed?.values?.[1]||'')}  C：${escapeHtml(c.feed?.values?.[2]||'')}  D：${escapeHtml(c.feed?.values?.[3]||'')}  附加：${escapeHtml(c.feed?.extra||'')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧪 样板组成</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${escapeHtml(c.sample_material || '未填写')}</div>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧬 原料组成</div>
+                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${(c.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
+                </div>
+            </div>
+        `).join('');
+        
+        let win = window.open('', '_blank', 'width=900,height=800');
+        if(win) {
+            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title><style>body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;}@media print{.no-print{display:none;}body{padding:0;}}</style></head><body>${printContent}<div class="no-print" style="text-align:center;margin-top:20px;"><button onclick="window.print()" style="padding:10px 30px;background:#1f6e8c;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">🖨️ 打印全部</button> <button onclick="window.close()" style="padding:10px 30px;background:#999;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">关闭</button></div></body></html>`);
+            win.document.close();
+        } else {
+            showToast('请允许弹出窗口');
+        }
+    }
+    
     function showCraftDetailModal(craft) {
         if(!craft) return;
         let modalHtml = `
             <div class="modal-overlay" id="craftDetailModal">
                 <div class="modal-container">
                     <button class="close-btn" onclick="document.getElementById('craftDetailModal')?.remove()">✕</button>
-                    <h3 style="margin-bottom:4px;">📄 ${escapeHtml(craft.title)}</h3>
-                    <div style="color:#5e7e97; margin-bottom:16px;">👤 ${escapeHtml(craft.customer||'未填写')} &nbsp; 📅 ${craft.date||'未填写'}</div>
+                    <h3 style="margin-bottom:4px; font-weight:700;">📄 ${escapeHtml(craft.title)}</h3>
+                    <div style="color:#5e7e97; margin-bottom:16px; font-weight:600;">📋 ${escapeHtml(craft.craft_code || '未编号')} &nbsp; 👤 ${escapeHtml(craft.customer||'未填写')} &nbsp; 📅 ${craft.date||'未填写'}</div>
                     <div class="table-wrapper">
                         <table class="data-table">
                             <thead><tr><th>参数</th><th>A</th><th>B</th><th>C</th><th>D</th><th>附加</th></tr></thead>
                             <tbody>
-                                <tr><td>🌀 卷曲(单)</td>
-                                    <td>${escapeHtml(craft.curlsingle?.values?.[0]||'')}</td>
-                                    <td>${escapeHtml(craft.curlsingle?.values?.[1]||'')}</td>
-                                    <td>${escapeHtml(craft.curlsingle?.values?.[2]||'')}</td>
-                                    <td>${escapeHtml(craft.curlsingle?.values?.[3]||'')}</td>
-                                    <td>${escapeHtml(craft.curlsingle?.extra)}</td>
+                                <tr><td style="font-weight:700;">🌀 卷曲(单)</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curlsingle?.values?.[0]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curlsingle?.values?.[1]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curlsingle?.values?.[2]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curlsingle?.values?.[3]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curlsingle?.extra)}</td>
                                 </tr>
-                                <tr><td>🌀 卷曲(双)</td>
-                                    <td>${escapeHtml(craft.curldouble?.values?.[0]||'')}</td>
-                                    <td>${escapeHtml(craft.curldouble?.values?.[1]||'')}</td>
-                                    <td>${escapeHtml(craft.curldouble?.values?.[2]||'')}</td>
-                                    <td>${escapeHtml(craft.curldouble?.values?.[3]||'')}</td>
-                                    <td>${escapeHtml(craft.curldouble?.extra)}</td>
+                                <tr><td style="font-weight:700;">🌀 卷曲(双)</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curldouble?.values?.[0]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curldouble?.values?.[1]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curldouble?.values?.[2]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curldouble?.values?.[3]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.curldouble?.extra)}</td>
                                 </tr>
-                                <tr><td>⚙️ 牵伸</td>
-                                    <td>${escapeHtml(craft.draft?.values?.[0]||'')}</td>
-                                    <td>${escapeHtml(craft.draft?.values?.[1]||'')}</td>
-                                    <td>${escapeHtml(craft.draft?.values?.[2]||'')}</td>
-                                    <td>${escapeHtml(craft.draft?.values?.[3]||'')}</td>
-                                    <td>${escapeHtml(craft.draft?.extra)}</td>
+                                <tr><td style="font-weight:700;">⚙️ 牵伸</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.draft?.values?.[0]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.draft?.values?.[1]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.draft?.values?.[2]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.draft?.values?.[3]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.draft?.extra)}</td>
                                 </tr>
-                                <tr><td>📥 喂入</td>
-                                    <td>${escapeHtml(craft.feed?.values?.[0]||'')}</td>
-                                    <td>${escapeHtml(craft.feed?.values?.[1]||'')}</td>
-                                    <td>${escapeHtml(craft.feed?.values?.[2]||'')}</td>
-                                    <td>${escapeHtml(craft.feed?.values?.[3]||'')}</td>
-                                    <td>${escapeHtml(craft.feed?.extra)}</td>
+                                <tr><td style="font-weight:700;">📥 喂入</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.feed?.values?.[0]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.feed?.values?.[1]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.feed?.values?.[2]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.feed?.values?.[3]||'')}</td>
+                                    <td style="font-weight:600;">${escapeHtml(craft.feed?.extra)}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div style="margin-top:12px;"><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>
+                    <div style="margin-top:12px; font-weight:600;"><strong>🧪 样板组成：</strong>${escapeHtml(craft.sample_material || '未设置')}</div>
+                    <div style="margin-top:8px; font-weight:600;"><strong>🧬 原料组成：</strong> ${(craft.materials||[]).map(m=>`<span class="material-tag">${escapeHtml(m)}</span>`).join('')||'未设置'}</div>
                     <div style="margin-top:16px; display:flex; gap:12px; justify-content:flex-end;">
-                        <button class="btn-primary btn-sm" onclick="document.getElementById('craftDetailModal')?.remove(); showCraftModal(craft, true);">✏️ 编辑</button>
-                        <button class="btn-out btn-sm" onclick="document.getElementById('craftDetailModal')?.remove()">关闭</button>
+                        <button class="btn-primary btn-sm" onclick="document.getElementById('craftDetailModal')?.remove(); showCraftModal(craft, true);" style="font-weight:600;">✏️ 编辑</button>
+                        <button class="btn-print btn-sm" onclick="document.getElementById('craftDetailModal')?.remove(); printCraftCard(craft);" style="font-weight:600;">🖨️ 打印</button>
+                        <button class="btn-out btn-sm" onclick="document.getElementById('craftDetailModal')?.remove();" style="font-weight:600;">关闭</button>
                     </div>
                 </div>
             </div>
@@ -1201,7 +1346,8 @@
         renderCraftGrid();
     });
     
-    // 工艺编辑弹窗（牵伸/喂入分列输入）
+    document.getElementById('printCraftBtn')?.addEventListener('click', printSelectedCrafts);
+    
     function showCraftModal(craft, onSave){
         let today = new Date().toISOString().slice(0,10);
         let materials = craft?.materials || [];
@@ -1209,11 +1355,20 @@
             <div class="modal-overlay" id="craftModal">
                 <div class="modal-container">
                     <button class="close-btn" onclick="document.getElementById('craftModal')?.remove()">✕</button>
-                    <h3>✏️ ${craft?'编辑':'新增'}工艺参数</h3>
-                    <div class="form-field"><label>工艺标题 *</label><input type="text" id="editTitle" value="${escapeHtml(craft?.title||'')}"></div>
+                    <h3 style="font-weight:700;">✏️ ${craft?'编辑':'新增'}工艺参数</h3>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:12px;">
+                        <div class="form-field" style="flex:1;">
+                            <label>工艺标题 *</label>
+                            <input type="text" id="editTitle" value="${escapeHtml(craft?.title||'')}" style="font-weight:600; width:100%;">
+                        </div>
+                        <div class="form-field" style="flex:0 0 140px;">
+                            <label>编号</label>
+                            <input type="text" id="editCode" value="${escapeHtml(craft?.craft_code||'')}" readonly style="background:#f0f6fa; font-weight:700; width:100%;" placeholder="自动生成">
+                        </div>
+                    </div>
                     <div style="display:flex; gap:16px; flex-wrap:wrap;">
-                        <div class="form-field" style="flex:1"><label>客户</label><input type="text" id="editCustomer" value="${escapeHtml(craft?.customer||'')}"></div>
-                        <div class="form-field" style="flex:1"><label>日期</label><input type="date" id="editDate" value="${craft?.date||today}"></div>
+                        <div class="form-field" style="flex:1"><label>客户</label><input type="text" id="editCustomer" value="${escapeHtml(craft?.customer||'')}" style="font-weight:600; width:100%;"></div>
+                        <div class="form-field" style="flex:1"><label>日期</label><input type="date" id="editDate" value="${craft?.date||today}" style="font-weight:600; width:100%;"></div>
                     </div>
                     <div class="param-group"><h4>🌀 卷曲(单)</h4>
                         <div class="param-row"><label>A</label><input type="text" id="c0" value="${escapeHtml(craft?.curlsingle?.values?.[0]||'')}"><label>B</label><input type="text" id="c1" value="${escapeHtml(craft?.curlsingle?.values?.[1]||'')}"><label>C</label><input type="text" id="c2" value="${escapeHtml(craft?.curlsingle?.values?.[2]||'')}"><label>D</label><input type="text" id="c3" value="${escapeHtml(craft?.curlsingle?.values?.[3]||'')}"><label>附加</label><input type="text" id="cExtra" value="${escapeHtml(craft?.curlsingle?.extra||'')}"></div>
@@ -1227,13 +1382,17 @@
                     <div class="param-group"><h4>📥 喂入</h4>
                         <div class="param-row"><label>A</label><input type="text" id="f0" value="${escapeHtml(craft?.feed?.values?.[0]||'')}"><label>B</label><input type="text" id="f1" value="${escapeHtml(craft?.feed?.values?.[1]||'')}"><label>C</label><input type="text" id="f2" value="${escapeHtml(craft?.feed?.values?.[2]||'')}"><label>D</label><input type="text" id="f3" value="${escapeHtml(craft?.feed?.values?.[3]||'')}"><label>附加</label><input type="text" id="fExtra" value="${escapeHtml(craft?.feed?.extra||'')}"></div>
                     </div>
+                    <div class="form-field" style="margin-bottom:12px;">
+                        <label style="font-weight:700;">🧪 样板组成</label>
+                        <input type="text" id="editSampleMaterial" value="${escapeHtml(craft?.sample_material||'')}" placeholder="样板号：YB-001  规格：32S/1  黑色  180g" style="font-weight:600; width:100%; padding:8px 12px; border:1px solid #cbdbe6; border-radius:12px;">
+                    </div>
                     <div class="param-group"><h4>🧬 原料组成</h4>
                         <div id="materialsContainer"></div>
-                        <div style="display:flex; gap:8px;"><input type="text" id="newMaterial" placeholder="例: 涤纶65%" style="flex:1"><button type="button" id="addMaterialBtn" class="btn-sm">+ 添加</button></div>
+                        <div style="display:flex; gap:8px;"><input type="text" id="newMaterial" placeholder="例: 涤纶65%" style="flex:1; font-weight:600;"><button type="button" id="addMaterialBtn" class="btn-sm" style="font-weight:600;">+ 添加</button></div>
                     </div>
                     <div class="modal-buttons" style="display:flex; gap:12px; margin-top:16px;">
-                        <button id="saveCraftBtn" class="btn-primary">保存</button>
-                        <button id="cancelModalBtn" class="btn-out">取消</button>
+                        <button id="saveCraftBtn" class="btn-primary" style="font-weight:600;">保存</button>
+                        <button id="cancelModalBtn" class="btn-out" style="font-weight:600;">取消</button>
                     </div>
                 </div>
             </div>
@@ -1246,7 +1405,7 @@
         function renderMaterials(){
             let container = document.getElementById('materialsContainer');
             if(!container) return;
-            container.innerHTML = `<div class="materials-list">${materials.map((m,idx)=>`<span class="material-tag">${escapeHtml(m)} <button data-idx="${idx}" class="remove-material" style="background:none;border:none;cursor:pointer;color:#f44336;">✕</button></span>`).join('')}</div>`;
+            container.innerHTML = `<div class="materials-list">${materials.map((m,idx)=>`<span class="material-tag">${escapeHtml(m)} <button data-idx="${idx}" class="remove-material" style="background:none;border:none;cursor:pointer;color:#f44336;font-weight:700;">✕</button></span>`).join('')}</div>`;
             document.querySelectorAll('.remove-material').forEach(btn=>btn.onclick=()=>{materials.splice(parseInt(btn.dataset.idx),1); renderMaterials();});
         }
         renderMaterials();
@@ -1259,10 +1418,16 @@
         document.getElementById('saveCraftBtn').onclick = async () => {
             let title = document.getElementById('editTitle').value.trim();
             if(!title){ alert('请填写工艺标题'); return; }
+            let code = document.getElementById('editCode').value.trim();
+            if(!code) {
+                code = await generateCraftCode();
+            }
             let data = {
+                craft_code: code,
                 title,
                 customer: document.getElementById('editCustomer').value,
                 date: document.getElementById('editDate').value,
+                sample_material: document.getElementById('editSampleMaterial').value,
                 curlsingle: { values: [document.getElementById('c0').value, document.getElementById('c1').value, document.getElementById('c2').value, document.getElementById('c3').value], extra: document.getElementById('cExtra').value },
                 curldouble: { values: [document.getElementById('d0').value, document.getElementById('d1').value, document.getElementById('d2').value, document.getElementById('d3').value], extra: document.getElementById('dExtra').value },
                 draft: { values: [document.getElementById('e0').value, document.getElementById('e1').value, document.getElementById('e2').value, document.getElementById('e3').value], extra: document.getElementById('eExtra').value },
@@ -1287,7 +1452,7 @@
     document.getElementById('addCraftBtn')?.addEventListener('click', () => showCraftModal(null, false));
     document.getElementById('craftSearch')?.addEventListener('input', () => renderCraftGrid());
 
-    // ========== 入仓（含合计行） ==========
+    // ========== 入仓 ==========
     function renderIn(){
         let val = document.getElementById('inSearch')?.value.toLowerCase() || '';
         let f = warehouseIn.filter(i => !i.is_waste && (
@@ -1301,7 +1466,6 @@
         let tfoot = document.getElementById('inTableFoot');
         if(!tbody) return;
         
-        // 计算合计
         let totalWeight = f.reduce((s,i)=>s+(+i.weight||0),0);
         let totalAmount = f.reduce((s,i)=>s+(+i.total||0),0);
         
@@ -1312,21 +1476,20 @@
             let totalDisplay = formatPrice(i.total);
             return `<tr>
                 <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
-                <td>${escapeHtml(i.customer||'-')}</td>
-                <td>${escapeHtml(i.model)}</td>
-                <td>${escapeHtml(i.batch_no||'-')}</td>
-                <td>${escapeHtml(i.color_no||'-')}</td>
-                <td>${i.weight}</td>
-                <td>${priceDisplay}</td>
-                <td>${totalDisplay}</td>
-                <td>${i.date}</td>
+                <td style="font-weight:600;">${escapeHtml(i.customer||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(i.model)}</td>
+                <td style="font-weight:600;">${escapeHtml(i.batch_no||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(i.color_no||'-')}</td>
+                <td style="font-weight:600;">${i.weight}</td>
+                <td style="font-weight:600;">${priceDisplay}</td>
+                <td style="font-weight:700;">${totalDisplay}</td>
+                <td style="font-weight:600;">${i.date}</td>
                 <td><button class="btn-delete" onclick="delIn('${i.id}')">删除</button></td>
             </tr>`;
-        }).join('') || '<tr><td colspan="10" class="empty-state">暂无入仓记录</td></tr>';
+        }).join('') || '<tr><td colspan="10" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无入仓记录</td></tr>';
         
-        // 合计行
         if(f.length > 0) {
-            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="5" style="text-align:right;">📊 合计</td><td>${totalWeight.toFixed(2)} kg</td><td></td><td>${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
+            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="5" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
         } else {
             tfoot.innerHTML = '';
         }
@@ -1374,7 +1537,7 @@
         });
     });
 
-    // ========== 出仓（含合计行） ==========
+    // ========== 出仓（含备注） ==========
     let outSelectedIds = new Set();
     
     function populateOutFilterCustomers() {
@@ -1398,7 +1561,8 @@
             let matchSearch = (o.customer||'').toLowerCase().includes(searchVal) ||
                 (o.model||'').toLowerCase().includes(searchVal) ||
                 (o.batch_no||'').toLowerCase().includes(searchVal) ||
-                (o.color_no||'').toLowerCase().includes(searchVal);
+                (o.color_no||'').toLowerCase().includes(searchVal) ||
+                (o.remark||'').toLowerCase().includes(searchVal);
             let matchCust = !custFilter || (o.customer||'').trim() === custFilter;
             let matchModel = !modelFilter || (o.model||'').toLowerCase().includes(modelFilter);
             let matchDate = true;
@@ -1424,7 +1588,6 @@
         let tfoot = document.getElementById('outTableFoot');
         if(!tbody) return;
         
-        // 计算合计
         let totalWeight = filtered.reduce((s,o)=>s+(+o.weight||0),0);
         let totalAmount = filtered.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))||0),0);
         
@@ -1437,21 +1600,21 @@
             return `<tr>
                 <td><input type="checkbox" class="out-checkbox" data-id="${o.id}" ${checked}></td>
                 <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
-                <td>${escapeHtml(o.customer||'-')}</td>
-                <td>${escapeHtml(o.model)}</td>
-                <td>${escapeHtml(o.batch_no||'-')}</td>
-                <td>${escapeHtml(o.color_no||'-')}</td>
-                <td>${o.weight}</td>
-                <td>${priceDisplay}</td>
-                <td class="price-total">${totalDisplay}</td>
-                <td>${o.date}</td>
+                <td style="font-weight:600;">${escapeHtml(o.customer||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(o.model)}</td>
+                <td style="font-weight:600;">${escapeHtml(o.batch_no||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(o.color_no||'-')}</td>
+                <td style="font-weight:600;">${o.weight}</td>
+                <td style="font-weight:600;">${priceDisplay}</td>
+                <td class="price-total" style="font-weight:700;">${totalDisplay}</td>
+                <td style="font-weight:600;">${o.date}</td>
+                <td style="font-weight:600;">${escapeHtml(o.remark||'')}</td>
                 <td><button class="btn-delete" onclick="delOut('${o.id}')">删除</button></td>
             </tr>`;
-        }).join('') || '<tr><td colspan="11" class="empty-state">暂无出仓记录</td></tr>';
+        }).join('') || '<tr><td colspan="12" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无出仓记录</td></tr>';
         
-        // 合计行
         if(filtered.length > 0) {
-            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="6" style="text-align:right;">📊 合计</td><td>${totalWeight.toFixed(2)} kg</td><td></td><td>${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
+            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="6" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="3"></td></tr>`;
         } else {
             tfoot.innerHTML = '';
         }
@@ -1543,8 +1706,9 @@
         let p = parseFloat(document.getElementById('outPrice').value);
         let total = (!isNaN(w) && !isNaN(p) && p > 0) ? (w*p).toFixed(2) : null;
         let d = document.getElementById('outDate').value || new Date().toISOString().slice(0,10);
+        let remark = document.getElementById('outRemark').value.trim();
         if(!m || isNaN(w)){ alert('请填写型号和重量'); return; }
-        let data = { id: Date.now().toString(), type, customer: c||null, model: m, batch_no: b||null, color_no: col||null, weight: w, date: d };
+        let data = { id: Date.now().toString(), type, customer: c||null, model: m, batch_no: b||null, color_no: col||null, weight: w, date: d, remark: remark || null };
         if(!isNaN(p) && p > 0){ data.price = p; data.total = parseFloat(total); }
         let {error} = await supabase.from('out_records').insert(data);
         if(error){ showToast('添加失败：'+error.message); } else {
@@ -1552,14 +1716,14 @@
             document.getElementById('outCustomer').value=''; document.getElementById('outModel').value='';
             document.getElementById('outBatch').value=''; document.getElementById('outColor').value='';
             document.getElementById('outWeight').value=''; document.getElementById('outPrice').value='';
-            document.getElementById('outTotal').value='';
+            document.getElementById('outTotal').value=''; document.getElementById('outRemark').value='';
         }
     });
     
     document.getElementById('exportOutAllBtn')?.addEventListener('click', () => {
         let filtered = getOutFilteredData();
         filtered.sort((a,b) => a.date < b.date ? 1 : -1);
-        let data = filtered.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date}));
+        let data = filtered.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
         if(!data.length) { showToast('没有数据可导出'); return; }
         exportExcel(data,'出仓记录_全部');
     });
@@ -1569,7 +1733,7 @@
         if(ids.length === 0) { showToast('请先勾选要导出的记录'); return; }
         let selected = warehouseOut.filter(o => ids.includes(o.id));
         selected.sort((a,b) => a.date < b.date ? 1 : -1);
-        let data = selected.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date}));
+        let data = selected.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
         exportExcel(data,'出仓记录_选中');
     });
     
@@ -1617,19 +1781,19 @@
         tbody.innerHTML = f.map(o => {
             let statusClass = o.status === '待生产' ? 'pending' : (o.status === '生产中' ? 'producing' : 'done');
             return `<tr>
-                <td>${escapeHtml(o.order_no)}</td>
-                <td>${escapeHtml(o.customer||'-')}</td>
-                <td>${escapeHtml(o.product_spec)}</td>
-                <td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:70px;"></td>
-                <td><input type="number" value="${o.remaining_weight||''}" data-id="${o.id}" class="order-remaining" step="0.01" style="width:80px;" placeholder="选填"></td>
-                <td><select data-id="${o.id}" class="order-status"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已完成'?'selected':''}>已完成</option></select></td>
-                <td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px;"></td>
-                <td>${o.created_date}</td>
-                <td>${formatDate(o.updated_date) || o.created_date}</td>
+                <td style="font-weight:600;">${escapeHtml(o.order_no)}</td>
+                <td style="font-weight:600;">${escapeHtml(o.customer||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(o.product_spec)}</td>
+                <td><input type="number" value="${o.quantity}" data-id="${o.id}" class="order-qty" style="width:70px; font-weight:600;"></td>
+                <td><input type="number" value="${o.remaining_weight||''}" data-id="${o.id}" class="order-remaining" step="0.01" style="width:80px; font-weight:600;" placeholder="选填"></td>
+                <td><select data-id="${o.id}" class="order-status" style="font-weight:600;"><option ${o.status==='待生产'?'selected':''}>待生产</option><option ${o.status==='生产中'?'selected':''}>生产中</option><option ${o.status==='已完成'?'selected':''}>已完成</option></select></td>
+                <td><input type="text" value="${escapeHtml(o.remark||'')}" data-id="${o.id}" class="order-remark" style="width:100px; font-weight:600;"></td>
+                <td style="font-weight:600;">${o.created_date}</td>
+                <td style="font-weight:600;">${formatDate(o.updated_date) || o.created_date}</td>
                 <td><button class="btn-delete" onclick="delOrder('${o.id}')">删除</button></td>
             </tr>`;
         }).join('');
-        if(!f.length) tbody.innerHTML = '<tr><td colspan="10" class="empty-state">暂无订单</td></tr>';
+        if(!f.length) tbody.innerHTML = '<tr><td colspan="10" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无订单</td></tr>';
         
         document.querySelectorAll('.order-qty').forEach(inp => inp.onchange = async e => {
             await supabase.from('order_progress').update({ 
@@ -1705,7 +1869,7 @@
         exportExcel(data,'订单记录');
     });
 
-    // ========== 废置（回收站分离） ==========
+    // ========== 废置 ==========
     function calculateNet(){ 
         let gross = parseFloat(document.getElementById('wmGross').value)||0; 
         let tube = parseFloat(document.getElementById('wmTube').value)||0; 
@@ -1727,20 +1891,26 @@
         tbody.innerHTML = f.map(w => {
             let isDeleted = w.is_deleted;
             return `<tr style="${isDeleted ? 'opacity:0.5; background:#f5f5f5;' : ''}">
-                <td>${escapeHtml(w.model||'-')}</td><td>${escapeHtml(w.customer||'-')}</td>
-                <td>${escapeHtml(w.batch_no||'-')}</td><td>${escapeHtml(w.color_no||'-')}</td>
-                <td>${w.gross_weight||0}</td><td>${w.tube_weight||0}</td><td>${w.box_weight||0}</td>
-                <td>${w.quantity||0}</td><td>${w.net_weight||0}</td>
-                <td>${w.date||'-'}</td><td>${escapeHtml(w.remark||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(w.model||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(w.customer||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(w.batch_no||'-')}</td>
+                <td style="font-weight:600;">${escapeHtml(w.color_no||'-')}</td>
+                <td style="font-weight:600;">${w.gross_weight||0}</td>
+                <td style="font-weight:600;">${w.tube_weight||0}</td>
+                <td style="font-weight:600;">${w.box_weight||0}</td>
+                <td style="font-weight:600;">${w.quantity||0}</td>
+                <td style="font-weight:700;">${w.net_weight||0}</td>
+                <td style="font-weight:600;">${w.date||'-'}</td>
+                <td style="font-weight:600;">${escapeHtml(w.remark||'-')}</td>
                 <td>
                     ${isDeleted ? 
-                        `<button class="btn-restore" onclick="restoreWaste('${w.id}')">↩️ 恢复</button>
-                         <button class="btn-permanent-delete" onclick="permanentDeleteWaste('${w.id}')">💀 永久删除</button>` :
-                        `<button class="btn-delete" onclick="softDelWaste('${w.id}')">🗑️ 删除</button>`
+                        `<button class="btn-restore" onclick="restoreWaste('${w.id}')" style="font-weight:600;">↩️ 恢复</button>
+                         <button class="btn-permanent-delete" onclick="permanentDeleteWaste('${w.id}')" style="font-weight:600;">💀 永久删除</button>` :
+                        `<button class="btn-delete" onclick="softDelWaste('${w.id}')" style="font-weight:600;">🗑️ 删除</button>`
                     }
                 </td>
             </tr>`;
-        }).join('') || `<tr><td colspan="12" class="empty-state">${showDeletedWaste ? '回收站为空' : '暂无废置记录'}</td></tr>`;
+        }).join('') || `<tr><td colspan="12" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">${showDeletedWaste ? '回收站为空' : '暂无废置记录'}</td></tr>`;
         let recycleBtn = document.getElementById('showDeletedWasteBtn');
         if(recycleBtn) {
             recycleBtn.textContent = showDeletedWaste ? '📋 返回列表' : '🗑️ 回收站';
