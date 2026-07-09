@@ -160,10 +160,92 @@
         .total-row-table { background: #eef3fc; font-weight: 700; }
         .total-row-table td { border-top: 2px solid #2c7da0; padding: 10px 10px; font-weight: 700; }
         
+        /* ===== 打印样式 ===== */
         @media print {
             .no-print { display: none !important; }
-            .craft-print-card { page-break-after: always; padding: 20px; border: 1px solid #ddd; margin: 0; font-weight: 600; }
+            body { background: white !important; padding: 0 !important; }
+            .craft-print-card { 
+                max-width: 800px; 
+                margin: 20px auto; 
+                padding: 40px 50px; 
+                border: 1px solid #ddd; 
+                border-radius: 8px;
+                font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+                page-break-after: always;
+            }
             .craft-print-card:last-child { page-break-after: avoid; }
+            .craft-print-card .print-title {
+                text-align: center;
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 20px;
+                color: #1a1a1a;
+            }
+            .craft-print-card .print-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px 30px;
+                margin-bottom: 20px;
+                padding: 12px 16px;
+                background: #f5f8fa;
+                border-radius: 8px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-param-group {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-param-group .param-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+                color: #1f6e8c;
+            }
+            .craft-print-card .print-param-group .param-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px 20px;
+            }
+            .craft-print-card .print-sample {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-sample .sample-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+            }
+            .craft-print-card .print-sample .sample-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-material {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-material .material-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+            }
+            .craft-print-card .print-material .material-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-footer {
+                margin-top: 20px;
+                text-align: center;
+                color: #999;
+                font-weight: 400;
+                font-size: 12px;
+                border-top: 1px solid #eee;
+                padding-top: 12px;
+            }
         }
         
         @media (max-width: 780px) {
@@ -1180,47 +1262,106 @@
         }
     }
     
+    // ========== 打印工艺卡片（修复排版） ==========
     function printCraftCard(craft) {
         if(!craft) return;
         let printContent = `
-            <div style="max-width:800px; margin:0 auto; padding:30px; font-family:'Segoe UI',sans-serif; font-weight:600;">
-                <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:20px;">中山市淮鸿橡筋织带工艺参数卡</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; padding:12px; background:#f5f8fa; border-radius:8px;">
+            <div class="craft-print-card no-print">
+                <div class="print-title">中山市淮鸿橡筋织带工艺参数卡</div>
+                <div class="print-info">
                     <div><strong>编号：</strong>${escapeHtml(craft.craft_code || '未编号')}</div>
                     <div><strong>日期：</strong>${craft.date || '未填写'}</div>
                     <div><strong>工艺：</strong>${escapeHtml(craft.title)}</div>
                     <div><strong>客户：</strong>${escapeHtml(craft.customer || '无客户')}</div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(单)</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.curlsingle?.values?.[0]||'')}  B：${escapeHtml(craft.curlsingle?.values?.[1]||'')}  C：${escapeHtml(craft.curlsingle?.values?.[2]||'')}  D：${escapeHtml(craft.curlsingle?.values?.[3]||'')}  附加：${escapeHtml(craft.curlsingle?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">🌀 卷曲(单)</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(craft.curlsingle?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.curlsingle?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.curlsingle?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.curlsingle?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.curlsingle?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(双)</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.curldouble?.values?.[0]||'')}  B：${escapeHtml(craft.curldouble?.values?.[1]||'')}  C：${escapeHtml(craft.curldouble?.values?.[2]||'')}  D：${escapeHtml(craft.curldouble?.values?.[3]||'')}  附加：${escapeHtml(craft.curldouble?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">🌀 卷曲(双)</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(craft.curldouble?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.curldouble?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.curldouble?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.curldouble?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.curldouble?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">⚙️ 牵伸</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.draft?.values?.[0]||'')}  B：${escapeHtml(craft.draft?.values?.[1]||'')}  C：${escapeHtml(craft.draft?.values?.[2]||'')}  D：${escapeHtml(craft.draft?.values?.[3]||'')}  附加：${escapeHtml(craft.draft?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">⚙️ 牵伸</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(craft.draft?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.draft?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.draft?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.draft?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.draft?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">📥 喂入</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(craft.feed?.values?.[0]||'')}  B：${escapeHtml(craft.feed?.values?.[1]||'')}  C：${escapeHtml(craft.feed?.values?.[2]||'')}  D：${escapeHtml(craft.feed?.values?.[3]||'')}  附加：${escapeHtml(craft.feed?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">📥 喂入</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(craft.feed?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.feed?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.feed?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.feed?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.feed?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧪 样板组成</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${escapeHtml(craft.sample_material || '未填写')}</div>
+                <div class="print-sample">
+                    <div class="sample-label">🧪 样板组成</div>
+                    <div class="sample-values">${escapeHtml(craft.sample_material || '未填写')}</div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧬 原料组成</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${(craft.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
+                <div class="print-material">
+                    <div class="material-label">🧬 原料组成</div>
+                    <div class="material-values">${(craft.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
                 </div>
-                <div style="margin-top:20px; text-align:center; color:#999; font-weight:400; font-size:12px;">打印时间：${new Date().toLocaleString()}</div>
+                <div class="print-footer">打印时间：${new Date().toLocaleString()}</div>
             </div>
         `;
         let win = window.open('', '_blank', 'width=900,height=800');
         if(win) {
-            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title><style>body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;}@media print{.no-print{display:none;}body{padding:0;}}</style></head><body>${printContent}<div class="no-print" style="text-align:center;margin-top:20px;"><button onclick="window.print()" style="padding:10px 30px;background:#1f6e8c;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">🖨️ 打印</button> <button onclick="window.close()" style="padding:10px 30px;background:#999;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">关闭</button></div></body></html>`);
+            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title>
+            <style>
+                body { background: white; padding: 20px; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+                .no-print { max-width: 800px; margin: 0 auto; padding: 40px 50px; border: 1px solid #ddd; border-radius: 8px; }
+                .print-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
+                .print-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 30px; margin-bottom: 20px; padding: 12px 16px; background: #f5f8fa; border-radius: 8px; font-weight: 600; }
+                .print-param-group { margin-bottom: 14px; }
+                .print-param-group .param-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #1f6e8c; }
+                .print-param-group .param-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+                .print-sample { margin-bottom: 14px; }
+                .print-sample .sample-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+                .print-sample .sample-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
+                .print-material { margin-bottom: 14px; }
+                .print-material .material-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+                .print-material .material-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
+                .print-footer { margin-top: 20px; text-align: center; color: #999; font-weight: 400; font-size: 12px; border-top: 1px solid #eee; padding-top: 12px; }
+                @media print { 
+                    body { padding: 0; } 
+                    .no-print { border: none; padding: 30px 40px; max-width: 100%; }
+                }
+                @media screen {
+                    .print-actions { text-align: center; margin-top: 20px; }
+                    .print-actions button { padding: 10px 30px; margin: 0 8px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; }
+                    .btn-print-action { background: #1f6e8c; color: white; }
+                    .btn-print-action:hover { background: #155a74; }
+                    .btn-close-action { background: #999; color: white; }
+                    .btn-close-action:hover { background: #777; }
+                }
+            </style>
+            </head><body>${printContent}
+            <div class="print-actions no-print">
+                <button class="btn-print-action" onclick="window.print()">🖨️ 打印</button>
+                <button class="btn-close-action" onclick="window.close()">✕ 关闭</button>
+            </div>
+            </body></html>`);
             win.document.close();
         } else {
             showToast('请允许弹出窗口');
@@ -1238,44 +1379,101 @@
         if(crafts.length === 0) { showToast('没有可打印的工艺'); return; }
         
         let printContent = crafts.map(c => `
-            <div style="max-width:800px; margin:0 auto 30px auto; padding:30px; font-family:'Segoe UI',sans-serif; font-weight:600; border-bottom:2px dashed #ccc; page-break-after:always;">
-                <div style="text-align:center; font-size:18px; font-weight:700; margin-bottom:20px;">中山市淮鸿橡筋织带工艺参数卡</div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; padding:12px; background:#f5f8fa; border-radius:8px;">
+            <div class="craft-print-card">
+                <div class="print-title">中山市淮鸿橡筋织带工艺参数卡</div>
+                <div class="print-info">
                     <div><strong>编号：</strong>${escapeHtml(c.craft_code || '未编号')}</div>
                     <div><strong>日期：</strong>${c.date || '未填写'}</div>
                     <div><strong>工艺：</strong>${escapeHtml(c.title)}</div>
                     <div><strong>客户：</strong>${escapeHtml(c.customer || '无客户')}</div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(单)</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.curlsingle?.values?.[0]||'')}  B：${escapeHtml(c.curlsingle?.values?.[1]||'')}  C：${escapeHtml(c.curlsingle?.values?.[2]||'')}  D：${escapeHtml(c.curlsingle?.values?.[3]||'')}  附加：${escapeHtml(c.curlsingle?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">🌀 卷曲(单)</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(c.curlsingle?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.curlsingle?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.curlsingle?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.curlsingle?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.curlsingle?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🌀 卷曲(双)</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.curldouble?.values?.[0]||'')}  B：${escapeHtml(c.curldouble?.values?.[1]||'')}  C：${escapeHtml(c.curldouble?.values?.[2]||'')}  D：${escapeHtml(c.curldouble?.values?.[3]||'')}  附加：${escapeHtml(c.curldouble?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">🌀 卷曲(双)</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(c.curldouble?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.curldouble?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.curldouble?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.curldouble?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.curldouble?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">⚙️ 牵伸</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.draft?.values?.[0]||'')}  B：${escapeHtml(c.draft?.values?.[1]||'')}  C：${escapeHtml(c.draft?.values?.[2]||'')}  D：${escapeHtml(c.draft?.values?.[3]||'')}  附加：${escapeHtml(c.draft?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">⚙️ 牵伸</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(c.draft?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.draft?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.draft?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.draft?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.draft?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">📥 喂入</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">A：${escapeHtml(c.feed?.values?.[0]||'')}  B：${escapeHtml(c.feed?.values?.[1]||'')}  C：${escapeHtml(c.feed?.values?.[2]||'')}  D：${escapeHtml(c.feed?.values?.[3]||'')}  附加：${escapeHtml(c.feed?.extra||'')}</div>
+                <div class="print-param-group">
+                    <div class="param-label">📥 喂入</div>
+                    <div class="param-values">
+                        <span>A：${escapeHtml(c.feed?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.feed?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.feed?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.feed?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.feed?.extra||'')}</span>
+                    </div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧪 样板组成</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${escapeHtml(c.sample_material || '未填写')}</div>
+                <div class="print-sample">
+                    <div class="sample-label">🧪 样板组成</div>
+                    <div class="sample-values">${escapeHtml(c.sample_material || '未填写')}</div>
                 </div>
-                <div style="margin-bottom:12px;">
-                    <div style="font-weight:700; font-size:15px; margin-bottom:4px;">🧬 原料组成</div>
-                    <div style="padding:6px 12px; background:#f9fbfe; border-radius:6px;">${(c.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
+                <div class="print-material">
+                    <div class="material-label">🧬 原料组成</div>
+                    <div class="material-values">${(c.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
                 </div>
+                <div class="print-footer">打印时间：${new Date().toLocaleString()}</div>
             </div>
         `).join('');
         
         let win = window.open('', '_blank', 'width=900,height=800');
         if(win) {
-            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title><style>body{margin:0;padding:20px;font-family:'Segoe UI',sans-serif;}@media print{.no-print{display:none;}body{padding:0;}}</style></head><body>${printContent}<div class="no-print" style="text-align:center;margin-top:20px;"><button onclick="window.print()" style="padding:10px 30px;background:#1f6e8c;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">🖨️ 打印全部</button> <button onclick="window.close()" style="padding:10px 30px;background:#999;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">关闭</button></div></body></html>`);
+            win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title>
+            <style>
+                body { background: white; padding: 20px; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+                .craft-print-card { max-width: 800px; margin: 0 auto 30px auto; padding: 40px 50px; border: 1px solid #ddd; border-radius: 8px; page-break-after: always; }
+                .craft-print-card:last-child { page-break-after: avoid; }
+                .print-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
+                .print-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 30px; margin-bottom: 20px; padding: 12px 16px; background: #f5f8fa; border-radius: 8px; font-weight: 600; }
+                .print-param-group { margin-bottom: 14px; }
+                .print-param-group .param-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #1f6e8c; }
+                .print-param-group .param-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+                .print-sample { margin-bottom: 14px; }
+                .print-sample .sample-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+                .print-sample .sample-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
+                .print-material { margin-bottom: 14px; }
+                .print-material .material-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+                .print-material .material-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
+                .print-footer { margin-top: 20px; text-align: center; color: #999; font-weight: 400; font-size: 12px; border-top: 1px solid #eee; padding-top: 12px; }
+                @media print { body { padding: 0; } .craft-print-card { border: none; padding: 30px 40px; } }
+                @media screen {
+                    .print-actions { text-align: center; margin-top: 20px; }
+                    .print-actions button { padding: 10px 30px; margin: 0 8px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; }
+                    .btn-print-action { background: #1f6e8c; color: white; }
+                    .btn-print-action:hover { background: #155a74; }
+                    .btn-close-action { background: #999; color: white; }
+                    .btn-close-action:hover { background: #777; }
+                }
+            </style>
+            </head><body>${printContent}
+            <div class="print-actions no-print">
+                <button class="btn-print-action" onclick="window.print()">🖨️ 打印全部</button>
+                <button class="btn-close-action" onclick="window.close()">✕ 关闭</button>
+            </div>
+            </body></html>`);
             win.document.close();
         } else {
             showToast('请允许弹出窗口');
@@ -1537,7 +1735,7 @@
         });
     });
 
-    // ========== 出仓（含备注） ==========
+    // ========== 出仓 ==========
     let outSelectedIds = new Set();
     
     function populateOutFilterCustomers() {
