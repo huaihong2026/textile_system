@@ -160,109 +160,155 @@
         .total-row-table { background: #eef3fc; font-weight: 700; }
         .total-row-table td { border-top: 2px solid #2c7da0; padding: 10px 10px; font-weight: 700; }
         
-        /* ===== 打印样式 - 等距排列 ===== */
+        /* ===== 分页控件样式 ===== */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+            padding: 10px 16px;
+            background: #f7fafd;
+            border-radius: 12px;
+            border: 1px solid #dce9f2;
+        }
+        .pagination-info {
+            font-size: 0.85rem;
+            color: #5e7e97;
+            font-weight: 600;
+        }
+        .pagination-controls {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .pagination-controls button {
+            padding: 4px 12px;
+            border: 1px solid #cbdde9;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #333;
+            transition: 0.2s;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background: #1f6e8c;
+            color: white;
+            border-color: #1f6e8c;
+        }
+        .pagination-controls button.active-page {
+            background: #1f6e8c;
+            color: white;
+            border-color: #1f6e8c;
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .pagination-controls .page-ellipsis {
+            padding: 4px 6px;
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .pagination-controls select {
+            padding: 4px 8px;
+            border: 1px solid #cbdde9;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: white;
+        }
+        
+        /* ===== 打印样式 ===== */
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; padding: 0 !important; }
-        }
-        .print-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 50px;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            background: white;
-            border-radius: 8px;
-        }
-        .print-title {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #1a1a1a;
-        }
-        .print-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 30px;
-            margin-bottom: 20px;
-            padding: 12px 16px;
-            background: #f5f8fa;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        .print-param-group {
-            margin-bottom: 14px;
-        }
-        .print-param-group .param-label {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 4px;
-            color: #1f6e8c;
-        }
-        /* ★★★ 关键：等距排列 ★★★ */
-        .print-param-group .param-values {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr;
-            gap: 4px 8px;
-            padding: 6px 12px;
-            background: #f9fbfe;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        .print-param-group .param-values .param-item {
-            text-align: left;
-            padding: 2px 0;
-        }
-        .print-sample {
-            margin-bottom: 14px;
-        }
-        .print-sample .sample-label {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
-        .print-sample .sample-values {
-            padding: 6px 12px;
-            background: #f9fbfe;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        .print-material {
-            margin-bottom: 14px;
-        }
-        .print-material .material-label {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 4px;
-        }
-        .print-material .material-values {
-            padding: 6px 12px;
-            background: #f9fbfe;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        .print-footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #999;
-            font-weight: 400;
-            font-size: 12px;
-            border-top: 1px solid #eee;
-            padding-top: 12px;
-        }
-        /* 打印时去掉边框和背景 */
-        @media print {
-            .print-container { padding: 30px 40px; border: none; }
-            .print-param-group .param-values { background: #f9fbfe !important; }
-            .print-info { background: #f5f8fa !important; }
-        }
-        @media screen {
-            .print-actions { text-align: center; margin-top: 20px; }
-            .print-actions button { padding: 10px 30px; margin: 0 8px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; }
-            .btn-print-action { background: #1f6e8c; color: white; }
-            .btn-print-action:hover { background: #155a74; }
-            .btn-close-action { background: #999; color: white; }
-            .btn-close-action:hover { background: #777; }
+            .craft-print-card { 
+                max-width: 800px; 
+                margin: 20px auto; 
+                padding: 40px 50px; 
+                border: 1px solid #ddd; 
+                border-radius: 8px;
+                font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+                page-break-after: always;
+            }
+            .craft-print-card:last-child { page-break-after: avoid; }
+            .craft-print-card .print-title {
+                text-align: center;
+                font-size: 20px;
+                font-weight: 700;
+                margin-bottom: 20px;
+                color: #1a1a1a;
+            }
+            .craft-print-card .print-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px 30px;
+                margin-bottom: 20px;
+                padding: 12px 16px;
+                background: #f5f8fa;
+                border-radius: 8px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-param-group {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-param-group .param-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+                color: #1f6e8c;
+            }
+            .craft-print-card .print-param-group .param-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px 20px;
+            }
+            .craft-print-card .print-sample {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-sample .sample-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+            }
+            .craft-print-card .print-sample .sample-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-material {
+                margin-bottom: 14px;
+            }
+            .craft-print-card .print-material .material-label {
+                font-weight: 700;
+                font-size: 15px;
+                margin-bottom: 4px;
+            }
+            .craft-print-card .print-material .material-values {
+                padding: 6px 12px;
+                background: #f9fbfe;
+                border-radius: 6px;
+                font-weight: 600;
+            }
+            .craft-print-card .print-footer {
+                margin-top: 20px;
+                text-align: center;
+                color: #999;
+                font-weight: 400;
+                font-size: 12px;
+                border-top: 1px solid #eee;
+                padding-top: 12px;
+            }
         }
         
         @media (max-width: 780px) {
@@ -277,6 +323,8 @@
             .filter-bar .form-field input { width: 100%; }
             .filter-bar .form-field select { width: 100%; }
             .table-toolbar { flex-direction: column; align-items: stretch; }
+            .pagination-wrapper { flex-direction: column; align-items: stretch; text-align: center; }
+            .pagination-controls { justify-content: center; }
         }
     </style>
 </head>
@@ -326,6 +374,8 @@
                 <button id="printCraftBtn" class="btn-print">🖨️ 打印选中</button>
             </div>
             <div id="craftGrid" class="craft-grid"></div>
+            <!-- 分页控件 -->
+            <div id="craftPagination" class="pagination-wrapper"></div>
         </div>
         
         <div id="inPanel" style="display:none;">
@@ -356,6 +406,8 @@
                     <tfoot id="inTableFoot"></tfoot>
                 </table>
             </div>
+            <!-- 分页控件 -->
+            <div id="inPagination" class="pagination-wrapper"></div>
         </div>
         
         <div id="outPanel" style="display:none;">
@@ -418,6 +470,8 @@
                     <tfoot id="outTableFoot"></tfoot>
                 </table>
             </div>
+            <!-- 分页控件 -->
+            <div id="outPagination" class="pagination-wrapper"></div>
         </div>
         
         <div id="stockPanel" style="display:none;">
@@ -445,6 +499,8 @@
                     <tbody id="stockTableBody"></tbody>
                 </table>
             </div>
+            <!-- 分页控件 -->
+            <div id="stockPagination" class="pagination-wrapper"></div>
             <div class="report-box">
                 <div class="report-title">📌 库存预警</div>
                 <div class="alert-setting">
@@ -548,6 +604,8 @@
                     <tbody id="wasteManualTableBody"></tbody>
                 </table>
             </div>
+            <!-- 分页控件 -->
+            <div id="wastePagination" class="pagination-wrapper"></div>
         </div>
     </div>
 </div>
@@ -568,6 +626,11 @@
     let showDeletedWaste = false;
     let showDeletedCraft = false;
     let selectedCraftIds = new Set();
+    
+    // ===== 分页相关变量 =====
+    const PAGE_SIZE = 20;
+    let inPage = 1, outPage = 1, craftPage = 1, stockPage = 1, wastePage = 1;
+    let inTotal = 0, outTotal = 0, craftTotal = 0, stockTotal = 0, wasteTotal = 0;
 
     try {
         let saved = localStorage.getItem('stockAlertThreshold');
@@ -582,7 +645,60 @@
     function formatDateShort(d){ if(!d) return ''; let dt=new Date(d); return dt.toLocaleDateString('zh-CN'); }
     function formatPrice(val){ if(val === undefined || val === null || val === '') return '—'; let n=parseFloat(val); return isNaN(n)?'—':n.toFixed(2); }
     
-    // ========== 生成工艺编号 ==========
+    // ===== 分页控件渲染函数 =====
+    function renderPagination(containerId, currentPage, totalPages, totalRecords, onPageChange) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        if (totalPages <= 1 && totalRecords <= PAGE_SIZE) {
+            container.innerHTML = '';
+            return;
+        }
+        
+        let html = `
+            <div class="pagination-info">
+                共 <strong>${totalRecords}</strong> 条记录 &nbsp;|&nbsp; 第 <strong>${currentPage}</strong> / <strong>${totalPages}</strong> 页 &nbsp;|&nbsp; 每页 ${PAGE_SIZE} 条
+            </div>
+            <div class="pagination-controls">
+                <button class="page-prev" ${currentPage <= 1 ? 'disabled' : ''}>上一页</button>
+        `;
+        
+        // 页码按钮
+        let startPage = Math.max(1, currentPage - 4);
+        let endPage = Math.min(totalPages, currentPage + 4);
+        if (startPage > 1) {
+            html += `<button class="page-btn" data-page="1">1</button>`;
+            if (startPage > 2) html += `<span class="page-ellipsis">…</span>`;
+        }
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button class="page-btn ${i === currentPage ? 'active-page' : ''}" data-page="${i}">${i}</button>`;
+        }
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) html += `<span class="page-ellipsis">…</span>`;
+            html += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
+        }
+        
+        html += `
+                <button class="page-next" ${currentPage >= totalPages ? 'disabled' : ''}>下一页</button>
+            </div>
+        `;
+        container.innerHTML = html;
+        
+        // 绑定事件
+        container.querySelector('.page-prev')?.addEventListener('click', () => {
+            if (currentPage > 1) onPageChange(currentPage - 1);
+        });
+        container.querySelector('.page-next')?.addEventListener('click', () => {
+            if (currentPage < totalPages) onPageChange(currentPage + 1);
+        });
+        container.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = parseInt(btn.dataset.page);
+                if (page !== currentPage) onPageChange(page);
+            });
+        });
+    }
+
+    // ===== 生成工艺编号 =====
     async function generateCraftCode() {
         let year = new Date().getFullYear();
         let {data} = await supabase.from('craft_records')
@@ -614,6 +730,8 @@
         orderRecords = ord || [];
         let {data:wm} = await supabase.from('waste_manual_records').select('*');
         wasteManualRecords = wm || [];
+        // 重置页码到第一页
+        inPage = 1; outPage = 1; craftPage = 1; stockPage = 1; wastePage = 1;
         refreshCurrent();
     }
 
@@ -807,6 +925,7 @@
         return stockArr;
     }
     
+    // ===== 库存板块（分页） =====
     function renderStock() {
         let searchVal = document.getElementById('stockSearchInput')?.value.toLowerCase() || '';
         let typeFilter = document.getElementById('stockTypeFilter')?.value || '';
@@ -829,10 +948,16 @@
         document.getElementById('materialTotalIn').innerText = totalMaterialIn.toFixed(2);
         document.getElementById('materialTotalOut').innerText = totalMaterialOut.toFixed(2);
         
+        stockTotal = filtered.length;
+        const totalPages = Math.ceil(stockTotal / PAGE_SIZE) || 1;
+        if (stockPage > totalPages) stockPage = totalPages;
+        const start = (stockPage - 1) * PAGE_SIZE;
+        const pageData = filtered.slice(start, start + PAGE_SIZE);
+        
         let tbody = document.getElementById('stockTableBody');
-        if(!filtered.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">暂无库存数据</td></tr>'; }
+        if(!pageData.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">暂无库存数据</td></tr>'; }
         else {
-            tbody.innerHTML = filtered.map(s => {
+            tbody.innerHTML = pageData.map(s => {
                 let stockClass = s.stock < 0 ? 'negative-stock' : '';
                 let typeLabel = s.type === '材料' ? '🧵 材料' : '📦 产品';
                 let typeClass = s.type === '材料' ? 'material' : 'product';
@@ -848,13 +973,18 @@
             }).join('');
         }
         
+        renderPagination('stockPagination', stockPage, totalPages, stockTotal, (page) => {
+            stockPage = page;
+            renderStock();
+        });
+        
         let lowStock = filtered.filter(s => s.stock < alertThreshold && s.stock > 0);
         let alertDiv = document.getElementById('stockAlertList');
         if(lowStock.length) alertDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px;">${lowStock.map(s=>`<span class="material-tag" style="background:#fff3e0; font-weight:700;">⚠️ ${escapeHtml(s.type)} ${escapeHtml(s.model)}: ${s.stock.toFixed(2)} kg</span>`).join('')}</div>`;
         else alertDiv.innerHTML = '<div class="empty-state" style="font-weight:600; text-align:center; padding:20px; color:#8aaec0;">✅ 暂无低库存物料</div>';
     }
 
-    // ========== 年度报表（含客户搜索 + 美化导出） ==========
+    // ========== 年度报表 ==========
     function refreshStats() {
         let year = parseInt(document.getElementById('statsYear').value) || new Date().getFullYear();
         let month = parseInt(document.getElementById('statsMonth').value);
@@ -1153,13 +1283,13 @@
     }
 
     // ========== 事件绑定 ==========
-    document.getElementById('refreshStockBtn')?.addEventListener('click',()=>renderStock());
+    document.getElementById('refreshStockBtn')?.addEventListener('click',()=>{ stockPage = 1; renderStock(); });
     document.getElementById('exportStockBtn')?.addEventListener('click',()=>{ 
         let data = computeStockOverview().map(s=>({类型:s.type, 客户:s.customer, 型号:s.model, 当前库存:s.stock.toFixed(2), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate})); 
         exportExcel(data,'库存总览'); 
     });
-    document.getElementById('stockSearchInput')?.addEventListener('input',()=>renderStock());
-    document.getElementById('stockTypeFilter')?.addEventListener('change',()=>renderStock());
+    document.getElementById('stockSearchInput')?.addEventListener('input',()=>{ stockPage = 1; renderStock(); });
+    document.getElementById('stockTypeFilter')?.addEventListener('change',()=>{ stockPage = 1; renderStock(); });
     document.getElementById('refreshStatsBtn')?.addEventListener('click',()=>refreshStats());
     document.getElementById('exportStatsBtn')?.addEventListener('click',()=>exportStats());
     document.getElementById('exportReconcileBtn')?.addEventListener('click',()=>exportReconcile());
@@ -1180,96 +1310,108 @@
         }
     });
 
-    // ========== 工艺参数 ==========
+    // ========== 工艺参数（分页） ==========
     function renderCraftGrid() {
         let val = document.getElementById('craftSearch')?.value.toLowerCase() || '';
         let records = showDeletedCraft ? craftRecords.filter(c => c.is_deleted) : craftRecords.filter(c => !c.is_deleted);
         records.sort((a, b) => (a.date || '').localeCompare(b.date || '') * -1);
-        let f = records.filter(c => 
+        let filtered = records.filter(c => 
             (c.title||'').toLowerCase().includes(val) || 
             (c.customer||'').toLowerCase().includes(val) ||
             (c.craft_code||'').toLowerCase().includes(val)
         );
+        
+        craftTotal = filtered.length;
+        const totalPages = Math.ceil(craftTotal / PAGE_SIZE) || 1;
+        if (craftPage > totalPages) craftPage = totalPages;
+        const start = (craftPage - 1) * PAGE_SIZE;
+        const pageData = filtered.slice(start, start + PAGE_SIZE);
+        
         let container = document.getElementById('craftGrid');
-        if(!f.length) {
+        if(!pageData.length) {
             container.innerHTML = `<div class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">${showDeletedCraft ? '回收站为空' : '暂无工艺记录'}</div>`;
-            return;
-        }
-        container.innerHTML = f.map(c => `
-            <div class="craft-card ${c.is_deleted ? 'deleted' : ''}" data-id="${c.id}">
-                <div class="craft-code">📋 ${escapeHtml(c.craft_code || '未编号')}</div>
-                <div class="title">📄 ${escapeHtml(c.title)} ${c.is_deleted ? '<span class="deleted-badge">已删除</span>' : ''}</div>
-                <div class="customer">👤 ${escapeHtml(c.customer || '无客户')}</div>
-                <div class="date">📅 ${c.date ? formatDateShort(c.date) : '日期未填'}</div>
-                <div class="actions">
-                    ${c.is_deleted ? 
-                        `<button class="btn-restore restore-craft" data-id="${c.id}">↩️ 恢复</button>
-                         <button class="btn-permanent-delete permanent-delete-craft" data-id="${c.id}">💀 永久删除</button>` :
-                        `<button class="btn-sm btn-primary edit-craft" data-id="${c.id}">✏️ 编辑</button>
-                         <button class="btn-sm btn-delete del-craft" data-id="${c.id}">🗑️ 删除</button>
-                         <button class="btn-sm btn-print print-single-craft" data-id="${c.id}">🖨️ 打印</button>`
-                    }
+        } else {
+            container.innerHTML = pageData.map(c => `
+                <div class="craft-card ${c.is_deleted ? 'deleted' : ''}" data-id="${c.id}">
+                    <div class="craft-code">📋 ${escapeHtml(c.craft_code || '未编号')}</div>
+                    <div class="title">📄 ${escapeHtml(c.title)} ${c.is_deleted ? '<span class="deleted-badge">已删除</span>' : ''}</div>
+                    <div class="customer">👤 ${escapeHtml(c.customer || '无客户')}</div>
+                    <div class="date">📅 ${c.date ? formatDateShort(c.date) : '日期未填'}</div>
+                    <div class="actions">
+                        ${c.is_deleted ? 
+                            `<button class="btn-restore restore-craft" data-id="${c.id}">↩️ 恢复</button>
+                             <button class="btn-permanent-delete permanent-delete-craft" data-id="${c.id}">💀 永久删除</button>` :
+                            `<button class="btn-sm btn-primary edit-craft" data-id="${c.id}">✏️ 编辑</button>
+                             <button class="btn-sm btn-delete del-craft" data-id="${c.id}">🗑️ 删除</button>
+                             <button class="btn-sm btn-print print-single-craft" data-id="${c.id}">🖨️ 打印</button>`
+                        }
+                    </div>
                 </div>
-            </div>
-        `).join('');
-        
-        container.querySelectorAll('.craft-card').forEach(el => {
-            el.addEventListener('click', (e) => {
-                if(e.target.closest('.actions')) return;
-                let id = el.dataset.id;
-                let craft = craftRecords.find(c => c.id == id);
-                if(craft) showCraftDetailModal(craft);
+            `).join('');
+            
+            container.querySelectorAll('.craft-card').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if(e.target.closest('.actions')) return;
+                    let id = el.dataset.id;
+                    let craft = craftRecords.find(c => c.id == id);
+                    if(craft) showCraftDetailModal(craft);
+                });
             });
-        });
+            
+            container.querySelectorAll('.edit-craft').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    let craft = craftRecords.find(c => c.id == btn.dataset.id);
+                    if(craft) showCraftModal(craft, true);
+                };
+            });
+            
+            container.querySelectorAll('.del-craft').forEach(btn => {
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    if(confirm('确认删除此工艺？可到回收站恢复。')){
+                        await supabase.from('craft_records').update({ is_deleted: true, deleted_at: new Date().toISOString() }).eq('id', btn.dataset.id);
+                        await loadData();
+                        showToast('已移到回收站');
+                    }
+                };
+            });
+            
+            container.querySelectorAll('.restore-craft').forEach(btn => {
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    if(confirm('确认恢复此工艺？')){
+                        await supabase.from('craft_records').update({ is_deleted: false, deleted_at: null }).eq('id', btn.dataset.id);
+                        await loadData();
+                        showToast('已恢复');
+                    }
+                };
+            });
+            
+            container.querySelectorAll('.permanent-delete-craft').forEach(btn => {
+                btn.onclick = async (e) => {
+                    e.stopPropagation();
+                    let craft = craftRecords.find(c => c.id == btn.dataset.id);
+                    if(confirm(`⚠️ 确认永久删除「${craft?.title || ''}」？\n\n此操作不可恢复！`)){
+                        await supabase.from('craft_records').delete().eq('id', btn.dataset.id);
+                        await loadData();
+                        showToast('已永久删除');
+                    }
+                };
+            });
+            
+            container.querySelectorAll('.print-single-craft').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    let craft = craftRecords.find(c => c.id == btn.dataset.id);
+                    if(craft) printCraftCard(craft);
+                };
+            });
+        }
         
-        container.querySelectorAll('.edit-craft').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                let craft = craftRecords.find(c => c.id == btn.dataset.id);
-                if(craft) showCraftModal(craft, true);
-            };
-        });
-        
-        container.querySelectorAll('.del-craft').forEach(btn => {
-            btn.onclick = async (e) => {
-                e.stopPropagation();
-                if(confirm('确认删除此工艺？可到回收站恢复。')){
-                    await supabase.from('craft_records').update({ is_deleted: true, deleted_at: new Date().toISOString() }).eq('id', btn.dataset.id);
-                    await loadData();
-                    showToast('已移到回收站');
-                }
-            };
-        });
-        
-        container.querySelectorAll('.restore-craft').forEach(btn => {
-            btn.onclick = async (e) => {
-                e.stopPropagation();
-                if(confirm('确认恢复此工艺？')){
-                    await supabase.from('craft_records').update({ is_deleted: false, deleted_at: null }).eq('id', btn.dataset.id);
-                    await loadData();
-                    showToast('已恢复');
-                }
-            };
-        });
-        
-        container.querySelectorAll('.permanent-delete-craft').forEach(btn => {
-            btn.onclick = async (e) => {
-                e.stopPropagation();
-                let craft = craftRecords.find(c => c.id == btn.dataset.id);
-                if(confirm(`⚠️ 确认永久删除「${craft?.title || ''}」？\n\n此操作不可恢复！`)){
-                    await supabase.from('craft_records').delete().eq('id', btn.dataset.id);
-                    await loadData();
-                    showToast('已永久删除');
-                }
-            };
-        });
-        
-        container.querySelectorAll('.print-single-craft').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                let craft = craftRecords.find(c => c.id == btn.dataset.id);
-                if(craft) printCraftCard(craft);
-            };
+        renderPagination('craftPagination', craftPage, totalPages, craftTotal, (page) => {
+            craftPage = page;
+            renderCraftGrid();
         });
         
         let recycleBtn = document.getElementById('showDeletedCraftBtn');
@@ -1279,40 +1421,11 @@
         }
     }
     
-    // ========== 打印工艺卡片（等距排列） ==========
+    // ========== 打印工艺卡片 ==========
     function printCraftCard(craft) {
         if(!craft) return;
-        let values = [
-            craft.curlsingle?.values?.[0] || '',
-            craft.curlsingle?.values?.[1] || '',
-            craft.curlsingle?.values?.[2] || '',
-            craft.curlsingle?.values?.[3] || '',
-            craft.curlsingle?.extra || ''
-        ];
-        let values2 = [
-            craft.curldouble?.values?.[0] || '',
-            craft.curldouble?.values?.[1] || '',
-            craft.curldouble?.values?.[2] || '',
-            craft.curldouble?.values?.[3] || '',
-            craft.curldouble?.extra || ''
-        ];
-        let values3 = [
-            craft.draft?.values?.[0] || '',
-            craft.draft?.values?.[1] || '',
-            craft.draft?.values?.[2] || '',
-            craft.draft?.values?.[3] || '',
-            craft.draft?.extra || ''
-        ];
-        let values4 = [
-            craft.feed?.values?.[0] || '',
-            craft.feed?.values?.[1] || '',
-            craft.feed?.values?.[2] || '',
-            craft.feed?.values?.[3] || '',
-            craft.feed?.extra || ''
-        ];
-        
         let printContent = `
-            <div class="print-container">
+            <div class="craft-print-card no-print">
                 <div class="print-title">中山市淮鸿橡筋织带工艺参数卡</div>
                 <div class="print-info">
                     <div><strong>编号：</strong>${escapeHtml(craft.craft_code || '未编号')}</div>
@@ -1323,41 +1436,41 @@
                 <div class="print-param-group">
                     <div class="param-label">🌀 卷曲(单)</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(values[0])}</span>
-                        <span class="param-item">B：${escapeHtml(values[1])}</span>
-                        <span class="param-item">C：${escapeHtml(values[2])}</span>
-                        <span class="param-item">D：${escapeHtml(values[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(values[4])}</span>
+                        <span>A：${escapeHtml(craft.curlsingle?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.curlsingle?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.curlsingle?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.curlsingle?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.curlsingle?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">🌀 卷曲(双)</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(values2[0])}</span>
-                        <span class="param-item">B：${escapeHtml(values2[1])}</span>
-                        <span class="param-item">C：${escapeHtml(values2[2])}</span>
-                        <span class="param-item">D：${escapeHtml(values2[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(values2[4])}</span>
+                        <span>A：${escapeHtml(craft.curldouble?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.curldouble?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.curldouble?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.curldouble?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.curldouble?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">⚙️ 牵伸</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(values3[0])}</span>
-                        <span class="param-item">B：${escapeHtml(values3[1])}</span>
-                        <span class="param-item">C：${escapeHtml(values3[2])}</span>
-                        <span class="param-item">D：${escapeHtml(values3[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(values3[4])}</span>
+                        <span>A：${escapeHtml(craft.draft?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.draft?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.draft?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.draft?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.draft?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">📥 喂入</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(values4[0])}</span>
-                        <span class="param-item">B：${escapeHtml(values4[1])}</span>
-                        <span class="param-item">C：${escapeHtml(values4[2])}</span>
-                        <span class="param-item">D：${escapeHtml(values4[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(values4[4])}</span>
+                        <span>A：${escapeHtml(craft.feed?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(craft.feed?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(craft.feed?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(craft.feed?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(craft.feed?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-sample">
@@ -1376,13 +1489,12 @@
             win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title>
             <style>
                 body { background: white; padding: 20px; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
-                .print-container { max-width: 800px; margin: 0 auto; padding: 40px 50px; background: white; border-radius: 8px; border: 1px solid #ddd; }
+                .no-print { max-width: 800px; margin: 0 auto; padding: 40px 50px; border: 1px solid #ddd; border-radius: 8px; }
                 .print-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
                 .print-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 30px; margin-bottom: 20px; padding: 12px 16px; background: #f5f8fa; border-radius: 8px; font-weight: 600; }
                 .print-param-group { margin-bottom: 14px; }
                 .print-param-group .param-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #1f6e8c; }
-                .print-param-group .param-values { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr; gap: 4px 8px; padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
-                .print-param-group .param-values .param-item { text-align: left; padding: 2px 0; }
+                .print-param-group .param-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 20px; }
                 .print-sample { margin-bottom: 14px; }
                 .print-sample .sample-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
                 .print-sample .sample-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
@@ -1390,7 +1502,10 @@
                 .print-material .material-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
                 .print-material .material-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
                 .print-footer { margin-top: 20px; text-align: center; color: #999; font-weight: 400; font-size: 12px; border-top: 1px solid #eee; padding-top: 12px; }
-                @media print { body { padding: 0; } .print-container { border: none; padding: 30px 40px; } }
+                @media print { 
+                    body { padding: 0; } 
+                    .no-print { border: none; padding: 30px 40px; max-width: 100%; }
+                }
                 @media screen {
                     .print-actions { text-align: center; margin-top: 20px; }
                     .print-actions button { padding: 10px 30px; margin: 0 8px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; }
@@ -1422,12 +1537,7 @@
         let crafts = craftRecords.filter(c => ids.includes(c.id) && !c.is_deleted);
         if(crafts.length === 0) { showToast('没有可打印的工艺'); return; }
         
-        let printContent = crafts.map(c => {
-            let v1 = [c.curlsingle?.values?.[0]||'', c.curlsingle?.values?.[1]||'', c.curlsingle?.values?.[2]||'', c.curlsingle?.values?.[3]||'', c.curlsingle?.extra||''];
-            let v2 = [c.curldouble?.values?.[0]||'', c.curldouble?.values?.[1]||'', c.curldouble?.values?.[2]||'', c.curldouble?.values?.[3]||'', c.curldouble?.extra||''];
-            let v3 = [c.draft?.values?.[0]||'', c.draft?.values?.[1]||'', c.draft?.values?.[2]||'', c.draft?.values?.[3]||'', c.draft?.extra||''];
-            let v4 = [c.feed?.values?.[0]||'', c.feed?.values?.[1]||'', c.feed?.values?.[2]||'', c.feed?.values?.[3]||'', c.feed?.extra||''];
-            return `
+        let printContent = crafts.map(c => `
             <div class="craft-print-card">
                 <div class="print-title">中山市淮鸿橡筋织带工艺参数卡</div>
                 <div class="print-info">
@@ -1439,41 +1549,41 @@
                 <div class="print-param-group">
                     <div class="param-label">🌀 卷曲(单)</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(v1[0])}</span>
-                        <span class="param-item">B：${escapeHtml(v1[1])}</span>
-                        <span class="param-item">C：${escapeHtml(v1[2])}</span>
-                        <span class="param-item">D：${escapeHtml(v1[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(v1[4])}</span>
+                        <span>A：${escapeHtml(c.curlsingle?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.curlsingle?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.curlsingle?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.curlsingle?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.curlsingle?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">🌀 卷曲(双)</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(v2[0])}</span>
-                        <span class="param-item">B：${escapeHtml(v2[1])}</span>
-                        <span class="param-item">C：${escapeHtml(v2[2])}</span>
-                        <span class="param-item">D：${escapeHtml(v2[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(v2[4])}</span>
+                        <span>A：${escapeHtml(c.curldouble?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.curldouble?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.curldouble?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.curldouble?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.curldouble?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">⚙️ 牵伸</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(v3[0])}</span>
-                        <span class="param-item">B：${escapeHtml(v3[1])}</span>
-                        <span class="param-item">C：${escapeHtml(v3[2])}</span>
-                        <span class="param-item">D：${escapeHtml(v3[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(v3[4])}</span>
+                        <span>A：${escapeHtml(c.draft?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.draft?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.draft?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.draft?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.draft?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-param-group">
                     <div class="param-label">📥 喂入</div>
                     <div class="param-values">
-                        <span class="param-item">A：${escapeHtml(v4[0])}</span>
-                        <span class="param-item">B：${escapeHtml(v4[1])}</span>
-                        <span class="param-item">C：${escapeHtml(v4[2])}</span>
-                        <span class="param-item">D：${escapeHtml(v4[3])}</span>
-                        <span class="param-item">附加：${escapeHtml(v4[4])}</span>
+                        <span>A：${escapeHtml(c.feed?.values?.[0]||'')}</span>
+                        <span>B：${escapeHtml(c.feed?.values?.[1]||'')}</span>
+                        <span>C：${escapeHtml(c.feed?.values?.[2]||'')}</span>
+                        <span>D：${escapeHtml(c.feed?.values?.[3]||'')}</span>
+                        <span>附加：${escapeHtml(c.feed?.extra||'')}</span>
                     </div>
                 </div>
                 <div class="print-sample">
@@ -1485,22 +1595,21 @@
                     <div class="material-values">${(c.materials||[]).map(m=>escapeHtml(m)).join('、') || '未设置'}</div>
                 </div>
                 <div class="print-footer">打印时间：${new Date().toLocaleString()}</div>
-            </div>`;
-        }).join('');
+            </div>
+        `).join('');
         
         let win = window.open('', '_blank', 'width=900,height=800');
         if(win) {
             win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>工艺参数打印</title>
             <style>
                 body { background: white; padding: 20px; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
-                .craft-print-card { max-width: 800px; margin: 0 auto 30px auto; padding: 40px 50px; border: 1px solid #ddd; border-radius: 8px; page-break-after: always; background: white; }
+                .craft-print-card { max-width: 800px; margin: 0 auto 30px auto; padding: 40px 50px; border: 1px solid #ddd; border-radius: 8px; page-break-after: always; }
                 .craft-print-card:last-child { page-break-after: avoid; }
                 .print-title { text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #1a1a1a; }
                 .print-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 30px; margin-bottom: 20px; padding: 12px 16px; background: #f5f8fa; border-radius: 8px; font-weight: 600; }
                 .print-param-group { margin-bottom: 14px; }
                 .print-param-group .param-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #1f6e8c; }
-                .print-param-group .param-values { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr; gap: 4px 8px; padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
-                .print-param-group .param-values .param-item { text-align: left; padding: 2px 0; }
+                .print-param-group .param-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 4px 20px; }
                 .print-sample { margin-bottom: 14px; }
                 .print-sample .sample-label { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
                 .print-sample .sample-values { padding: 6px 12px; background: #f9fbfe; border-radius: 6px; font-weight: 600; }
@@ -1591,10 +1700,14 @@
     
     document.getElementById('showDeletedCraftBtn')?.addEventListener('click', () => {
         showDeletedCraft = !showDeletedCraft;
+        craftPage = 1;
         renderCraftGrid();
     });
     
     document.getElementById('printCraftBtn')?.addEventListener('click', printSelectedCrafts);
+    
+    document.getElementById('addCraftBtn')?.addEventListener('click', () => showCraftModal(null, false));
+    document.getElementById('craftSearch')?.addEventListener('input', () => { craftPage = 1; renderCraftGrid(); });
     
     function showCraftModal(craft, onSave){
         let today = new Date().toISOString().slice(0,10);
@@ -1696,28 +1809,32 @@
         };
         document.getElementById('cancelModalBtn').onclick = () => document.getElementById('craftModal')?.remove();
     }
-    
-    document.getElementById('addCraftBtn')?.addEventListener('click', () => showCraftModal(null, false));
-    document.getElementById('craftSearch')?.addEventListener('input', () => renderCraftGrid());
 
-    // ========== 入仓 ==========
+    // ========== 入仓（分页） ==========
     function renderIn(){
         let val = document.getElementById('inSearch')?.value.toLowerCase() || '';
-        let f = warehouseIn.filter(i => !i.is_waste && (
+        let filtered = warehouseIn.filter(i => !i.is_waste && (
             (i.customer||'').toLowerCase().includes(val) ||
             (i.model||'').toLowerCase().includes(val) ||
             (i.batch_no||'').toLowerCase().includes(val) ||
             (i.color_no||'').toLowerCase().includes(val)
         ));
-        f.sort((a,b) => a.date < b.date ? 1 : -1);
+        filtered.sort((a,b) => a.date < b.date ? 1 : -1);
+        
+        inTotal = filtered.length;
+        const totalPages = Math.ceil(inTotal / PAGE_SIZE) || 1;
+        if (inPage > totalPages) inPage = totalPages;
+        const start = (inPage - 1) * PAGE_SIZE;
+        const pageData = filtered.slice(start, start + PAGE_SIZE);
+        
         let tbody = document.getElementById('inTableBody');
         let tfoot = document.getElementById('inTableFoot');
         if(!tbody) return;
         
-        let totalWeight = f.reduce((s,i)=>s+(+i.weight||0),0);
-        let totalAmount = f.reduce((s,i)=>s+(+i.total||0),0);
+        let totalWeight = filtered.reduce((s,i)=>s+(+i.weight||0),0);
+        let totalAmount = filtered.reduce((s,i)=>s+(+i.total||0),0);
         
-        tbody.innerHTML = f.map(i => {
+        tbody.innerHTML = pageData.map(i => {
             let typeLabel = i.type === '材料' ? '🧵 材料' : '📦 产品';
             let typeClass = i.type === '材料' ? 'material' : 'product';
             let priceDisplay = formatPrice(i.price);
@@ -1736,11 +1853,16 @@
             </tr>`;
         }).join('') || '<tr><td colspan="10" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无入仓记录</td></tr>';
         
-        if(f.length > 0) {
+        if(filtered.length > 0) {
             tfoot.innerHTML = `<tr class="total-row-table"><td colspan="5" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
         } else {
             tfoot.innerHTML = '';
         }
+        
+        renderPagination('inPagination', inPage, totalPages, inTotal, (page) => {
+            inPage = page;
+            renderIn();
+        });
     }
     window.delIn = async (id) => {
         if(confirm('确认删除？')){
@@ -1774,18 +1896,9 @@
         let data = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer, 型号:i.model, 批号:i.batch_no, 色号:i.color_no, 重量:i.weight, 单价:i.price||'', 总价:i.total||'', 日期:i.date}));
         exportExcel(data,'入仓记录');
     });
-    document.getElementById('inSearch')?.addEventListener('input', () => renderIn());
-    ['inWeight','inPrice'].forEach(id => {
-        let el = document.getElementById(id);
-        if(el) el.addEventListener('input', () => {
-            let w = parseFloat(document.getElementById('inWeight')?.value||0);
-            let p = parseFloat(document.getElementById('inPrice')?.value||0);
-            let totalEl = document.getElementById('inTotal');
-            if(totalEl) totalEl.value = (!isNaN(w) && !isNaN(p) && p > 0) ? (w*p).toFixed(2) : '';
-        });
-    });
+    document.getElementById('inSearch')?.addEventListener('input', () => { inPage = 1; renderIn(); });
 
-    // ========== 出仓 ==========
+    // ========== 出仓（分页） ==========
     let outSelectedIds = new Set();
     
     function populateOutFilterCustomers() {
@@ -1832,6 +1945,12 @@
             countEl2.style.display = 'inline';
         }
         
+        outTotal = filtered.length;
+        const totalPages = Math.ceil(outTotal / PAGE_SIZE) || 1;
+        if (outPage > totalPages) outPage = totalPages;
+        const start = (outPage - 1) * PAGE_SIZE;
+        const pageData = filtered.slice(start, start + PAGE_SIZE);
+        
         let tbody = document.getElementById('outTableBody');
         let tfoot = document.getElementById('outTableFoot');
         if(!tbody) return;
@@ -1839,7 +1958,7 @@
         let totalWeight = filtered.reduce((s,o)=>s+(+o.weight||0),0);
         let totalAmount = filtered.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))||0),0);
         
-        tbody.innerHTML = filtered.map(o => {
+        tbody.innerHTML = pageData.map(o => {
             let typeLabel = o.type === '材料' ? '🧵 材料' : '📦 产品';
             let typeClass = o.type === '材料' ? 'material' : 'product';
             let checked = outSelectedIds.has(o.id) ? 'checked' : '';
@@ -1883,6 +2002,11 @@
                 updateDeleteSelectedBtn();
                 updateSelectAllState();
             };
+        });
+        
+        renderPagination('outPagination', outPage, totalPages, outTotal, (page) => {
+            outPage = page;
+            renderOut();
         });
     }
     
@@ -1985,16 +2109,17 @@
         exportExcel(data,'出仓记录_选中');
     });
     
-    document.getElementById('applyOutFilterBtn')?.addEventListener('click', () => { outSelectedIds.clear(); renderOut(); });
+    document.getElementById('applyOutFilterBtn')?.addEventListener('click', () => { outSelectedIds.clear(); outPage = 1; renderOut(); });
     document.getElementById('clearOutFilterBtn')?.addEventListener('click', () => {
         document.getElementById('outFilterCustomer').value = '';
         document.getElementById('outFilterModel').value = '';
         document.getElementById('outFilterDateFrom').value = '';
         document.getElementById('outFilterDateTo').value = '';
         outSelectedIds.clear();
+        outPage = 1;
         renderOut();
     });
-    document.getElementById('outSearch')?.addEventListener('input', () => { outSelectedIds.clear(); renderOut(); });
+    document.getElementById('outSearch')?.addEventListener('input', () => { outSelectedIds.clear(); outPage = 1; renderOut(); });
     ['outWeight','outPrice'].forEach(id => {
         let el = document.getElementById(id);
         if(el) el.addEventListener('input', () => {
@@ -2117,7 +2242,7 @@
         exportExcel(data,'订单记录');
     });
 
-    // ========== 废置 ==========
+    // ========== 废置（分页） ==========
     function calculateNet(){ 
         let gross = parseFloat(document.getElementById('wmGross').value)||0; 
         let tube = parseFloat(document.getElementById('wmTube').value)||0; 
@@ -2132,11 +2257,18 @@
     function renderWasteManual(){
         let val = document.getElementById('wasteManualSearch')?.value.toLowerCase() || '';
         let records = showDeletedWaste ? wasteManualRecords.filter(w => w.is_deleted) : wasteManualRecords.filter(w => !w.is_deleted);
-        let f = records.filter(w => (w.model||'').toLowerCase().includes(val) || (w.customer||'').toLowerCase().includes(val) || (w.batch_no||'').toLowerCase().includes(val) || (w.color_no||'').toLowerCase().includes(val));
-        f.sort((a,b) => a.date < b.date ? 1 : -1);
+        let filtered = records.filter(w => (w.model||'').toLowerCase().includes(val) || (w.customer||'').toLowerCase().includes(val) || (w.batch_no||'').toLowerCase().includes(val) || (w.color_no||'').toLowerCase().includes(val));
+        filtered.sort((a,b) => a.date < b.date ? 1 : -1);
+        
+        wasteTotal = filtered.length;
+        const totalPages = Math.ceil(wasteTotal / PAGE_SIZE) || 1;
+        if (wastePage > totalPages) wastePage = totalPages;
+        const start = (wastePage - 1) * PAGE_SIZE;
+        const pageData = filtered.slice(start, start + PAGE_SIZE);
+        
         let tbody = document.getElementById('wasteManualTableBody');
         if(!tbody) return;
-        tbody.innerHTML = f.map(w => {
+        tbody.innerHTML = pageData.map(w => {
             let isDeleted = w.is_deleted;
             return `<tr style="${isDeleted ? 'opacity:0.5; background:#f5f5f5;' : ''}">
                 <td style="font-weight:600;">${escapeHtml(w.model||'-')}</td>
@@ -2159,6 +2291,12 @@
                 </td>
             </tr>`;
         }).join('') || `<tr><td colspan="12" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">${showDeletedWaste ? '回收站为空' : '暂无废置记录'}</td></tr>`;
+        
+        renderPagination('wastePagination', wastePage, totalPages, wasteTotal, (page) => {
+            wastePage = page;
+            renderWasteManual();
+        });
+        
         let recycleBtn = document.getElementById('showDeletedWasteBtn');
         if(recycleBtn) {
             recycleBtn.textContent = showDeletedWaste ? '📋 返回列表' : '🗑️ 回收站';
@@ -2189,6 +2327,7 @@
     };
     document.getElementById('showDeletedWasteBtn')?.addEventListener('click', () => {
         showDeletedWaste = !showDeletedWaste;
+        wastePage = 1;
         renderWasteManual();
     });
     document.getElementById('addWasteManualBtn')?.addEventListener('click', async () => {
@@ -2221,7 +2360,7 @@
         let data = records.map(w => ({型号:w.model, 客户:w.customer, 批号:w.batch_no, 色号:w.color_no, 毛重:w.gross_weight, 筒重:w.tube_weight, 箱重:w.box_weight, 数量:w.quantity, 净重:w.net_weight, 日期:w.date, 备注:w.remark, 状态:w.is_deleted ? '已删除' : '正常'}));
         exportExcel(data,'废置记录');
     });
-    document.getElementById('wasteManualSearch')?.addEventListener('input', () => renderWasteManual());
+    document.getElementById('wasteManualSearch')?.addEventListener('input', () => { wastePage = 1; renderWasteManual(); });
 
     // ========== 通用导出 ==========
     function exportExcel(data, filename){
@@ -2250,6 +2389,12 @@
         document.getElementById('wastePanel').style.display = tab === 'waste' ? 'block' : 'none';
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelector(`.tab[data-tab="${tab}"]`)?.classList.add('active');
+        // 重置分页页码
+        if(tab === 'in') inPage = 1;
+        else if(tab === 'out') outPage = 1;
+        else if(tab === 'craft') craftPage = 1;
+        else if(tab === 'stock') stockPage = 1;
+        else if(tab === 'waste') wastePage = 1;
         refreshCurrent();
     }
     window.switchTab = switchTab;
@@ -2260,18 +2405,18 @@
         let val = document.getElementById('globalSearch').value;
         let type = document.getElementById('globalSearchType').value;
         if(type === 'current'){ 
-            if(currentTab==='in'){ document.getElementById('inSearch').value=val; renderIn(); } 
-            else if(currentTab==='out'){ document.getElementById('outSearch').value=val; renderOut(); } 
+            if(currentTab==='in'){ document.getElementById('inSearch').value=val; inPage = 1; renderIn(); } 
+            else if(currentTab==='out'){ document.getElementById('outSearch').value=val; outPage = 1; renderOut(); } 
             else if(currentTab==='order'){ document.getElementById('orderSearch').value=val; renderOrder(); } 
-            else if(currentTab==='craft'){ document.getElementById('craftSearch').value=val; renderCraftGrid(); } 
-            else if(currentTab==='stock'){ document.getElementById('stockSearchInput').value=val; renderStock(); } 
-            else if(currentTab==='waste'){ document.getElementById('wasteManualSearch').value=val; renderWasteManual(); } 
-        } else if(type==='in'){ switchTab('in'); document.getElementById('inSearch').value=val; renderIn(); }
-        else if(type==='out'){ switchTab('out'); document.getElementById('outSearch').value=val; renderOut(); }
+            else if(currentTab==='craft'){ document.getElementById('craftSearch').value=val; craftPage = 1; renderCraftGrid(); } 
+            else if(currentTab==='stock'){ document.getElementById('stockSearchInput').value=val; stockPage = 1; renderStock(); } 
+            else if(currentTab==='waste'){ document.getElementById('wasteManualSearch').value=val; wastePage = 1; renderWasteManual(); } 
+        } else if(type==='in'){ switchTab('in'); document.getElementById('inSearch').value=val; inPage = 1; renderIn(); }
+        else if(type==='out'){ switchTab('out'); document.getElementById('outSearch').value=val; outPage = 1; renderOut(); }
         else if(type==='order'){ switchTab('order'); document.getElementById('orderSearch').value=val; renderOrder(); }
-        else if(type==='craft'){ switchTab('craft'); document.getElementById('craftSearch').value=val; renderCraftGrid(); }
-        else if(type==='stock'){ switchTab('stock'); document.getElementById('stockSearchInput').value=val; renderStock(); }
-        else if(type==='waste'){ switchTab('waste'); document.getElementById('wasteManualSearch').value=val; renderWasteManual(); }
+        else if(type==='craft'){ switchTab('craft'); document.getElementById('craftSearch').value=val; craftPage = 1; renderCraftGrid(); }
+        else if(type==='stock'){ switchTab('stock'); document.getElementById('stockSearchInput').value=val; stockPage = 1; renderStock(); }
+        else if(type==='waste'){ switchTab('waste'); document.getElementById('wasteManualSearch').value=val; wastePage = 1; renderWasteManual(); }
     };
 
     loadData();
