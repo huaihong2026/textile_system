@@ -72,7 +72,7 @@
         .archive-controls input[type="date"] { padding: 6px 10px; border: 1px solid #cbdde9; border-radius: 12px; font-size: 0.85rem; font-weight: 600; width: 160px; }
         
         .stats-row { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 1000px; }
         .data-table th, .data-table td { border: 1px solid #e2edf5; padding: 12px 10px; text-align: left; vertical-align: middle; }
         .data-table th { background: #eef3fc; font-weight: 700; font-size: 0.85rem; position: sticky; top: 0; z-index: 10; }
         .data-table td { font-weight: 600; }
@@ -378,6 +378,7 @@
             <div id="craftPagination" class="pagination-wrapper"></div>
         </div>
         
+        <!-- ===== 入仓记录（新增"个数"列） ===== -->
         <div id="inPanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">➕ 手动添加入仓</h4>
                 <div class="form-row">
@@ -389,6 +390,7 @@
                     <div class="form-field"><label>批号</label><input type="text" id="inBatch"></div>
                     <div class="form-field"><label>色号</label><input type="text" id="inColor"></div>
                     <div class="form-field"><label>重量(kg) *</label><input type="number" id="inWeight" step="0.01"></div>
+                    <div class="form-field"><label>个数</label><input type="number" id="inQty" step="1" placeholder="选填"></div>
                     <div class="form-field"><label>单价</label><input type="number" id="inPrice" step="0.01" placeholder="选填"></div>
                     <div class="form-field"><label>总价</label><input type="text" id="inTotal" readonly></div>
                     <div class="form-field"><label>日期</label><input type="date" id="inDate"></div>
@@ -401,7 +403,7 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead>
+                    <thead><tr><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>个数</th><th>单价</th><th>总价</th><th>日期</th><th>操作</th></tr></thead>
                     <tbody id="inTableBody"></tbody>
                     <tfoot id="inTableFoot"></tfoot>
                 </table>
@@ -410,6 +412,7 @@
             <div id="inPagination" class="pagination-wrapper"></div>
         </div>
         
+        <!-- ===== 出仓记录（新增"个数"列） ===== -->
         <div id="outPanel" style="display:none;">
             <div class="add-form"><h4 style="margin-bottom:12px; font-weight:700;">📤 手动添加出仓</h4>
                 <div class="form-row">
@@ -421,6 +424,7 @@
                     <div class="form-field"><label>批号</label><input type="text" id="outBatch"></div>
                     <div class="form-field"><label>色号</label><input type="text" id="outColor"></div>
                     <div class="form-field"><label>重量(kg) *</label><input type="number" id="outWeight" step="0.01"></div>
+                    <div class="form-field"><label>个数</label><input type="number" id="outQty" step="1" placeholder="选填"></div>
                     <div class="form-field"><label>单价</label><input type="number" id="outPrice" step="0.01" placeholder="选填"></div>
                     <div class="form-field"><label>总价</label><input type="text" id="outTotal" readonly></div>
                     <div class="form-field"><label>日期</label><input type="date" id="outDate"></div>
@@ -465,7 +469,7 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th><input type="checkbox" id="outSelectAll"></th><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>单价</th><th>总价</th><th>日期</th><th>备注</th><th>操作</th></tr></thead>
+                    <thead><tr><th><input type="checkbox" id="outSelectAll"></th><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>色号</th><th>重量(kg)</th><th>个数</th><th>单价</th><th>总价</th><th>日期</th><th>备注</th><th>操作</th></tr></thead>
                     <tbody id="outTableBody"></tbody>
                     <tfoot id="outTableFoot"></tfoot>
                 </table>
@@ -474,6 +478,7 @@
             <div id="outPagination" class="pagination-wrapper"></div>
         </div>
         
+        <!-- ===== 库存板块（总个数在前，总重量在后） ===== -->
         <div id="stockPanel" style="display:none;">
             <div class="stock-section">
                 <div class="stat-card"><h3>📦 产品库存</h3>
@@ -486,7 +491,7 @@
                 </div>
             </div>
             <div class="filter-bar">
-                <div class="form-field"><label>🔍 搜索客户/型号</label><input type="text" id="stockSearchInput" placeholder="关键词"></div>
+                <div class="form-field"><label>🔍 搜索客户/型号/批号</label><input type="text" id="stockSearchInput" placeholder="关键词"></div>
                 <div class="form-field"><label>类型</label>
                     <select id="stockTypeFilter"><option value="">全部</option><option value="材料">🧵 材料</option><option value="产品">📦 产品</option></select>
                 </div>
@@ -495,7 +500,7 @@
             </div>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead><tr><th>类型</th><th>客户</th><th>型号</th><th>累计入仓(kg)</th><th>累计出仓(kg)</th><th>当前库存(kg)</th><th>最后更新</th></tr></thead>
+                    <thead><tr><th>类型</th><th>客户</th><th>型号</th><th>批号</th><th>总个数</th><th>总重量(kg)</th><th>累计入仓(kg)</th><th>累计出仓(kg)</th><th>最后更新</th></tr></thead>
                     <tbody id="stockTableBody"></tbody>
                 </table>
             </div>
@@ -878,49 +883,71 @@
         document.getElementById('archiveBtn')?.addEventListener('click', () => archiveOldData());
     }
 
-    // ========== 库存计算 ==========
+    // ========== 库存计算（按客户+型号+批号分组） ==========
     function computeStockOverview() {
         let groupMap = new Map();
+        // 入仓累加
         warehouseIn.filter(i=>!i.is_waste).forEach(rec => {
             let type = rec.type || '产品';
             let cust = (rec.customer || '').trim();
             let model = rec.model || '未知型号';
+            let batch = (rec.batch_no || '').trim() || '无批号';
             let weight = +rec.weight || 0;
+            let qty = +rec.qty || 0;
             let date = rec.date || '';
-            let key = type + '_' + cust + '_' + model;
+            let key = type + '|' + cust + '|' + model + '|' + batch;
             if(!groupMap.has(key)) {
-                groupMap.set(key, { type, customer: cust, model, totalIn: 0, totalOut: 0, lastDate: '' });
+                groupMap.set(key, { type, customer: cust, model, batch, totalIn: 0, totalInQty: 0, totalOut: 0, totalOutQty: 0, lastDate: '' });
             }
             let item = groupMap.get(key);
             item.totalIn += weight;
+            item.totalInQty += qty;
             if(date > item.lastDate) item.lastDate = date;
         });
+        // 出仓累减
         warehouseOut.forEach(rec => {
             let type = rec.type || '产品';
             let cust = (rec.customer || '').trim();
             let model = rec.model || '未知型号';
+            let batch = (rec.batch_no || '').trim() || '无批号';
             let weight = +rec.weight || 0;
-            let key = type + '_' + cust + '_' + model;
+            let qty = +rec.qty || 0;
+            let key = type + '|' + cust + '|' + model + '|' + batch;
             if(groupMap.has(key)) {
-                groupMap.get(key).totalOut += weight;
+                let item = groupMap.get(key);
+                item.totalOut += weight;
+                item.totalOutQty += qty;
             } else {
-                groupMap.set(key, { type, customer: cust, model, totalIn: 0, totalOut: weight, lastDate: '' });
+                // 只有出仓没有入仓的情况（库存为负）
+                groupMap.set(key, { type, customer: cust, model, batch, totalIn: 0, totalInQty: 0, totalOut: weight, totalOutQty: qty, lastDate: '' });
             }
         });
         let stockArr = [];
         for(let item of groupMap.values()) {
             let stock = item.totalIn - item.totalOut;
-            if(Math.abs(stock) > 0.001) {
-                stockArr.push({ ...item, stock });
+            let stockQty = item.totalInQty - item.totalOutQty;
+            // 只显示库存 > 0 的记录
+            if(stock > 0.001 || stockQty > 0.001) {
+                stockArr.push({ 
+                    type: item.type, 
+                    customer: item.customer, 
+                    model: item.model, 
+                    batch: item.batch,
+                    totalIn: item.totalIn, 
+                    totalOut: item.totalOut, 
+                    totalInQty: item.totalInQty,
+                    totalOutQty: item.totalOutQty,
+                    stock: stock,
+                    stockQty: stockQty,
+                    lastDate: item.lastDate 
+                });
             }
         }
         stockArr.sort((a,b) => {
             if(a.type !== b.type) return a.type === '产品' ? -1 : 1;
-            let aCust = a.customer || '', bCust = b.customer || '';
-            if(aCust === '' && bCust !== '') return 1;
-            if(aCust !== '' && bCust === '') return -1;
-            if(aCust !== bCust) return aCust.localeCompare(bCust, 'zh');
-            return a.model.localeCompare(b.model, 'zh');
+            if(a.customer !== b.customer) return a.customer.localeCompare(b.customer, 'zh');
+            if(a.model !== b.model) return a.model.localeCompare(b.model, 'zh');
+            return a.batch.localeCompare(b.batch, 'zh');
         });
         return stockArr;
     }
@@ -931,11 +958,14 @@
         let typeFilter = document.getElementById('stockTypeFilter')?.value || '';
         let stockData = computeStockOverview();
         let filtered = stockData.filter(s => {
-            let matchSearch = s.model.toLowerCase().includes(searchVal) || (s.customer && s.customer.toLowerCase().includes(searchVal));
+            let matchSearch = s.model.toLowerCase().includes(searchVal) || 
+                (s.customer && s.customer.toLowerCase().includes(searchVal)) ||
+                s.batch.toLowerCase().includes(searchVal);
             let matchType = !typeFilter || s.type === typeFilter;
             return matchSearch && matchType;
         });
         
+        // 计算总库存（用于顶部卡片）
         let totalMaterialIn = warehouseIn.filter(i=>!i.is_waste && i.type==='材料').reduce((s,i)=>s+(+i.weight||0),0);
         let totalMaterialOut = warehouseOut.filter(o=>o.type==='材料').reduce((s,o)=>s+(+o.weight||0),0);
         let totalProductIn = warehouseIn.filter(i=>!i.is_waste && i.type==='产品').reduce((s,i)=>s+(+i.weight||0),0);
@@ -955,19 +985,23 @@
         const pageData = filtered.slice(start, start + PAGE_SIZE);
         
         let tbody = document.getElementById('stockTableBody');
-        if(!pageData.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">暂无库存数据</td></tr>'; }
-        else {
+        if(!pageData.length) { 
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-state" style="font-weight:600; text-align:center; padding:40px; color:#8aaec0;">暂无库存数据</td></tr>'; 
+        } else {
             tbody.innerHTML = pageData.map(s => {
                 let stockClass = s.stock < 0 ? 'negative-stock' : '';
                 let typeLabel = s.type === '材料' ? '🧵 材料' : '📦 产品';
                 let typeClass = s.type === '材料' ? 'material' : 'product';
+                let stockQtyDisplay = s.stockQty > 0 ? s.stockQty.toFixed(0) : '0';
                 return `<tr>
                     <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
                     <td>${escapeHtml(s.customer) || '-'}</td>
                     <td>${escapeHtml(s.model)}</td>
+                    <td>${escapeHtml(s.batch)}</td>
+                    <td>${stockQtyDisplay}</td>
+                    <td class="${stockClass}" style="font-weight:700;">${s.stock.toFixed(2)}</td>
                     <td>${s.totalIn.toFixed(2)}</td>
                     <td>${s.totalOut.toFixed(2)}</td>
-                    <td class="${stockClass}" style="font-weight:700;">${s.stock.toFixed(2)} kg</td>
                     <td>${s.lastDate || '-'}</td>
                 </tr>`;
             }).join('');
@@ -980,7 +1014,7 @@
         
         let lowStock = filtered.filter(s => s.stock < alertThreshold && s.stock > 0);
         let alertDiv = document.getElementById('stockAlertList');
-        if(lowStock.length) alertDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px;">${lowStock.map(s=>`<span class="material-tag" style="background:#fff3e0; font-weight:700;">⚠️ ${escapeHtml(s.type)} ${escapeHtml(s.model)}: ${s.stock.toFixed(2)} kg</span>`).join('')}</div>`;
+        if(lowStock.length) alertDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:8px;">${lowStock.map(s=>`<span class="material-tag" style="background:#fff3e0; font-weight:700;">⚠️ ${escapeHtml(s.type)} ${escapeHtml(s.model)} (${escapeHtml(s.batch)}): ${s.stock.toFixed(2)} kg</span>`).join('')}</div>`;
         else alertDiv.innerHTML = '<div class="empty-state" style="font-weight:600; text-align:center; padding:20px; color:#8aaec0;">✅ 暂无低库存物料</div>';
     }
 
@@ -1162,11 +1196,12 @@
         let totalAmount = filtered.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))||0),0);
         
         let rows = [
-            ['日期', '客户', '型号', '批号', '色号', '净重(kg)', '单价', '总价(元)', '备注']
+            ['日期', '客户', '型号', '批号', '色号', '净重(kg)', '个数', '单价', '总价(元)', '备注']
         ];
         filtered.forEach(o => {
             let price = (+o.price||0) || '';
             let amount = (+o.total||((+o.weight||0)*(+o.price||0))||0).toFixed(2);
+            let qty = (+o.qty||0) || '';
             rows.push([
                 o.date || '',
                 o.customer || '',
@@ -1174,13 +1209,14 @@
                 o.batch_no || '',
                 o.color_no || '',
                 (+o.weight||0).toFixed(2),
+                qty,
                 price,
                 amount,
                 o.remark || ''
             ]);
         });
-        rows.push(['', '', '', '', '', '合计', '', totalAmount.toFixed(2), '']);
-        rows.push(['', '', '', '', '', totalWeight.toFixed(2), '', '', '']);
+        rows.push(['', '', '', '', '', '合计', '', '', totalAmount.toFixed(2), '']);
+        rows.push(['', '', '', '', '', totalWeight.toFixed(2), '', '', '', '']);
         
         let csv = rows.map(row => row.join('\t')).join('\n');
         let blob = new Blob(["\uFEFF" + csv], {type: 'text/csv;charset=utf-8;'});
@@ -1252,11 +1288,11 @@
                 return "\uFEFF" + rows.join('\n');
             }
             
-            let inData = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer||'', 型号:i.model||'', 批号:i.batch_no||'', 色号:i.color_no||'', 重量:i.weight||0, 单价:i.price||'', 总价:i.total||'', 日期:i.date||''}));
-            zip.file("1_in_records.csv", arrayToCSV(inData, ['类型','客户','型号','批号','色号','重量','单价','总价','日期']));
+            let inData = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer||'', 型号:i.model||'', 批号:i.batch_no||'', 色号:i.color_no||'', 重量:i.weight||0, 个数:i.qty||0, 单价:i.price||'', 总价:i.total||'', 日期:i.date||''}));
+            zip.file("1_in_records.csv", arrayToCSV(inData, ['类型','客户','型号','批号','色号','重量','个数','单价','总价','日期']));
             
-            let outData = warehouseOut.map(o => ({类型:o.type||'产品', 客户:o.customer||'', 型号:o.model||'', 批号:o.batch_no||'', 色号:o.color_no||'', 重量:o.weight||0, 单价:o.price||0, 总价:o.total||(o.weight*o.price).toFixed(2), 日期:o.date||'', 备注:o.remark||''}));
-            zip.file("2_out_records.csv", arrayToCSV(outData, ['类型','客户','型号','批号','色号','重量','单价','总价','日期','备注']));
+            let outData = warehouseOut.map(o => ({类型:o.type||'产品', 客户:o.customer||'', 型号:o.model||'', 批号:o.batch_no||'', 色号:o.color_no||'', 重量:o.weight||0, 个数:o.qty||0, 单价:o.price||0, 总价:o.total||(o.weight*o.price).toFixed(2), 日期:o.date||'', 备注:o.remark||''}));
+            zip.file("2_out_records.csv", arrayToCSV(outData, ['类型','客户','型号','批号','色号','重量','个数','单价','总价','日期','备注']));
             
             let orderData = orderRecords.map(o => ({订单号:o.order_no||'', 客户:o.customer||'', 规格:o.product_spec||'', 数量:o.quantity||0, 剩余重量:o.remaining_weight||'', 状态:o.status||'', 备注:o.remark||'', 创建日期:o.created_date||'', 更新时间:o.updated_date||''}));
             zip.file("3_order_records.csv", arrayToCSV(orderData, ['订单号','客户','规格','数量','剩余重量','状态','备注','创建日期','更新时间']));
@@ -1267,8 +1303,8 @@
             let wasteData = wasteManualRecords.filter(w=>!w.is_deleted).map(w => ({型号:w.model||'', 客户:w.customer||'', 批号:w.batch_no||'', 色号:w.color_no||'', 毛重:w.gross_weight||0, 筒重:w.tube_weight||0, 箱重:w.box_weight||0, 数量:w.quantity||0, 净重:w.net_weight||0, 日期:w.date||'', 备注:w.remark||''}));
             zip.file("5_waste_records.csv", arrayToCSV(wasteData, ['型号','客户','批号','色号','毛重','筒重','箱重','数量','净重','日期','备注']));
             
-            let stockDataExport = stockData.map(s => ({类型:s.type, 客户:s.customer||'', 型号:s.model||'', 当前库存:s.stock.toFixed(2), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate||''}));
-            zip.file("6_stock_snapshot.csv", arrayToCSV(stockDataExport, ['类型','客户','型号','当前库存','累计入仓','累计出仓','最后更新']));
+            let stockDataExport = stockData.map(s => ({类型:s.type, 客户:s.customer, 型号:s.model, 批号:s.batch, 当前库存:s.stock.toFixed(2), 总个数:s.stockQty.toFixed(0), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate}));
+            zip.file("6_stock_snapshot.csv", arrayToCSV(stockDataExport, ['类型','客户','型号','批号','当前库存','总个数','累计入仓','累计出仓','最后更新']));
             
             let info = `备份时间: ${now.toLocaleString()}\n入仓记录数: ${warehouseIn.filter(i=>!i.is_waste).length}\n出仓记录数: ${warehouseOut.length}\n订单数: ${orderRecords.length}\n工艺参数数: ${craftRecords.filter(c=>!c.is_deleted).length}\n废置记录数: ${wasteManualRecords.filter(w=>!w.is_deleted).length}\n库存种类数: ${stockData.length}\n\n纺织管理系统备份文件\n保存好此文件，可用于恢复数据。`;
             zip.file("backup_info.txt", info);
@@ -1285,7 +1321,7 @@
     // ========== 事件绑定 ==========
     document.getElementById('refreshStockBtn')?.addEventListener('click',()=>{ stockPage = 1; renderStock(); });
     document.getElementById('exportStockBtn')?.addEventListener('click',()=>{ 
-        let data = computeStockOverview().map(s=>({类型:s.type, 客户:s.customer, 型号:s.model, 当前库存:s.stock.toFixed(2), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate})); 
+        let data = computeStockOverview().map(s=>({类型:s.type, 客户:s.customer, 型号:s.model, 批号:s.batch, 当前库存:s.stock.toFixed(2), 总个数:s.stockQty.toFixed(0), 累计入仓:s.totalIn.toFixed(2), 累计出仓:s.totalOut.toFixed(2), 最后更新:s.lastDate})); 
         exportExcel(data,'库存总览'); 
     });
     document.getElementById('stockSearchInput')?.addEventListener('input',()=>{ stockPage = 1; renderStock(); });
@@ -1833,12 +1869,14 @@
         
         let totalWeight = filtered.reduce((s,i)=>s+(+i.weight||0),0);
         let totalAmount = filtered.reduce((s,i)=>s+(+i.total||0),0);
+        let totalQty = filtered.reduce((s,i)=>s+(+i.qty||0),0);
         
         tbody.innerHTML = pageData.map(i => {
             let typeLabel = i.type === '材料' ? '🧵 材料' : '📦 产品';
             let typeClass = i.type === '材料' ? 'material' : 'product';
             let priceDisplay = formatPrice(i.price);
             let totalDisplay = formatPrice(i.total);
+            let qtyDisplay = (i.qty !== undefined && i.qty !== null && i.qty !== '') ? i.qty : '';
             return `<tr>
                 <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
                 <td style="font-weight:600;">${escapeHtml(i.customer||'-')}</td>
@@ -1846,15 +1884,16 @@
                 <td style="font-weight:600;">${escapeHtml(i.batch_no||'-')}</td>
                 <td style="font-weight:600;">${escapeHtml(i.color_no||'-')}</td>
                 <td style="font-weight:600;">${i.weight}</td>
+                <td style="font-weight:600;">${qtyDisplay}</td>
                 <td style="font-weight:600;">${priceDisplay}</td>
                 <td style="font-weight:700;">${totalDisplay}</td>
                 <td style="font-weight:600;">${i.date}</td>
                 <td><button class="btn-delete" onclick="delIn('${i.id}')">删除</button></td>
             </tr>`;
-        }).join('') || '<tr><td colspan="10" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无入仓记录</td></tr>';
+        }).join('') || '<tr><td colspan="11" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无入仓记录</td></tr>';
         
         if(filtered.length > 0) {
-            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="5" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
+            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="5" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td style="font-weight:700;">${totalQty.toFixed(0)}</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="2"></td></tr>`;
         } else {
             tfoot.innerHTML = '';
         }
@@ -1877,23 +1916,25 @@
         let b = document.getElementById('inBatch').value;
         let col = document.getElementById('inColor').value;
         let w = parseFloat(document.getElementById('inWeight').value);
+        let qty = parseFloat(document.getElementById('inQty').value);
         let p = parseFloat(document.getElementById('inPrice').value);
         let total = (!isNaN(w) && !isNaN(p) && p > 0) ? (w*p).toFixed(2) : null;
         let d = document.getElementById('inDate').value || new Date().toISOString().slice(0,10);
         if(!m || isNaN(w)){ alert('请填写型号和重量'); return; }
         let data = { id: Date.now().toString(), type, customer: c||null, model: m, batch_no: b||null, color_no: col||null, weight: w, date: d };
+        if(!isNaN(qty) && qty > 0){ data.qty = qty; }
         if(!isNaN(p) && p > 0){ data.price = p; data.total = parseFloat(total); }
         let {error} = await supabase.from('in_records').insert(data);
         if(error){ showToast('添加失败：'+error.message); } else {
             await loadData(); showToast('入仓成功');
             document.getElementById('inCustomer').value=''; document.getElementById('inModel').value='';
             document.getElementById('inBatch').value=''; document.getElementById('inColor').value='';
-            document.getElementById('inWeight').value=''; document.getElementById('inPrice').value='';
-            document.getElementById('inTotal').value='';
+            document.getElementById('inWeight').value=''; document.getElementById('inQty').value='';
+            document.getElementById('inPrice').value=''; document.getElementById('inTotal').value='';
         }
     });
     document.getElementById('exportInBtn')?.addEventListener('click', () => {
-        let data = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer, 型号:i.model, 批号:i.batch_no, 色号:i.color_no, 重量:i.weight, 单价:i.price||'', 总价:i.total||'', 日期:i.date}));
+        let data = warehouseIn.filter(i=>!i.is_waste).map(i => ({类型:i.type||'产品', 客户:i.customer, 型号:i.model, 批号:i.batch_no, 色号:i.color_no, 重量:i.weight, 个数:i.qty||0, 单价:i.price||'', 总价:i.total||'', 日期:i.date}));
         exportExcel(data,'入仓记录');
     });
     document.getElementById('inSearch')?.addEventListener('input', () => { inPage = 1; renderIn(); });
@@ -1957,6 +1998,7 @@
         
         let totalWeight = filtered.reduce((s,o)=>s+(+o.weight||0),0);
         let totalAmount = filtered.reduce((s,o)=>s+(+o.total||((+o.weight||0)*(+o.price||0))||0),0);
+        let totalQty = filtered.reduce((s,o)=>s+(+o.qty||0),0);
         
         tbody.innerHTML = pageData.map(o => {
             let typeLabel = o.type === '材料' ? '🧵 材料' : '📦 产品';
@@ -1964,6 +2006,7 @@
             let checked = outSelectedIds.has(o.id) ? 'checked' : '';
             let priceDisplay = formatPrice(o.price);
             let totalDisplay = formatPrice(o.total || (o.weight*o.price));
+            let qtyDisplay = (o.qty !== undefined && o.qty !== null && o.qty !== '') ? o.qty : '';
             return `<tr>
                 <td><input type="checkbox" class="out-checkbox" data-id="${o.id}" ${checked}></td>
                 <td><span class="type-tag ${typeClass}">${typeLabel}</span></td>
@@ -1972,16 +2015,17 @@
                 <td style="font-weight:600;">${escapeHtml(o.batch_no||'-')}</td>
                 <td style="font-weight:600;">${escapeHtml(o.color_no||'-')}</td>
                 <td style="font-weight:600;">${o.weight}</td>
+                <td style="font-weight:600;">${qtyDisplay}</td>
                 <td style="font-weight:600;">${priceDisplay}</td>
                 <td class="price-total" style="font-weight:700;">${totalDisplay}</td>
                 <td style="font-weight:600;">${o.date}</td>
                 <td style="font-weight:600;">${escapeHtml(o.remark||'')}</td>
                 <td><button class="btn-delete" onclick="delOut('${o.id}')">删除</button></td>
             </tr>`;
-        }).join('') || '<tr><td colspan="12" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无出仓记录</td></tr>';
+        }).join('') || '<tr><td colspan="13" class="empty-state" style="font-weight:600; text-align:center; padding:30px; color:#8aaec0;">暂无出仓记录</td></tr>';
         
         if(filtered.length > 0) {
-            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="6" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="3"></td></tr>`;
+            tfoot.innerHTML = `<tr class="total-row-table"><td colspan="6" style="text-align:right; font-weight:700;">📊 合计</td><td style="font-weight:700;">${totalWeight.toFixed(2)} kg</td><td style="font-weight:700;">${totalQty.toFixed(0)}</td><td></td><td style="font-weight:700;">${totalAmount > 0 ? totalAmount.toFixed(2) : '—'}</td><td colspan="3"></td></tr>`;
         } else {
             tfoot.innerHTML = '';
         }
@@ -2075,27 +2119,30 @@
         let b = document.getElementById('outBatch').value;
         let col = document.getElementById('outColor').value;
         let w = parseFloat(document.getElementById('outWeight').value);
+        let qty = parseFloat(document.getElementById('outQty').value);
         let p = parseFloat(document.getElementById('outPrice').value);
         let total = (!isNaN(w) && !isNaN(p) && p > 0) ? (w*p).toFixed(2) : null;
         let d = document.getElementById('outDate').value || new Date().toISOString().slice(0,10);
         let remark = document.getElementById('outRemark').value.trim();
         if(!m || isNaN(w)){ alert('请填写型号和重量'); return; }
         let data = { id: Date.now().toString(), type, customer: c||null, model: m, batch_no: b||null, color_no: col||null, weight: w, date: d, remark: remark || null };
+        if(!isNaN(qty) && qty > 0){ data.qty = qty; }
         if(!isNaN(p) && p > 0){ data.price = p; data.total = parseFloat(total); }
         let {error} = await supabase.from('out_records').insert(data);
         if(error){ showToast('添加失败：'+error.message); } else {
             await loadData(); showToast('出仓成功');
             document.getElementById('outCustomer').value=''; document.getElementById('outModel').value='';
             document.getElementById('outBatch').value=''; document.getElementById('outColor').value='';
-            document.getElementById('outWeight').value=''; document.getElementById('outPrice').value='';
-            document.getElementById('outTotal').value=''; document.getElementById('outRemark').value='';
+            document.getElementById('outWeight').value=''; document.getElementById('outQty').value='';
+            document.getElementById('outPrice').value=''; document.getElementById('outTotal').value='';
+            document.getElementById('outRemark').value='';
         }
     });
     
     document.getElementById('exportOutAllBtn')?.addEventListener('click', () => {
         let filtered = getOutFilteredData();
         filtered.sort((a,b) => a.date < b.date ? 1 : -1);
-        let data = filtered.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
+        let data = filtered.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 个数:o.qty||0, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
         if(!data.length) { showToast('没有数据可导出'); return; }
         exportExcel(data,'出仓记录_全部');
     });
@@ -2105,7 +2152,7 @@
         if(ids.length === 0) { showToast('请先勾选要导出的记录'); return; }
         let selected = warehouseOut.filter(o => ids.includes(o.id));
         selected.sort((a,b) => a.date < b.date ? 1 : -1);
-        let data = selected.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
+        let data = selected.map(o => ({类型:o.type||'产品', 客户:o.customer, 型号:o.model, 批号:o.batch_no, 色号:o.color_no, 净重:o.weight, 个数:o.qty||0, 单价:formatPrice(o.price), 总价:formatPrice(o.total || (o.weight*o.price)), 日期:o.date, 备注:o.remark||''}));
         exportExcel(data,'出仓记录_选中');
     });
     
